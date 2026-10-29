@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contact & Directions | Roots Dental & Buds Child Clinic | Wanowrie, Pune{% endblock %}
+
+{% block content %}
+<section class="py-16 lg:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+
+  <div class="text-center max-w-3xl mx-auto mb-14">
+    <span class="px-4 py-1.5 rounded-full bg-slate-200/80 text-slate-700 text-xs font-heading font-bold uppercase tracking-wider">
+      📍 Location &bull; Timings &bull; Appointments
+    </span>
+    <h1 class="text-4xl sm:text-5xl font-heading font-extrabold text-slate-900 mt-4 tracking-tight">
+      Visit Roots Dental &amp; Buds Child Clinic
+    </h1>
+    <p class="text-slate-600 text-sm sm:text-base mt-2 font-sans">
+      Conveniently located at One Place Commercial Spaces in Wanowrie with ample dedicated patient parking.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    
+    <!-- Contact Info Cards (Left 5 Cols) -->
+    <div class="lg:col-span-5 space-y-4">
+      
+      <!-- Address Card -->
+      <div class="glass-surface p-6 rounded-3xl border border-white/80 shadow-md">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-dental-50 text-dental-700 flex items-center justify-center text-xl flex-shrink-0">
+            <i data-lucide="map-pin" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-heading font-bold text-slate-900 text-base">Clinic Address</h3>
+            <p class="text-xs text-slate-600 font-sans mt-1 leading-relaxed">
+              <strong>One Place — Commercial Spaces</strong><br />
+              Wanowrie, Pune, Maharashtra — 411040<br />
+              <span class="text-slate-500">(Landmark: Near Kedari Petrol Pump &amp; Oxford Comforts)</span>
+            </p>
+            <a href="https://maps.google.com" target="_blank" rel="noopener" class="mt-3 inline-flex items-center gap-1 text-xs font-heading font-bold text-dental-600 hover:text-dental-800">
+              <span>Open in Google Maps &rarr;</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone & WhatsApp Card -->
+      <div class="glass-surface p-6 rounded-3xl border border-white/80 shadow-md">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-xl flex-shrink-0">
+            <i data-lucide="phone-call" class="w-5 h-5"></i>
+          </div>
+          <div class="space-y-2">
+            <h3 class="font-heading font-bold text-slate-900 text-base">Direct Front Desk Contacts</h3>
+            <div class="text-xs font-sans text-slate-600 space-y-1">
+              <div>
+                <span class="font-semibold text-slate-800">Roots Dental Line:</span>
+                <a href="tel:+919876543210" class="text-dental-600 hover:underline font-bold">+91 98765 43210</a>
+              </div>
+              <div>
+                <span class="font-semibold text-slate-800">Buds Pediatric Line:</span>
+                <a href="tel:+919876543211" class="text-pediatric-700 hover:underline font-bold">+91 98765 43211</a>
+              </div>
+            </div>
+            <a href="https://wa.me/919876543210" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs shadow-sm transition">
+              <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+              <span>WhatsApp Front Desk</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hours Card -->
+      <div class="glass-surface p-6 rounded-3xl border border-white/80 shadow-md">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center text-xl flex-shrink-0">
+            <i data-lucide="clock" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-heading font-bold text-slate-900 text-base">Consultation Hours</h3>
+            <div class="text-xs text-slate-600 font-sans mt-1 space-y-0.5">
+              <div class="flex justify-between gap-6">
+                <span>Monday – Saturday:</span>
+                <strong class="text-slate-800">10:00 AM – 8:00 PM</strong>
+              </div>
+              <div class="flex justify-between gap-6">
+                <span>Sunday:</span>
+                <span class="text-rose-500 font-semibold">Closed / Emergency on Call</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Map & Booking Prompt (Right 7 Cols) -->
+    <div class="lg:col-span-7 space-y-6">
+      
+      <!-- Embedded Google Map -->
+      <div class="rounded-4xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 h-96">
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.9576449103444!2d73.89606821489246!3d18.480020187431267!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2c1d9b3524b07%3A0xe543c7263599295!2sWanowrie%2C%20Pune%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1680000000000!5m2!1sen!2sin" 
+          width="100%" 
+          height="100%" 
+          style="border:0;" 
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade" 
+          title="Roots & Buds Clinic Location">
+        </iframe>
+      </div>
+
+      <!-- Quick Booking Action Box -->
+      <div class="p-6 rounded-3xl bg-gradient-to-r from-slate-900 to-slate-800 text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+        <div>
+          <h4 class="font-heading font-bold text-base">Want to Request an Appointment?</h4>
+          <p class="text-xs text-slate-300 font-sans mt-0.5">Use our live 60-second booking widget on the homepage.</p>
+        </div>
+        <a href="/#booking-wrapper" onclick="if(window.innerWidth < 768){ (event || window.event).preventDefault(); window.openBookingModal(); }" class="px-6 py-3 rounded-full bg-dental-600 hover:bg-dental-500 text-white font-heading font-bold text-xs shadow-md transition whitespace-nowrap">
+          Go to Booking Form &rarr;
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+{% endblock %}

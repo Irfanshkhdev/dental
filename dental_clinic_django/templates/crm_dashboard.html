@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Front Desk Lean CRM | Roots Dental & Buds Child Clinic{% endblock %}
+
+{% block content %}
+<div class="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+
+  <!-- Top CRM Header -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-8 border-b border-slate-200">
+    <div>
+      <div class="flex items-center gap-2 mb-1">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="text-xs font-heading font-bold uppercase tracking-wider text-slate-500">Live Front Desk Engine &bull; Wanowrie</span>
+      </div>
+      <h1 class="text-3xl font-heading font-black text-slate-900 tracking-tight">
+        Clinic Appointment CRM
+      </h1>
+      <p class="text-slate-600 text-sm font-sans mt-0.5">
+        1-Click WhatsApp confirmation workflow for Dr. Sabina &amp; Dr. Jalil's patients.
+      </p>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="flex items-center gap-3">
+      <a href="/" class="px-4 py-2.5 rounded-2xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-heading font-semibold text-xs flex items-center gap-1.5 shadow-sm transition">
+        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+        <span>View Public Website</span>
+      </a>
+      <a href="/admin/clinic/appointmentrequest/" target="_blank" class="px-4 py-2.5 rounded-2xl bg-slate-900 text-white hover:bg-slate-800 font-heading font-semibold text-xs flex items-center gap-1.5 shadow-sm transition">
+        <i data-lucide="shield" class="w-3.5 h-3.5 text-indigo-400"></i>
+        <span>Django Admin</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Metric KPI Cards -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 my-8">
+    
+    <!-- Total Requests -->
+    <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+      <span class="text-slate-500 text-xs font-heading font-semibold">Total Requests</span>
+      <div class="text-2xl sm:text-3xl font-heading font-black text-slate-900 mt-2">{{ total_count }}</div>
+      <span class="text-[10px] text-slate-400 font-sans mt-1">All incoming leads</span>
+    </div>
+
+    <!-- Pending Confirmation -->
+    <div class="bg-amber-50/80 p-5 rounded-3xl border border-amber-200/80 shadow-sm flex flex-col justify-between">
+      <span class="text-amber-800 text-xs font-heading font-semibold flex items-center gap-1">
+        <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+        Pending Action
+      </span>
+      <div class="text-2xl sm:text-3xl font-heading font-black text-amber-700 mt-2">{{ pending_count }}</div>
+      <span class="text-[10px] text-amber-600 font-sans mt-1">Awaiting WhatsApp</span>
+    </div>
+
+    <!-- Confirmed / Accepted -->
+    <div class="bg-emerald-50/80 p-5 rounded-3xl border border-emerald-200/80 shadow-sm flex flex-col justify-between">
+      <span class="text-emerald-800 text-xs font-heading font-semibold">Accepted / Confirmed</span>
+      <div class="text-2xl sm:text-3xl font-heading font-black text-emerald-700 mt-2">{{ accepted_count }}</div>
+      <span class="text-[10px] text-emerald-600 font-sans mt-1">Confirmed on WhatsApp</span>
+    </div>
+
+    <!-- Rescheduled -->
+    <div class="bg-sky-50/80 p-5 rounded-3xl border border-sky-200/80 shadow-sm flex flex-col justify-between">
+      <span class="text-sky-800 text-xs font-heading font-semibold">Reschedule Proposed</span>
+      <div class="text-2xl sm:text-3xl font-heading font-black text-sky-700 mt-2">{{ reschedule_count }}</div>
+      <span class="text-[10px] text-sky-600 font-sans mt-1">Alternative slot sent</span>
+    </div>
+
+    <!-- Dental (Roots) -->
+    <div class="bg-dental-50/80 p-5 rounded-3xl border border-dental-200/80 shadow-sm flex flex-col justify-between">
+      <span class="text-dental-800 text-xs font-heading font-semibold">Roots Dental</span>
+      <div class="text-2xl sm:text-3xl font-heading font-black text-dental-700 mt-2">{{ dental_count }}</div>
+      <span class="text-[10px] text-dental-600 font-sans mt-1">Dr. Sabina's patients</span>
+    </div>
+
+    <!-- Pediatric (Buds) -->
+    <div class="bg-pediatric-50/80 p-5 rounded-3xl border border-pediatric-200/80 shadow-sm flex flex-col justify-between">
+      <span class="text-pediatric-800 text-xs font-heading font-semibold">Buds Child</span>
+      <div class="text-2xl sm:text-3xl font-heading font-black text-pediatric-700 mt-2">{{ pediatric_count }}</div>
+      <span class="text-[10px] text-pediatric-600 font-sans mt-1">Dr. Jalil's patients</span>
+    </div>
+
+  </div>
+
+  <!-- Filter Controls -->
+  <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+    <div class="flex items-center gap-2 overflow-x-auto pb-1">
+      <a href="?status=all" class="px-4 py-2 rounded-xl text-xs font-heading font-semibold transition {% if current_status == 'all' %}bg-slate-900 text-white{% else %}bg-white border border-slate-200 text-slate-700 hover:bg-slate-50{% endif %}">
+        All Requests
+      </a>
+      <a href="?status=pending" class="px-4 py-2 rounded-xl text-xs font-heading font-semibold transition {% if current_status == 'pending' %}bg-amber-600 text-white{% else %}bg-white border border-slate-200 text-amber-700 hover:bg-amber-50{% endif %}">
+        Pending ({{ pending_count }})
+      </a>
+      <a href="?status=accepted" class="px-4 py-2 rounded-xl text-xs font-heading font-semibold transition {% if current_status == 'accepted' %}bg-emerald-600 text-white{% else %}bg-white border border-slate-200 text-emerald-700 hover:bg-emerald-50{% endif %}">
+        Accepted ({{ accepted_count }})
+      </a>
+      <a href="?status=reschedule" class="px-4 py-2 rounded-xl text-xs font-heading font-semibold transition {% if current_status == 'reschedule' %}bg-sky-600 text-white{% else %}bg-white border border-slate-200 text-sky-700 hover:bg-sky-50{% endif %}">
+        Rescheduled ({{ reschedule_count }})
+      </a>
+      <span class="text-slate-300">|</span>
+      <a href="?clinic=dental" class="px-4 py-2 rounded-xl text-xs font-heading font-semibold transition {% if current_clinic == 'dental' %}bg-dental-600 text-white{% else %}bg-white border border-slate-200 text-dental-700 hover:bg-dental-50{% endif %}">
+        🦷 Dental Only
+      </a>
+      <a href="?clinic=pediatric" class="px-4 py-2 rounded-xl text-xs font-heading font-semibold transition {% if current_clinic == 'pediatric' %}bg-pediatric-600 text-white{% else %}bg-white border border-slate-200 text-pediatric-700 hover:bg-pediatric-50{% endif %}">
+        👶 Child Only
+      </a>
+    </div>
+
+    <!-- Quick Search Input -->
+    <div class="relative w-full sm:w-64">
+      <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+      <input type="text" id="crm-search" oninput="filterCrmTable()" placeholder="Search patient or phone..."
+             class="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-slate-200 text-xs font-sans focus:outline-none focus:ring-2 focus:ring-slate-400">
+    </div>
+  </div>
+
+  <!-- Appointment Requests Feed (Cards / Table Layout) -->
+  <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
+    
+    {% if requests %}
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs font-sans" id="crm-table">
+        <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-heading font-bold uppercase tracking-wider">
+          <tr>
+            <th class="py-4 px-6">Clinic &bull; Doctor</th>
+            <th class="py-4 px-6">Patient / Guardian</th>
+            <th class="py-4 px-6">Contact (Phone)</th>
+            <th class="py-4 px-6">Preferred Slot</th>
+            <th class="py-4 px-6">Status</th>
+            <th class="py-4 px-6 text-right">1-Click WhatsApp Action</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for req in requests %}
+          <tr class="hover:bg-slate-50/80 transition-colors crm-row" id="row-req-{{ req.id }}">
+            
+            <!-- Clinic & Doctor -->
+            <td class="py-4 px-6">
+              {% if req.clinic_type == 'dental' %}
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-dental-50 border border-dental-200 text-dental-700 font-heading font-bold text-[11px]">
+                  <span>🦷</span>
+                  <span>Roots Dental</span>
+                </span>
+                <div class="text-[11px] text-slate-500 font-sans mt-1">Dr. Sabina Shaikh (MDS)</div>
+              {% else %}
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pediatric-50 border border-pediatric-200 text-pediatric-700 font-heading font-bold text-[11px]">
+                  <span>👶</span>
+                  <span>Buds Child</span>
+                </span>
+                <div class="text-[11px] text-slate-500 font-sans mt-1">Dr. Jalil S. Mujawar</div>
+              {% endif %}
+            </td>
+
+            <!-- Patient / Guardian -->
+            <td class="py-4 px-6">
+              <div class="font-heading font-bold text-slate-900 text-sm patient-name-cell">{{ req.patient_name }}</div>
+              {% if req.parent_name %}
+                <div class="text-[11px] text-slate-500 font-sans flex items-center gap-1 mt-0.5">
+                  <i data-lucide="users" class="w-3 h-3 text-slate-400"></i>
+                  <span>Parent: {{ req.parent_name }}</span>
+                </div>
+              {% endif %}
+              <div class="text-[11px] text-slate-400 mt-1 font-sans">
+                Service: <strong class="text-slate-600">{{ req.service_needed|default:"General" }}</strong>
+              </div>
+              {% if req.notes %}
+                <div class="text-[10px] text-slate-500 italic mt-0.5 bg-slate-50 p-1.5 rounded-lg border border-slate-100 max-w-xs">
+                  "{{ req.notes }}"
+                </div>
+              {% endif %}
+            </td>
+
+            <!-- Phone Number -->
+            <td class="py-4 px-6">
+              <div class="flex items-center gap-1.5 font-sans font-semibold text-slate-800 phone-cell">
+                <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400"></i>
+                <span>+91 {{ req.phone_number }}</span>
+              </div>
+              <div class="text-[10px] text-slate-400 font-sans mt-0.5">
+                {{ req.created_at|timesince }} ago
+              </div>
+            </td>
+
+            <!-- Preferred Slot -->
+            <td class="py-4 px-6">
+              <div class="font-heading font-semibold text-slate-900 flex items-center gap-1">
+                <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i>
+                <span>{{ req.preferred_date }}</span>
+              </div>
+              <div class="text-[11px] text-slate-500 font-sans mt-0.5">
+                {{ req.preferred_time }}
+              </div>
+            </td>
+
+            <!-- Status Pill -->
+            <td class="py-4 px-6">
+              <span id="status-badge-{{ req.id }}" class="px-3 py-1 rounded-full text-[10px] font-heading font-bold inline-block
+                {% if req.status == 'pending' %}bg-amber-100 text-amber-800 border border-amber-200
+                {% elif req.status == 'accepted' %}bg-emerald-100 text-emerald-800 border border-emerald-200
+                {% elif req.status == 'reschedule' %}bg-sky-100 text-sky-800 border border-sky-200
+                {% else %}bg-slate-100 text-slate-600{% endif %}">
+                {{ req.get_status_display }}
+              </span>
+            </td>
+
+            <!-- 1-Click WhatsApp Workflow Buttons (Crucial Requirement) -->
+            <td class="py-4 px-6 text-right">
+              <div class="flex items-center justify-end gap-2">
+                
+                <!-- 1. Accept Button (Generates wa.me confirmation link & marks accepted) -->
+                <a href="{{ req.whatsapp_accept_url }}" 
+                   target="_blank" 
+                   rel="noopener"
+                   onclick="updateStatusDirectly({{ req.id }}, 'accepted')"
+                   class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs shadow-sm hover:shadow active:scale-95 transition"
+                   title="Open WhatsApp with confirmation template">
+                  <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                  <span>Accept (WhatsApp)</span>
+                </a>
+
+                <!-- 2. Propose Time Button (Generates wa.me reschedule template & marks reschedule) -->
+                <a href="{{ req.whatsapp_propose_url }}" 
+                   target="_blank" 
+                   rel="noopener"
+                   onclick="updateStatusDirectly({{ req.id }}, 'reschedule')"
+                   class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 font-heading font-semibold text-xs active:scale-95 transition"
+                   title="Open WhatsApp with reschedule proposal">
+                  <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-600"></i>
+                  <span>Propose Time</span>
+                </a>
+
+                <!-- Quick Direct Call -->
+                <a href="tel:+91{{ req.phone_number }}" 
+                   class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+                   title="Direct Phone Call">
+                  <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
+                </a>
+
+              </div>
+            </td>
+
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="text-center py-16 px-4">
+      <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-2xl mb-3 text-slate-400">
+        📋
+      </div>
+      <h3 class="font-heading font-bold text-slate-700 text-lg">No Appointment Requests Found</h3>
+      <p class="text-xs text-slate-400 font-sans mt-1">There are currently no requests matching this filter criteria.</p>
+      <a href="?" class="mt-4 inline-block px-5 py-2 rounded-xl bg-slate-900 text-white text-xs font-heading font-semibold">
+        Reset Filters
+      </a>
+    </div>
+    {% endif %}
+
+  </div>
+
+</div>
+
+<!-- CRM JavaScript for Search & Instant Status Updating -->
+<script>
+  function filterCrmTable() {
+    const input = document.getElementById('crm-search').value.toLowerCase();
+    const rows = document.querySelectorAll('.crm-row');
+    rows.forEach(row => {
+      const name = row.querySelector('.patient-name-cell')?.textContent.toLowerCase() || '';
+      const phone = row.querySelector('.phone-cell')?.textContent.toLowerCase() || '';
+      if (name.includes(input) || phone.includes(input)) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  }
+
+  function updateStatusDirectly(requestId, newStatus) {
+    fetch(`/api/requests/${requestId}/status/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status: newStatus })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'success') {
+        const badge = document.getElementById(`status-badge-${requestId}`);
+        if (badge) {
+          if (newStatus === 'accepted') {
+            badge.className = 'px-3 py-1 rounded-full text-[10px] font-heading font-bold inline-block bg-emerald-100 text-emerald-800 border border-emerald-200';
+            badge.textContent = 'Accepted & Confirmed';
+          } else if (newStatus === 'reschedule') {
+            badge.className = 'px-3 py-1 rounded-full text-[10px] font-heading font-bold inline-block bg-sky-100 text-sky-800 border border-sky-200';
+            badge.textContent = 'Reschedule Proposed';
+          }
+        }
+      }
+    })
+    .catch(err => console.error('Status update failed:', err));
+  }
+</script>
+{% endblock %}

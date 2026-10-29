@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% block title %}Dental Services | General, Cosmetic (Invisalign, Veneers) & Emergency Care{% endblock %}
+{% block content %}
+
+<section class="spa-gradient py-16 border-b border-slate-200/70">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
+    <span class="px-3.5 py-1.5 rounded-full bg-teal-100 text-teal-800 font-semibold text-xs">Clinical Excellence & Spa Comfort</span>
+    <h1 class="text-4xl sm:text-5xl font-bold text-slate-900 mt-4">Specialized Dental Suites</h1>
+    <p class="text-slate-600 text-sm sm:text-base mt-3">
+      Whether you are visiting for routine holistic prevention, a transformative smile makeover, or urgent same-day pain relief, our specialists combine artistry with automated convenience.
+    </p>
+    <div class="flex flex-wrap justify-center gap-3 mt-6">
+      <a href="#general" class="px-4 py-2 rounded-full text-xs font-semibold border border-teal-600 text-teal-700 hover:bg-teal-600 hover:text-white transition">General Dentistry</a>
+      <a href="#cosmetic" class="px-4 py-2 rounded-full text-xs font-semibold border border-teal-600 text-teal-700 hover:bg-teal-600 hover:text-white transition">Cosmetic (Invisalign® & Veneers)</a>
+      <a href="#emergency" class="px-4 py-2 rounded-full text-xs font-semibold border border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition">24/7 Emergency Care</a>
+    </div>
+  </div>
+</section>
+
+<!-- Main Services + High-Converting Multi-Step CRM Lead Capture Form -->
+<section class="py-16 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-12 items-start">
+
+    <!-- Left 7 Columns: Detailed Service Breakdowns -->
+    <div class="lg:col-span-7 space-y-14">
+
+      <!-- 1. General Dentistry -->
+      <div id="general" class="p-8 rounded-3xl bg-slate-50 border border-slate-100">
+        <span class="text-xs font-bold uppercase tracking-wider text-teal-600">01 • Preventive & Restorative</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">General & Holistic Dentistry</h2>
+        <p class="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed">
+          Our preventive program uses Swiss Guided Biofilm Therapy (warm water air-polishing) for pain-free cleanings, digital low-radiation 3D imaging, and BPA-free ceramic restorations.
+        </p>
+        <div class="grid sm:grid-cols-2 gap-3 mt-5 text-xs text-slate-700">
+          <div class="p-3 bg-white rounded-xl border border-slate-100">✓ Ultrasonic Spa Hygiene & Gum Therapy</div>
+          <div class="p-3 bg-white rounded-xl border border-slate-100">✓ 3D CBCT & AI Cavity Detection</div>
+          <div class="p-3 bg-white rounded-xl border border-slate-100">✓ Same-Day CEREC Ceramic Crowns</div>
+          <div class="p-3 bg-white rounded-xl border border-slate-100">✓ TMJ / Nightguard Bite Therapy</div>
+        </div>
+      </div>
+
+      <!-- 2. Cosmetic Dentistry -->
+      <div id="cosmetic" class="p-8 rounded-3xl bg-sky-50/60 border border-sky-100">
+        <span class="text-xs font-bold uppercase tracking-wider text-sky-600">02 • Aesthetic Smile Studio</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">Cosmetic Dentistry: Invisalign® & Veneers</h2>
+        <p class="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed">
+          Co-design your dream smile using facial-proportion 3D simulation before we ever touch a tooth. Partnered with master ceramists in Beverly Hills.
+        </p>
+        <div class="grid sm:grid-cols-2 gap-3 mt-5 text-xs text-slate-700">
+          <div class="p-3 bg-white rounded-xl border border-sky-100">✓ Ultra-Thin Minimal-Prep Porcelain Veneers</div>
+          <div class="p-3 bg-white rounded-xl border border-sky-100">✓ Diamond Plus Invisalign® Clear Aligners</div>
+          <div class="p-3 bg-white rounded-xl border border-sky-100">✓ Zoom! & Kor Laser Teeth Whitening</div>
+          <div class="p-3 bg-white rounded-xl border border-sky-100">✓ Aesthetic Gum Contouring & Bonding</div>
+        </div>
+      </div>
+
+      <!-- 3. Emergency Dental Care -->
+      <div id="emergency" class="p-8 rounded-3xl bg-red-50/50 border border-red-100">
+        <span class="text-xs font-bold uppercase tracking-wider text-red-600">03 • Urgent Same-Day Relief</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">24/7 Emergency Dental Care</h2>
+        <p class="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed">
+          Dental emergencies never wait. We hold dedicated daily emergency blocks and provide nitrous oxide & IV sedation for immediate, stress-free relief.
+        </p>
+        <div class="grid sm:grid-cols-2 gap-3 mt-5 text-xs text-slate-700">
+          <div class="p-3 bg-white rounded-xl border border-red-100">✓ Severe Toothache & Abscess Relief</div>
+          <div class="p-3 bg-white rounded-xl border border-red-100">✓ Broken, Cracked, or Knocked-Out Teeth</div>
+          <div class="p-3 bg-white rounded-xl border border-red-100">✓ Gentle Microscopic Root Canal Therapy</div>
+          <div class="p-3 bg-white rounded-xl border border-red-100">✓ Lost Crown or Veneer Re-Cementation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right 5 Columns: Sticky Multi-Step Lead Capture Form -> CRM Webhook -->
+    <div class="lg:col-span-5 lg:sticky lg:top-28 bg-white rounded-3xl shadow-2xl border border-slate-200/90 p-7">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-bold uppercase tracking-wider text-teal-600">CRM Webhook Connected</span>
+        <span class="lead-step-indicator text-xs font-semibold text-slate-500">Step 1 of 3</span>
+      </div>
+      <!-- Progress Bar -->
+      <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden mb-5">
+        <div class="lead-progress-bar h-full bg-teal-600 transition-all duration-300" style="width: 33%;"></div>
+      </div>
+
+      <h3 class="text-xl font-bold text-slate-900">Get a Personalized Treatment & Cost Estimate</h3>
+      <p class="text-xs text-slate-500 mt-1 mb-5">Complete this 3-step assessment. Submissions automatically route to our CRM via API/Webhooks for instant SMS follow-up.</p>
+
+      <form class="multi-step-lead-form space-y-4">
+        <input type="hidden" name="source_page" value="Services Page ({{ active_category }})" />
+
+        <!-- Step 1: Clinical Need -->
+        <div class="lead-step space-y-4" data-step="1">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Which treatment are you interested in? *</label>
+            <select name="service_interest" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm">
+              <option value="Porcelain Veneers / Smile Makeover">Porcelain Veneers / Smile Makeover</option>
+              <option value="Invisalign® Clear Aligners">Invisalign® Clear Aligners</option>
+              <option value="General Checkup & Ultrasonic Cleaning">General Checkup & Ultrasonic Cleaning</option>
+              <option value="Urgent / Emergency Dental Care">Urgent / Emergency Dental Care</option>
+              <option value="Dental Implants / Full Arch">Dental Implants / Full Arch Restoration</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Are you experiencing any dental pain?</label>
+            <select name="pain_level" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm">
+              <option value="No Pain - Routine or Cosmetic">No Pain — Routine or Cosmetic Goal</option>
+              <option value="Mild Sensitivity">Mild Sensitivity to Hot/Cold</option>
+              <option value="Urgent Severe Pain - Needs Same-Day">Urgent Pain — Requesting Same-Day Slot</option>
+            </select>
+          </div>
+          <button type="button" class="next-step-btn w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 rounded-xl text-sm">
+            Continue to Step 2 (Insurance & Timeline) &rarr;
+          </button>
+        </div>
+
+        <!-- Step 2: Insurance & Preferences -->
+        <div class="lead-step hidden space-y-4" data-step="2">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Insurance Coverage or Payment Preference</label>
+            <select name="insurance_provider" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm">
+              <option value="Delta Dental PPO">Delta Dental PPO</option>
+              <option value="Cigna / Aetna / MetLife PPO">Cigna / Aetna / MetLife PPO</option>
+              <option value="BlueCross / Guardian PPO">BlueCross / Guardian PPO</option>
+              <option value="0% Monthly Financing (CareCredit/Cherry)">0% Monthly Financing (CareCredit / Cherry)</option>
+              <option value="Self-Pay / Concierge Membership">Self-Pay / Concierge Membership</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Preferred Communication Channel</label>
+            <select name="preferred_contact" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm">
+              <option value="SMS Text Message & Email">SMS Text Message & Email</option>
+              <option value="Phone Call from Treatment Coordinator">Phone Call from Treatment Coordinator</option>
+              <option value="Email Only">Email Only</option>
+            </select>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" class="prev-step-btn w-1/3 border border-slate-200 text-slate-700 font-semibold py-3 rounded-xl text-xs">&larr; Back</button>
+            <button type="button" class="next-step-btn w-2/3 bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 rounded-xl text-xs">Continue to Final Step &rarr;</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Contact Details & Webhook Submit -->
+        <div class="lead-step hidden space-y-3" data-step="3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Full Name *</label>
+            <input type="text" name="full_name" required placeholder="Sophia Montgomery" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address *</label>
+            <input type="email" name="email" required placeholder="sophia@example.com" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Mobile Phone (For Instant SMS Quote) *</label>
+            <input type="tel" name="phone" required placeholder="(310) 555-0188" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Smile Goals or Questions (Optional)</label>
+            <textarea name="notes" rows="2" placeholder="Tell us about your smile goals..." class="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-xs"></textarea>
+          </div>
+          <div class="flex gap-2 pt-1">
+            <button type="button" class="prev-step-btn w-1/3 border border-slate-200 text-slate-700 font-semibold py-3 rounded-xl text-xs">&larr; Back</button>
+            <button type="submit" class="w-2/3 bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 rounded-xl text-xs shadow-md">
+              Complete & Get Instant Treatment Estimate
+            </button>
+          </div>
+        </div>
+
+        <div class="lead-feedback hidden mt-4"></div>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

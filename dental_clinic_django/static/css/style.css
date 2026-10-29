@@ -1,0 +1,119 @@
+/* Roots Dental Clinic & Buds Child Clinic — Custom Medical Styling */
+:root {
+  --dental-primary: #1E487A;
+  --dental-dark: #122945;
+  --dental-light: #255B98;
+  --pediatric-primary: #4A7C59;
+  --pediatric-dark: #243C2B;
+  --pediatric-light: #588157;
+  --pearl: #F8FAFC;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #1E293B;
+  background-color: #F8FAFC;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Luminous Apple-Style Mesh Background (No harsh flat blues) */
+.liquid-mesh-bg {
+  background-color: #FAFBFD;
+  background-image: 
+    radial-gradient(ellipse 65% 55% at 80% 20%, rgba(37, 91, 152, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 15% 80%, rgba(74, 124, 89, 0.06) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 50% 40%, rgba(255, 255, 255, 0.8) 0%, transparent 100%);
+}
+
+.liquid-mesh-green {
+  background-color: #FAFBF9;
+  background-image: 
+    radial-gradient(ellipse 65% 55% at 80% 20%, rgba(74, 124, 89, 0.09) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 15% 80%, rgba(37, 91, 152, 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 50% 40%, rgba(255, 255, 255, 0.8) 0%, transparent 100%);
+}
+
+/* Apple Liquid Glass Panels */
+.glass-surface {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.06);
+}
+
+.glass-surface-dark {
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* iOS 17/18 Floating Liquid Glass Micro-Capsule (Translucent Apple Glass) */
+.glass-capsule {
+  background: rgba(255, 255, 255, 0.58) !important;
+  backdrop-filter: blur(22px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.09), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Horizontal Card Swiping on Touch Devices */
+.snap-x {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.snap-center {
+  scroll-snap-align: center;
+}
+
+/* Subtle Micro-Floating Animations */
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes floatDelayed {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes slideUpSheet {
+  0% {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-float {
+  animation: floatGentle 4.5s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: floatDelayed 5.5s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
+.animate-slide-up {
+  animation: slideUpSheet 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Form input custom highlights */
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(30, 72, 122, 0.15);
+}

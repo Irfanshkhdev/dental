@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Clinic Gallery | Roots Dental & Buds Child Clinic | Wanowrie, Pune{% endblock %}
+
+{% block content %}
+<section class="py-16 lg:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+  
+  <div class="text-center max-w-3xl mx-auto mb-14">
+    <span class="px-4 py-1.5 rounded-full bg-slate-200/80 text-slate-700 text-xs font-heading font-bold uppercase tracking-wider">
+      🖼️ Clinical Sanctuary Tour
+    </span>
+    <h1 class="text-4xl sm:text-5xl font-heading font-extrabold text-slate-900 mt-4 tracking-tight">
+      A Modern Healthcare Sanctuary in Wanowrie
+    </h1>
+    <p class="text-slate-600 text-sm sm:text-base mt-2 font-sans">
+      Take a virtual tour through our ergonomic dental suites, comforting pediatric consultation bays, and medical sterilization units.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <!-- Gallery Item 1 -->
+    <div class="group relative rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-white flex flex-col">
+      <div class="h-64 overflow-hidden relative">
+        <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=800&q=80" 
+             alt="Ergonomic Dental Operatory" 
+             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+        <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-slate-900/60 backdrop-blur-md text-white text-[10px] font-heading font-bold">
+          Roots Dental Wing
+        </span>
+      </div>
+      <div class="p-5">
+        <h3 class="font-heading font-bold text-slate-900 text-base">Ergonomic Dental Operatory</h3>
+        <p class="text-xs text-slate-500 font-sans mt-1">Equipped with ultra-quiet brushless motors, LED shadowless lighting, and digital screens for patient education.</p>
+      </div>
+    </div>
+
+    <!-- Gallery Item 2 -->
+    <div class="group relative rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-white flex flex-col">
+      <div class="h-64 overflow-hidden relative">
+        <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80" 
+             alt="Warm Reception & Lobby" 
+             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+        <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-slate-900/60 backdrop-blur-md text-white text-[10px] font-heading font-bold">
+          Main Lobby
+        </span>
+      </div>
+      <div class="p-5">
+        <h3 class="font-heading font-bold text-slate-900 text-base">Warm Reception &amp; Welcome Lounge</h3>
+        <p class="text-xs text-slate-500 font-sans mt-1">Frosted glass partitions, calming ambient acoustics, and comfortable seating for families with infants.</p>
+      </div>
+    </div>
+
+    <!-- Gallery Item 3 -->
+    <div class="group relative rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-white flex flex-col">
+      <div class="h-64 overflow-hidden relative">
+        <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&w=800&q=80" 
+             alt="Buds Pediatric Consultation Bay" 
+             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+        <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-pediatric-800/80 backdrop-blur-md text-white text-[10px] font-heading font-bold">
+          Buds Child Wing
+        </span>
+      </div>
+      <div class="p-5">
+        <h3 class="font-heading font-bold text-slate-900 text-base">Child-Friendly Pediatric Bay</h3>
+        <p class="text-xs text-slate-500 font-sans mt-1">Dr. Jalil's consultation suite, complete with playful murals, baby changing counter, and infant weigh scales.</p>
+      </div>
+    </div>
+
+    <!-- Gallery Item 4 -->
+    <div class="group relative rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-white flex flex-col">
+      <div class="h-64 overflow-hidden relative">
+        <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=800&q=80" 
+             alt="Digital 3D Intraoral Scanning" 
+             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+        <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-dental-800/80 backdrop-blur-md text-white text-[10px] font-heading font-bold">
+          Roots Dental Wing
+        </span>
+      </div>
+      <div class="p-5">
+        <h3 class="font-heading font-bold text-slate-900 text-base">Digital 3D Intraoral Diagnostics</h3>
+        <p class="text-xs text-slate-500 font-sans mt-1">Say goodbye to uncomfortable rubber molds. We scan smiles digitally for aligners and crowns in minutes.</p>
+      </div>
+    </div>
+
+    <!-- Gallery Item 5 -->
+    <div class="group relative rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-white flex flex-col">
+      <div class="h-64 overflow-hidden relative">
+        <img src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80" 
+             alt="Hospital Grade Sterilization Lab" 
+             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+        <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-slate-900/60 backdrop-blur-md text-white text-[10px] font-heading font-bold">
+          Safety Protocols
+        </span>
+      </div>
+      <div class="p-5">
+        <h3 class="font-heading font-bold text-slate-900 text-base">Class-B Autoclave Sterilization</h3>
+        <p class="text-xs text-slate-500 font-sans mt-1">Multi-stage ultrasonic decontamination, medical pouches, and biological spore testing for absolute zero-cross contamination.</p>
+      </div>
+    </div>
+
+    <!-- Gallery Item 6 -->
+    <div class="group relative rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-white flex flex-col">
+      <div class="h-64 overflow-hidden relative">
+        <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&w=800&q=80" 
+             alt="Vaccination Cold-Chain Unit" 
+             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+        <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-pediatric-800/80 backdrop-blur-md text-white text-[10px] font-heading font-bold">
+          Buds Child Wing
+        </span>
+      </div>
+      <div class="p-5">
+        <h3 class="font-heading font-bold text-slate-900 text-base">Certified Vaccine Cold-Chain Unit</h3>
+        <p class="text-xs text-slate-500 font-sans mt-1">Temperature-monitored refrigeration ensuring active vaccine potency as per Indian Academy of Pediatrics standards.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="text-center mt-12">
+    <a href="/#booking-wrapper" class="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-dental-600 hover:bg-dental-700 text-white font-heading font-bold text-sm shadow-xl transition">
+      <span>Book Your In-Person Visit</span>
+      <i data-lucide="calendar" class="w-4 h-4"></i>
+    </a>
+  </div>
+
+</section>
+{% endblock %}
