@@ -1,0 +1,537 @@
+{% extends "crm/base_crm.html" %}
+
+{% block title %}Dr. Jalil Pediatric Module | Roots &amp; Buds CRM{% endblock %}
+
+{% block page_title %}
+<span class="text-emerald-500">👶</span> Dr. Jalil S. Mujawar &bull; Pediatric Charts &amp; Immunization
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <!-- Doctor Header Banner -->
+  <div class="bg-gradient-to-r from-slate-950 via-emerald-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold mb-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span>Buds Child Clinic &bull; Wanowrie</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-heading font-black tracking-tight text-white">
+          Dr. Jalil S. Mujawar
+        </h1>
+        <p class="text-emerald-200/80 text-xs sm:text-sm mt-0.5 font-medium">
+          MBBS, DNB(Pediatrics), MNAMS, SCHP, PGPN, MBA-Hosp Admin &bull; Senior Consultant Pediatrician &amp; Neonatologist
+        </p>
+      </div>
+
+      <!-- Active Child Patient Selector -->
+      <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/20 min-w-[280px]">
+        <label class="block text-[10px] uppercase font-bold tracking-wider text-emerald-300 mb-1">Active Pediatric Patient</label>
+        <form method="GET" action="/crm/pediatric/">
+          <select name="patient_id" onchange="this.form.submit()" class="w-full bg-slate-900/90 text-white rounded-xl px-3 py-2 text-xs border border-emerald-400/30 focus:outline-none focus:ring-1 focus:ring-emerald-400">
+            {% for p in patients %}
+            <option value="{{ p.id }}" {% if p.id == active_patient.id %}selected{% endif %}>
+              {{ p.full_name }} ({{ p.age_display }}, {{ p.gender }})
+            </option>
+            {% endfor %}
+          </select>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pediatric Income & Immunization KPI Cards -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pediatric Revenue</p>
+        <p class="text-2xl sm:text-3xl font-heading font-black text-slate-900 mt-1">₹ {{ total_pedia_revenue }}</p>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+        <i data-lucide="wallet" class="w-6 h-6"></i>
+      </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Collected Fees</p>
+        <p class="text-2xl sm:text-3xl font-heading font-black text-emerald-600 mt-1">₹ {{ total_pedia_collected }}</p>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center">
+        <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+      </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Vaccines Due Soon</p>
+        <p class="text-2xl sm:text-3xl font-heading font-black text-amber-600 mt-1">{{ due_vaccines_count }}</p>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
+        <i data-lucide="syringe" class="w-6 h-6"></i>
+      </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Administered</p>
+        <p class="text-2xl sm:text-3xl font-heading font-black text-indigo-600 mt-1">{{ administered_count }} Doses</p>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+        <i data-lucide="shield-check" class="w-6 h-6"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Child Health & Clinical Suite Tabs -->
+  <div class="border-b border-slate-200 bg-white px-6 rounded-2xl shadow-sm">
+    <nav class="flex space-x-8 -mb-px text-sm font-heading font-bold" id="pediatric-tabs">
+      <button onclick="switchPedTab('ptab-vaccines')" id="pbtn-ptab-vaccines" class="py-4 border-b-2 border-emerald-500 text-emerald-600 flex items-center gap-2">
+        <i data-lucide="shield" class="w-4 h-4"></i>
+        <span>IAP Immunization Matrix &amp; Card</span>
+      </button>
+      <button onclick="switchPedTab('ptab-growth')" id="pbtn-ptab-growth" class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+        <i data-lucide="trending-up" class="w-4 h-4"></i>
+        <span>WHO Growth Charts &amp; Percentiles</span>
+      </button>
+      <button onclick="switchPedTab('ptab-dosing')" id="pbtn-ptab-dosing" class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+        <i data-lucide="calculator" class="w-4 h-4"></i>
+        <span>Weight-Based Dose Helper</span>
+      </button>
+      <button onclick="switchPedTab('ptab-newborn')" id="pbtn-ptab-newborn" class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+        <i data-lucide="baby" class="w-4 h-4"></i>
+        <span>Newborn &amp; Developmental Suite</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- TAB 1: IAP IMMUNIZATION SCHEDULE & PRINTABLE CARD -->
+  <div id="ptab-vaccines" class="ped-tab-content space-y-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div>
+        <h3 class="text-base font-heading font-bold text-slate-900">
+          Indian Academy of Pediatrics (IAP) Immunization Schedule &bull; {{ active_patient.full_name }}
+        </h3>
+        <p class="text-xs text-slate-500">Track due dates, record batch numbers, and print the official immunization record.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        {% if active_patient %}
+        <a href="/crm/pediatric/vaccination-card/{{ active_patient.id }}/" target="_blank" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-heading font-bold text-xs flex items-center gap-1.5 shadow-sm transition">
+          <i data-lucide="printer" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>Print Official Vaccination Card</span>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50/80 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-100">
+            <tr>
+              <th class="py-3 px-4">Recommended Age</th>
+              <th class="py-3 px-4">Vaccine &bull; Dose</th>
+              <th class="py-3 px-4">Due Date</th>
+              <th class="py-3 px-4">Administered Date &bull; Batch</th>
+              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-4 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for v in vaccinations %}
+            <tr class="hover:bg-slate-50/50 transition">
+              <td class="py-3.5 px-4 font-bold text-slate-700">
+                {{ v.recommended_age_str }}
+              </td>
+              <td class="py-3.5 px-4">
+                <p class="font-bold text-slate-900">{{ v.vaccine_name }}</p>
+                <p class="text-[11px] text-slate-400">Dose #{{ v.dose_number }} &bull; {{ v.manufacturer }}</p>
+              </td>
+              <td class="py-3.5 px-4 text-slate-700 font-mono">
+                {{ v.due_date }}
+              </td>
+              <td class="py-3.5 px-4">
+                {% if v.administered_date %}
+                <p class="font-bold text-emerald-700">{{ v.administered_date }}</p>
+                <p class="text-[10px] font-mono text-slate-400">Batch: {{ v.batch_no }}</p>
+                {% else %}
+                <span class="text-slate-400 italic">Not administered</span>
+                {% endif %}
+              </td>
+              <td class="py-3.5 px-4">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase {% if v.status == 'administered' %}bg-emerald-100 text-emerald-800{% elif v.status == 'overdue' %}bg-rose-100 text-rose-800{% else %}bg-amber-100 text-amber-800{% endif %}">
+                  {{ v.get_status_display }}
+                </span>
+              </td>
+              <td class="py-3.5 px-4 text-right">
+                {% if v.status != 'administered' %}
+                <button onclick="promptAdminister({{ v.id }}, '{{ v.vaccine_name }}')" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-sm transition">
+                  Administer &check;
+                </button>
+                {% else %}
+                <span class="text-emerald-600 text-xs font-bold flex items-center justify-end gap-1">
+                  <i data-lucide="check" class="w-3.5 h-3.5"></i> Given
+                </span>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6" class="py-8 text-center text-slate-400">
+                No vaccination schedule generated for this patient yet.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: WHO GROWTH CHARTS & PERCENTILES -->
+  <div id="ptab-growth" class="ped-tab-content space-y-4 hidden">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-base font-heading font-bold text-slate-900">
+          WHO Somatic Growth Percentiles &bull; {{ active_patient.full_name }}
+        </h3>
+        <p class="text-xs text-slate-500">Weight-for-age, height-for-age, head circumference, and BMI velocity.</p>
+      </div>
+      <button onclick="openModal('growth-modal')" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 transition">
+        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+        <span>Record Growth Metrics</span>
+      </button>
+    </div>
+
+    <!-- Latest Metrics Highlight Cards -->
+    {% if latest_growth %}
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
+        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Current Weight</p>
+        <p class="text-2xl font-heading font-black text-slate-900 mt-1">{{ latest_growth.weight_kg }} kg</p>
+        <span class="text-[11px] text-emerald-600 font-semibold">{{ latest_growth.weight_percentile }}th percentile (WHO)</span>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
+        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Length / Height</p>
+        <p class="text-2xl font-heading font-black text-slate-900 mt-1">{{ latest_growth.height_cm }} cm</p>
+        <span class="text-[11px] text-emerald-600 font-semibold">{{ latest_growth.height_percentile }}th percentile (WHO)</span>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
+        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Head Circumference</p>
+        <p class="text-2xl font-heading font-black text-slate-900 mt-1">{{ latest_growth.head_circ_cm|default:"--" }} cm</p>
+        <span class="text-[11px] text-slate-400">Normal cranial expansion</span>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
+        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Calculated BMI</p>
+        <p class="text-2xl font-heading font-black text-slate-900 mt-1">{{ latest_growth.bmi|default:"--" }}</p>
+        <span class="text-[11px] text-teal-600 font-semibold">Healthy somatic growth</span>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Growth Log Table -->
+    <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+      <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+        <h4 class="font-heading font-bold text-xs uppercase tracking-wider text-slate-500">Historical Anthropometric Timeline</h4>
+        <span class="text-xs text-slate-400">{{ growth_records.count }} Recorded Points</span>
+      </div>
+      <table class="w-full text-left text-xs">
+        <thead class="bg-slate-50 text-slate-500 uppercase tracking-wider">
+          <tr>
+            <th class="py-2.5 px-4">Date</th>
+            <th class="py-2.5 px-4">Age (Months)</th>
+            <th class="py-2.5 px-4">Weight (kg)</th>
+            <th class="py-2.5 px-4">Height (cm)</th>
+            <th class="py-2.5 px-4">Head Circ (cm)</th>
+            <th class="py-2.5 px-4">WHO Centile</th>
+            <th class="py-2.5 px-4">Pediatrician Notes</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for g in growth_records %}
+          <tr class="hover:bg-slate-50/50">
+            <td class="py-3 px-4 font-mono font-bold">{{ g.recorded_date }}</td>
+            <td class="py-3 px-4">{{ g.age_months }}m</td>
+            <td class="py-3 px-4 font-bold text-slate-900">{{ g.weight_kg }} kg</td>
+            <td class="py-3 px-4 font-bold text-slate-900">{{ g.height_cm }} cm</td>
+            <td class="py-3 px-4">{{ g.head_circ_cm|default:"--" }} cm</td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold text-[10px]">
+                {{ g.weight_percentile }}th %
+              </span>
+            </td>
+            <td class="py-3 px-4 text-slate-600 italic">"{{ g.notes }}"</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="py-6 text-center text-slate-400">No growth entries yet. Click "Record Growth Metrics".</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 3: WEIGHT-BASED DOSE HELPER -->
+  <div id="ptab-dosing" class="ped-tab-content space-y-4 hidden">
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+        <div>
+          <h3 class="text-base font-heading font-black text-slate-900 flex items-center gap-2">
+            <i data-lucide="calculator" class="w-5 h-5 text-emerald-600"></i>
+            <span>Pediatric Weight-Based Dose Verification Helper</span>
+          </h3>
+          <p class="text-xs text-slate-500 mt-0.5">
+            Instant mg/kg to volume in mL calculation for standard pediatric suspensions.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <label class="text-xs font-bold text-slate-700">Patient Weight (kg):</label>
+          <div class="flex items-center gap-1">
+            <input type="number" id="calc-weight" value="{{ latest_growth.weight_kg|default:'10.0' }}" step="0.5" min="1" max="60" class="w-24 p-2 rounded-xl border border-slate-300 font-heading font-black text-base text-center text-emerald-700 focus:ring-2 focus:ring-emerald-500">
+            <button onclick="calculateDoses()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition">
+              Calculate
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Grid -->
+      <div id="dose-results-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Rendered via JS calculateDoses() -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: NEWBORN SUITE & DEVELOPMENTAL MILESTONES -->
+  <div id="ptab-newborn" class="ped-tab-content space-y-6 hidden">
+    
+    <!-- Newborn Suite Card -->
+    {% if newborn_record %}
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h3 class="font-heading font-black text-base text-slate-900">Newborn Natal &amp; Delivery Suite</h3>
+          <p class="text-xs text-slate-500">Birth history, APGAR, jaundice phototherapy, and neonatal feeding mode.</p>
+        </div>
+        <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold">
+          {{ newborn_record.get_delivery_type_display }}
+        </span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+          <p class="text-[10px] uppercase font-bold text-slate-400">Birth Weight</p>
+          <p class="text-lg font-heading font-black text-slate-900 mt-0.5">{{ newborn_record.birth_weight_kg }} kg</p>
+        </div>
+        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+          <p class="text-[10px] uppercase font-bold text-slate-400">Gestation</p>
+          <p class="text-lg font-heading font-black text-slate-900 mt-0.5">{{ newborn_record.gestational_age_weeks }} wks</p>
+        </div>
+        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+          <p class="text-[10px] uppercase font-bold text-slate-400">APGAR (1m / 5m)</p>
+          <p class="text-lg font-heading font-black text-emerald-600 mt-0.5">{{ newborn_record.apgar_1min }} / {{ newborn_record.apgar_5min }}</p>
+        </div>
+        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+          <p class="text-[10px] uppercase font-bold text-slate-400">Blood Group</p>
+          <p class="text-lg font-heading font-black text-slate-900 mt-0.5">{{ newborn_record.blood_group }}</p>
+        </div>
+        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+          <p class="text-[10px] uppercase font-bold text-slate-400">Feeding</p>
+          <p class="text-xs font-bold text-teal-700 mt-1">{{ newborn_record.get_feeding_type_display }}</p>
+        </div>
+        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+          <p class="text-[10px] uppercase font-bold text-slate-400">Phototherapy</p>
+          <p class="text-xs font-bold {% if newborn_record.phototherapy_required %}text-amber-600{% else %}text-slate-500{% endif %} mt-1">
+            {% if newborn_record.phototherapy_required %}{{ newborn_record.phototherapy_hours }} hrs{% else %}Not required{% endif %}
+          </p>
+        </div>
+      </div>
+
+      <div class="p-3 rounded-2xl bg-emerald-50/50 border border-emerald-100 text-xs text-slate-700">
+        <strong>Pediatrician Neonatal Notes:</strong> {{ newborn_record.pediatrician_notes }}
+      </div>
+    </div>
+    {% else %}
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 text-center text-slate-400 text-xs">
+      No newborn birth records filed for {{ active_patient.full_name }} (Registered as older child).
+    </div>
+    {% endif %}
+
+    <!-- Developmental Milestones -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h3 class="font-heading font-black text-base text-slate-900">Developmental Milestones Checklist</h3>
+          <p class="text-xs text-slate-500">Gross motor, fine motor, speech/language, and social achievements.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {% for m in milestones %}
+        <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">&check;</span>
+            <div>
+              <p class="font-bold text-xs text-slate-800">{{ m.milestone_name }}</p>
+              <p class="text-[10px] text-slate-400">{{ m.domain }} &bull; {{ m.age_category }}</p>
+            </div>
+          </div>
+          <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+            Achieved
+          </span>
+        </div>
+        {% empty %}
+        <p class="text-xs text-slate-400 col-span-full text-center py-4">No milestone records filed.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- MODAL: RECORD GROWTH -->
+<div id="growth-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+      <h3 class="font-heading font-black text-base text-slate-900">Record Growth Metrics</h3>
+      <button onclick="closeModal('growth-modal')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <form id="growth-form" onsubmit="handleGrowthSubmit(event)" class="space-y-3 pt-3 text-xs">
+      <input type="hidden" name="patient_id" value="{{ active_patient.id }}">
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Age (Months)</label>
+          <input type="number" name="age_months" value="12" step="0.5" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm" required>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Weight (kg)</label>
+          <input type="number" name="weight_kg" value="9.8" step="0.1" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm" required>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Height / Length (cm)</label>
+          <input type="number" name="height_cm" value="76.0" step="0.5" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm" required>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Head Circ (cm)</label>
+          <input type="number" name="head_circ_cm" value="46.0" step="0.5" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm">
+        </div>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Clinical Remarks</label>
+        <textarea name="notes" rows="2" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm" placeholder="Normal velocity, tone good"></textarea>
+      </div>
+      <div class="pt-2 flex justify-end gap-2">
+        <button type="button" onclick="closeModal('growth-modal')" class="px-4 py-2 rounded-xl text-slate-600 font-semibold hover:bg-slate-100">Cancel</button>
+        <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700">Save Metrics</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function switchPedTab(tabId) {
+    document.querySelectorAll('.ped-tab-content').forEach(el => el.classList.add('hidden'));
+    document.getElementById(tabId).classList.remove('hidden');
+
+    document.querySelectorAll('#pediatric-tabs button').forEach(btn => {
+      btn.classList.remove('border-emerald-500', 'text-emerald-600');
+      btn.classList.add('border-transparent', 'text-slate-500');
+    });
+
+    const activeBtn = document.getElementById('pbtn-' + tabId);
+    if (activeBtn) {
+      activeBtn.classList.remove('border-transparent', 'text-slate-500');
+      activeBtn.classList.add('border-emerald-500', 'text-emerald-600');
+    }
+
+    if (tabId === 'ptab-dosing') {
+      calculateDoses();
+    }
+  }
+
+  function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+  function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+  async function promptAdminister(vaxId, vaxName) {
+    const batch = prompt(`Administering ${vaxName}.\nEnter vaccine batch number (e.g. SII-2026-X):`, "BAT-2026-88");
+    if (batch !== null) {
+      const res = await fetch('/crm/api/pediatric/vaccine/update/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ vaccine_id: vaxId, batch_no: batch, status: 'administered' })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        window.location.reload();
+      }
+    }
+  }
+
+  async function handleGrowthSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const res = await fetch('/crm/api/pediatric/growth/add/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        patient_id: form.patient_id.value,
+        age_months: form.age_months.value,
+        weight_kg: form.weight_kg.value,
+        height_cm: form.height_cm.value,
+        head_circ_cm: form.head_circ_cm.value,
+        notes: form.notes.value
+      })
+    });
+    const data = await res.json();
+    if (data.status === 'success') {
+      window.location.reload();
+    }
+  }
+
+  // Dose Calculator
+  async function calculateDoses() {
+    const weight = document.getElementById('calc-weight').value || '10';
+    try {
+      const res = await fetch(`/crm/api/pediatric/dose-helper/?weight=${weight}`);
+      const data = await res.json();
+      const container = document.getElementById('dose-results-container');
+      container.innerHTML = '';
+
+      data.drugs.forEach(d => {
+        const card = document.createElement('div');
+        card.className = "p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2";
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <h4 class="font-heading font-black text-sm text-slate-900">${d.name}</h4>
+            <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono font-bold text-xs">${d.single_dose_mg}</span>
+          </div>
+          <p class="text-xs text-slate-500 font-medium">Standard Formula: ${d.rule}</p>
+          <div class="p-2.5 rounded-xl bg-white border border-slate-200 text-xs">
+            <span class="text-slate-400 block text-[10px] uppercase font-bold">Recommended Volume:</span>
+            <strong class="text-emerald-700 font-mono text-sm">${d.volume_options}</strong>
+          </div>
+          <p class="text-[11px] text-slate-600 italic">Frequency: ${d.frequency}</p>
+        `;
+        container.appendChild(card);
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  // Run on initial load
+  calculateDoses();
+</script>
+{% endblock %}

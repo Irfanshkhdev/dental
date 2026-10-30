@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Receipt #{{ invoice.invoice_no }} | Roots &amp; Buds Clinic</title>
+  <style>
+    @media print {
+      body { margin: 0; padding: 10mm; background: #fff; }
+      .no-print { display: none !important; }
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #1e293b;
+      background: #f8fafc;
+      padding: 20px;
+    }
+    .receipt {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+    .header {
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0;
+    }
+    .subtitle {
+      font-size: 11px;
+      color: #475569;
+      margin: 3px 0 0 0;
+    }
+    .meta-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+      background: #f8fafc;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-bottom: 24px;
+    }
+    th, td {
+      border-bottom: 1px solid #e2e8f0;
+      padding: 10px 12px;
+      text-align: left;
+    }
+    th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+    .totals {
+      width: 250px;
+      margin-left: auto;
+      font-size: 12px;
+    }
+    .totals div {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+    }
+    .total-due {
+      border-top: 2px solid #0f172a;
+      font-weight: 800;
+      font-size: 14px;
+      padding-top: 6px !important;
+      color: #0f172a;
+    }
+    .footer {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 11px;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="no-print" style="max-width: 700px; margin: 0 auto 16px auto; text-align: right;">
+    <button onclick="window.print()" style="padding: 8px 16px; background: #0f172a; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
+      🖨️ Print Clinical Receipt
+    </button>
+  </div>
+
+  <div class="receipt">
+    <div class="header">
+      <div>
+        <h1 class="title">ROOTS DENTAL &amp; BUDS CHILD CLINIC</h1>
+        <p class="subtitle">Comprehensive Dental Specialties &bull; Advanced Pediatric Care</p>
+        <p style="font-size: 10px; color: #64748b; margin: 4px 0 0 0;">
+          108 One Place Commercial Spaces, Salunke Vihar Rd, Wanowrie, Pune - 411040<br>
+          Tel: +91 99212 31399 &bull; +91 94269 14747 &bull; 020 46010398
+        </p>
+      </div>
+      <div style="text-align: right;">
+        <span style="font-weight: 800; font-size: 16px; color: #0f172a;">RECEIPT</span>
+        <p style="font-size: 11px; font-family: monospace; font-weight: bold; margin: 2px 0 0 0;">{{ invoice.invoice_no }}</p>
+        <p style="font-size: 10px; color: #64748b; margin: 2px 0 0 0;">Date: {{ invoice.created_at|date:"d M Y, h:i A" }}</p>
+      </div>
+    </div>
+
+    <div class="meta-box">
+      <div>
+        <strong>Billed To:</strong><br>
+        {{ invoice.patient.full_name }} ({{ invoice.patient.patient_id }})<br>
+        Phone: {{ invoice.patient.phone }}<br>
+        {% if invoice.family %}Family: {{ invoice.family.family_name }}<br>{% endif %}
+      </div>
+      <div>
+        <strong>Consulting Practice:</strong><br>
+        {{ invoice.get_clinic_type_display }}<br>
+        Doctor: {{ invoice.doctor_name }}<br>
+        Payment Mode: {{ invoice.get_payment_method_display }}
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Service / Treatment Description</th>
+          <th style="text-align: center;">Qty</th>
+          <th style="text-align: right;">Amount (₹)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td><strong>{{ item.name }}</strong></td>
+          <td style="text-align: center;">{{ item.qty|default:1 }}</td>
+          <td style="text-align: right;">₹ {{ item.total|default:item.rate }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td>1</td>
+          <td><strong>Clinical Consultation &amp; Assessment</strong></td>
+          <td style="text-align: center;">1</td>
+          <td style="text-align: right;">₹ {{ invoice.total_amount }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="totals">
+      <div>
+        <span>Subtotal:</span>
+        <span>₹ {{ invoice.subtotal }}</span>
+      </div>
+      <div>
+        <span>Discount:</span>
+        <span>₹ {{ invoice.discount }}</span>
+      </div>
+      <div class="total-due">
+        <span>Total Billed:</span>
+        <span>₹ {{ invoice.total_amount }}</span>
+      </div>
+      <div style="color: #059669; font-weight: bold;">
+        <span>Amount Paid:</span>
+        <span>₹ {{ invoice.paid_amount }}</span>
+      </div>
+      {% if invoice.balance_due > 0 %}
+      <div style="color: #e11d48; font-weight: bold;">
+        <span>Balance Due:</span>
+        <span>₹ {{ invoice.balance_due }}</span>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="footer">
+      <div>
+        <p style="margin: 0;">Thank you for trusting Roots &amp; Buds Clinic.</p>
+        <p style="margin: 2px 0 0 0; font-size: 10px;">This is a computer generated receipt.</p>
+      </div>
+      <div style="text-align: right;">
+        <p style="margin: 0; font-weight: bold;">Authorized Signatory</p>
+        <p style="margin: 2px 0 0 0; font-size: 10px;">Front Desk Operations &bull; Wanowrie</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

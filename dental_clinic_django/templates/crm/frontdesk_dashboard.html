@@ -1,0 +1,806 @@
+{% extends "crm/base_crm.html" %}
+
+{% block title %}Front Desk The Hub | Roots &amp; Buds CRM{% endblock %}
+
+{% block page_title %}
+<span class="text-rose-500">📋</span> Front Desk &bull; The Central Hub
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <!-- Hub Header Banner -->
+  <div class="bg-gradient-to-r from-slate-900 via-rose-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-semibold mb-2">
+          <span class="w-2 h-2 rounded-full bg-rose-400 animate-ping"></span>
+          <span>Wanowrie Dual-Practice Reception Desk</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-heading font-black tracking-tight text-white">
+          Front Desk Operations &amp; Concierge
+        </h1>
+        <p class="text-slate-300 text-xs sm:text-sm mt-1 max-w-xl">
+          Coordinate patient arrivals, manage the live lounge queue, trigger WhatsApp confirmations, link family profiles, and process dual-clinic billing.
+        </p>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex flex-wrap items-center gap-2.5">
+        <button onclick="openModal('token-modal')" class="px-4 py-2.5 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-heading font-bold text-xs shadow-lg shadow-rose-500/25 transition flex items-center gap-1.5">
+          <i data-lucide="ticket" class="w-4 h-4"></i>
+          <span>Issue Token</span>
+        </button>
+        <button onclick="openModal('family-modal')" class="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-heading font-semibold text-xs border border-white/20 backdrop-blur-sm transition flex items-center gap-1.5">
+          <i data-lucide="users" class="w-4 h-4"></i>
+          <span>New Family</span>
+        </button>
+        <button onclick="openModal('invoice-modal')" class="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-heading font-semibold text-xs border border-white/20 backdrop-blur-sm transition flex items-center gap-1.5">
+          <i data-lucide="receipt" class="w-4 h-4"></i>
+          <span>Create Bill</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Operational Stat Cards -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">In Waiting Lounge</p>
+        <p class="text-3xl font-heading font-black text-rose-600 mt-1">{{ queue_waiting_count }}</p>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center">
+        <i data-lucide="clock" class="w-6 h-6"></i>
+      </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">In Consultation</p>
+        <p class="text-3xl font-heading font-black text-emerald-600 mt-1">{{ queue_active_count }}</p>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center">
+        <i data-lucide="stethoscope" class="w-6 h-6"></i>
+      </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pending Bookings</p>
+        <p class="text-3xl font-heading font-black text-amber-600 mt-1">{{ pending_requests }}</p>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center">
+        <i data-lucide="calendar" class="w-6 h-6"></i>
+      </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Families</p>
+        <p class="text-3xl font-heading font-black text-sky-600 mt-1">{{ families.count }}</p>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-500 flex items-center justify-center">
+        <i data-lucide="home" class="w-6 h-6"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Tabs Navigation -->
+  <div class="border-b border-slate-200 bg-white px-6 rounded-2xl shadow-sm">
+    <nav class="flex space-x-8 -mb-px text-sm font-heading font-bold" id="hub-tabs">
+      <button onclick="switchTab('tab-queue')" id="btn-tab-queue" class="py-4 border-b-2 border-rose-500 text-rose-600 flex items-center gap-2">
+        <i data-lucide="users" class="w-4 h-4"></i>
+        <span>Live Waiting Lounge Queue ({{ queue_waiting_count }})</span>
+      </button>
+      <button onclick="switchTab('tab-inbox')" id="btn-tab-inbox" class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+        <i data-lucide="message-square" class="w-4 h-4"></i>
+        <span>Appointment Requests &bull; WhatsApp ({{ total_requests }})</span>
+      </button>
+      <button onclick="switchTab('tab-families')" id="btn-tab-families" class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+        <i data-lucide="folder-heart" class="w-4 h-4"></i>
+        <span>Family Profiles &amp; Dependents</span>
+      </button>
+      <button onclick="switchTab('tab-billing')" id="btn-tab-billing" class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+        <i data-lucide="credit-card" class="w-4 h-4"></i>
+        <span>Front Desk Billing &amp; Receipts</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- TAB 1: LIVE WAITING LOUNGE QUEUE -->
+  <div id="tab-queue" class="hub-tab-content space-y-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-base font-heading font-bold text-slate-900">Current Clinic Waiting Queue</h3>
+        <p class="text-xs text-slate-500">Live token calling and room allocation for Dr. Sabina and Dr. Jalil.</p>
+      </div>
+      <button onclick="openModal('token-modal')" class="px-3.5 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 flex items-center gap-1.5 transition">
+        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+        <span>Check-in Patient / Issue Token</span>
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {% for q in queue_entries %}
+      <div class="bg-white rounded-3xl p-5 border {% if q.status == 'in_consultation' %}border-emerald-300 ring-2 ring-emerald-100 bg-emerald-50/20{% else %}border-slate-200{% endif %} shadow-sm flex flex-col justify-between transition hover:shadow-md">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-1 rounded-xl text-xs font-black font-heading {% if q.status == 'in_consultation' %}bg-emerald-600 text-white{% else %}bg-rose-500 text-white{% endif %} shadow-sm">
+              Token #{{ q.token_number }}
+            </span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md {% if q.clinic_type == 'dental' %}bg-sky-50 text-sky-700 border border-sky-200{% else %}bg-emerald-50 text-emerald-700 border border-emerald-200{% endif %}">
+              {{ q.get_clinic_type_display }}
+            </span>
+          </div>
+
+          <h4 class="text-base font-heading font-black text-slate-900 truncate">
+            {{ q.patient.full_name }}
+          </h4>
+          <p class="text-xs text-slate-500 mt-0.5 flex items-center gap-1">
+            <i data-lucide="user-check" class="w-3.5 h-3.5 text-slate-400"></i>
+            <span>{{ q.doctor_assigned }}</span>
+          </p>
+          <p class="text-xs text-slate-600 bg-slate-50 p-2 rounded-xl mt-3 border border-slate-100 italic">
+            "{{ q.reason_for_visit }}"
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-[10px] text-slate-400 font-medium">
+            Arrived {{ q.check_in_time|date:"h:i A" }}
+          </span>
+          <div class="flex items-center gap-1.5">
+            {% if q.status == 'waiting' %}
+            <button onclick="updateQueueStatus({{ q.id }}, 'in_consultation')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold shadow-sm transition">
+              Call In &rarr;
+            </button>
+            {% elif q.status == 'in_consultation' %}
+            <button onclick="updateQueueStatus({{ q.id }}, 'completed')" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-bold shadow-sm transition">
+              Complete &check;
+            </button>
+            {% endif %}
+            <button onclick="updateQueueStatus({{ q.id }}, 'cancelled')" class="p-1 rounded-lg text-slate-300 hover:text-rose-600 hover:bg-rose-50 transition" title="Cancel Token">
+              <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-span-full py-12 text-center bg-white rounded-3xl border border-dashed border-slate-300">
+        <i data-lucide="coffee" class="w-10 h-10 text-slate-300 mx-auto mb-2"></i>
+        <p class="text-sm font-semibold text-slate-600">Waiting lounge is currently clear!</p>
+        <p class="text-xs text-slate-400 mt-1">Click "Issue Token" to register walk-ins or arriving patients.</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Completed Queue History -->
+    {% if recent_completed_queue %}
+    <div class="mt-6 pt-4">
+      <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Recently Completed Today</h4>
+      <div class="flex flex-wrap gap-2">
+        {% for cq in recent_completed_queue %}
+        <div class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 text-xs flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+          <span class="font-bold">Token #{{ cq.token_number }}</span>
+          <span>{{ cq.patient.full_name }}</span>
+          <span class="text-slate-400">({{ cq.completed_time|date:"h:i A" }})</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- TAB 2: APPOINTMENT REQUESTS & WHATSAPP ENGINE -->
+  <div id="tab-inbox" class="hub-tab-content space-y-4 hidden">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div>
+        <h3 class="text-base font-heading font-bold text-slate-900">Website Booking Inbox</h3>
+        <p class="text-xs text-slate-500">1-Click WhatsApp confirmations and rescheduling proposals.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="?status=all" class="px-3 py-1.5 rounded-xl text-xs font-semibold {% if current_status == 'all' %}bg-slate-900 text-white{% else %}bg-white border border-slate-200 text-slate-600 hover:bg-slate-50{% endif %}">
+          All ({{ total_requests }})
+        </a>
+        <a href="?status=pending" class="px-3 py-1.5 rounded-xl text-xs font-semibold {% if current_status == 'pending' %}bg-amber-600 text-white{% else %}bg-white border border-slate-200 text-amber-700 hover:bg-amber-50{% endif %}">
+          Pending ({{ pending_requests }})
+        </a>
+        <a href="?status=accepted" class="px-3 py-1.5 rounded-xl text-xs font-semibold {% if current_status == 'accepted' %}bg-emerald-600 text-white{% else %}bg-white border border-slate-200 text-emerald-700 hover:bg-emerald-50{% endif %}">
+          Confirmed
+        </a>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50/80 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-100">
+            <tr>
+              <th class="py-3 px-4">Clinic &bull; Doctor</th>
+              <th class="py-3 px-4">Patient Name</th>
+              <th class="py-3 px-4">Requested Slot</th>
+              <th class="py-3 px-4">Service &amp; Notes</th>
+              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-4 text-right">1-Click WhatsApp Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for req in requests %}
+            <tr class="hover:bg-slate-50/50 transition">
+              <td class="py-3.5 px-4">
+                <span class="inline-block px-2 py-0.5 rounded-md font-bold text-[10px] uppercase {% if req.clinic_type == 'dental' %}bg-sky-50 text-sky-700 border border-sky-200{% else %}bg-emerald-50 text-emerald-700 border border-emerald-200{% endif %}">
+                  {{ req.get_clinic_type_display }}
+                </span>
+                <p class="text-[11px] text-slate-500 mt-0.5">{{ req.doctor_name }}</p>
+              </td>
+              <td class="py-3.5 px-4 font-bold text-slate-900">
+                {{ req.patient_name }}
+                {% if req.parent_name %}
+                <p class="text-[11px] text-slate-400 font-normal">Parent: {{ req.parent_name }}</p>
+                {% endif %}
+                <p class="text-[11px] font-mono text-slate-500 font-normal">{{ req.phone_number }}</p>
+              </td>
+              <td class="py-3.5 px-4">
+                <p class="font-bold text-slate-800">{{ req.preferred_date }}</p>
+                <p class="text-slate-500 text-[11px]">{{ req.preferred_time }}</p>
+              </td>
+              <td class="py-3.5 px-4 max-w-xs">
+                <p class="font-medium text-slate-800 truncate">{{ req.service_needed }}</p>
+                <p class="text-slate-400 text-[11px] truncate italic">"{{ req.notes|default:'None' }}"</p>
+              </td>
+              <td class="py-3.5 px-4">
+                <span class="px-2 py-1 rounded-md text-[10px] font-bold uppercase {% if req.status == 'pending' %}bg-amber-100 text-amber-800{% elif req.status == 'accepted' %}bg-emerald-100 text-emerald-800{% elif req.status == 'reschedule' %}bg-indigo-100 text-indigo-800{% else %}bg-slate-100 text-slate-600{% endif %}">
+                  {{ req.get_status_display }}
+                </span>
+              </td>
+              <td class="py-3.5 px-4 text-right">
+                <div class="inline-flex items-center gap-1.5">
+                  <a href="{{ req.whatsapp_accept_url }}" target="_blank" onclick="markRequestAccepted({{ req.id }})" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold flex items-center gap-1 shadow-sm transition" title="Accept &amp; Send WhatsApp Confirmation">
+                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    <span>Accept</span>
+                  </a>
+                  <a href="{{ req.whatsapp_propose_url }}" target="_blank" class="px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold flex items-center gap-1 transition" title="Propose Alternate Time">
+                    <i data-lucide="calendar-clock" class="w-3.5 h-3.5"></i>
+                    <span>Propose</span>
+                  </a>
+                  <a href="{{ req.whatsapp_reminder_url }}" target="_blank" class="p-1 rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 transition" title="Send WhatsApp Reminder">
+                    <i data-lucide="bell" class="w-3.5 h-3.5"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6" class="py-8 text-center text-slate-400">
+                No appointment requests found matching filter.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: FAMILY PROFILES & DEPENDENTS -->
+  <div id="tab-families" class="hub-tab-content space-y-4 hidden">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-base font-heading font-bold text-slate-900">Unified Family Records</h3>
+        <p class="text-xs text-slate-500">Cross-clinic family directory linking parents, spouses, and child dependents.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="openModal('member-modal')" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1">
+          <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+          <span>Add Dependent</span>
+        </button>
+        <button onclick="openModal('family-modal')" class="px-3.5 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition flex items-center gap-1">
+          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+          <span>Create Family</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {% for fam in families %}
+      <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200 text-[10px] font-bold font-mono">
+              {{ fam.family_id }}
+            </span>
+            <span class="text-xs text-slate-400 font-semibold">
+              {{ fam.member_count }} Member{{ fam.member_count|pluralize }}
+            </span>
+          </div>
+
+          <h4 class="text-lg font-heading font-black text-slate-900">
+            {{ fam.family_name }}
+          </h4>
+          <p class="text-xs text-slate-500 mt-0.5 flex items-center gap-1">
+            <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400"></i>
+            <span>{{ fam.primary_phone }} ({{ fam.primary_contact_name }})</span>
+          </p>
+          <p class="text-xs text-slate-400 mt-1 truncate">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 inline text-slate-300"></i> {{ fam.address }}
+          </p>
+
+          <!-- Members List -->
+          <div class="mt-4 pt-3 border-t border-slate-100 space-y-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Linked Patients</p>
+            {% for m in fam.members.all %}
+            <div class="flex items-center justify-between text-xs p-2 rounded-xl bg-slate-50 border border-slate-100">
+              <div class="flex items-center gap-2">
+                <span>{% if m.is_child %}👶{% else %}👤{% endif %}</span>
+                <div>
+                  <p class="font-bold text-slate-800 leading-tight">{{ m.full_name }}</p>
+                  <p class="text-[10px] text-slate-400">{{ m.relationship_to_head }} &bull; {{ m.age_display }}</p>
+                </div>
+              </div>
+              <span class="text-[10px] font-mono text-slate-500 bg-white px-1.5 py-0.5 rounded border border-slate-200">
+                {{ m.blood_group }}
+              </span>
+            </div>
+            {% empty %}
+            <p class="text-xs text-slate-400 italic">No members linked yet.</p>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span class="text-[10px] text-slate-400">Wanowrie Resident</span>
+          <a href="https://wa.me/91{{ fam.primary_phone }}?text=Hello%20from%20Roots%20Dental%20and%20Buds%20Child%20Clinic!" target="_blank" class="text-emerald-600 hover:text-emerald-700 font-bold flex items-center gap-1">
+            <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+            <span>WhatsApp Family</span>
+          </a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-span-full py-10 text-center text-slate-400 bg-white rounded-3xl border border-dashed">
+        No family records found.
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- TAB 4: FRONT DESK BILLING & RECEIPTS -->
+  <div id="tab-billing" class="hub-tab-content space-y-4 hidden">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-base font-heading font-bold text-slate-900">Front Desk Billing Hub</h3>
+        <p class="text-xs text-slate-500">Record cash/UPI payments, track partial balances, and dispatch instant WhatsApp receipts.</p>
+      </div>
+      <button onclick="openModal('invoice-modal')" class="px-3.5 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition flex items-center gap-1">
+        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+        <span>Generate New Invoice</span>
+      </button>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50/80 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-100">
+            <tr>
+              <th class="py-3 px-4">Invoice #</th>
+              <th class="py-3 px-4">Patient / Family</th>
+              <th class="py-3 px-4">Clinic &bull; Doctor</th>
+              <th class="py-3 px-4">Total Amount</th>
+              <th class="py-3 px-4">Paid</th>
+              <th class="py-3 px-4">Balance Due</th>
+              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-4 text-right">Digital Receipt</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for inv in invoices %}
+            <tr class="hover:bg-slate-50/50 transition">
+              <td class="py-3.5 px-4 font-mono font-bold text-slate-800">
+                <a href="/crm/invoice/{{ inv.id }}/print/" target="_blank" class="hover:underline text-sky-600">
+                  {{ inv.invoice_no }}
+                </a>
+                <p class="text-[10px] text-slate-400 font-sans">{{ inv.created_at|date:"d M Y" }}</p>
+              </td>
+              <td class="py-3.5 px-4">
+                <p class="font-bold text-slate-900">{{ inv.patient.full_name }}</p>
+                {% if inv.family %}
+                <p class="text-[10px] text-slate-500">{{ inv.family.family_name }}</p>
+                {% endif %}
+              </td>
+              <td class="py-3.5 px-4">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase {% if inv.clinic_type == 'dental' %}bg-sky-50 text-sky-700{% else %}bg-emerald-50 text-emerald-700{% endif %}">
+                  {{ inv.get_clinic_type_display }}
+                </span>
+                <p class="text-[11px] text-slate-500 mt-0.5">{{ inv.doctor_name }}</p>
+              </td>
+              <td class="py-3.5 px-4 font-heading font-bold text-slate-900">
+                ₹ {{ inv.total_amount }}
+              </td>
+              <td class="py-3.5 px-4 font-semibold text-emerald-600">
+                ₹ {{ inv.paid_amount }}
+                <span class="text-[10px] text-slate-400">({{ inv.get_payment_method_display }})</span>
+              </td>
+              <td class="py-3.5 px-4 font-bold {% if inv.balance_due > 0 %}text-rose-600{% else %}text-slate-400{% endif %}">
+                ₹ {{ inv.balance_due }}
+              </td>
+              <td class="py-3.5 px-4">
+                <span class="px-2 py-1 rounded-md text-[10px] font-bold uppercase {% if inv.payment_status == 'paid' %}bg-emerald-100 text-emerald-800{% elif inv.payment_status == 'partial' %}bg-amber-100 text-amber-800{% else %}bg-rose-100 text-rose-800{% endif %}">
+                  {{ inv.get_payment_status_display }}
+                </span>
+              </td>
+              <td class="py-3.5 px-4 text-right">
+                <div class="inline-flex items-center gap-1.5">
+                  <a href="{{ inv.whatsapp_receipt_url }}" target="_blank" class="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] flex items-center gap-1 transition" title="WhatsApp Receipt">
+                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                    <span>WhatsApp</span>
+                  </a>
+                  <a href="/crm/invoice/{{ inv.id }}/print/" target="_blank" class="p-1 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition" title="Print Bill">
+                    <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="8" class="py-8 text-center text-slate-400">No invoices recorded yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL: ISSUE TOKEN / CHECK-IN PATIENT -->
+<div id="token-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+      <h3 class="font-heading font-black text-lg text-slate-900">Issue Waiting Room Token</h3>
+      <button onclick="closeModal('token-modal')" class="text-slate-400 hover:text-slate-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <form id="token-form" onsubmit="handleTokenSubmit(event)" class="space-y-4 pt-4 text-xs">
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Select Patient</label>
+        <select name="patient_id" required class="w-full p-2.5 rounded-xl border border-slate-200 text-sm">
+          {% for p in patients %}
+          <option value="{{ p.id }}">{{ p.full_name }} ({{ p.age_display }}) - {{ p.phone }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Clinic Practice</label>
+        <select name="clinic_type" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm">
+          <option value="dental">Roots Dental Clinic (Dr. Sabina Firoj Shaikh)</option>
+          <option value="pediatric">Buds Child Clinic (Dr. Jalil S. Mujawar)</option>
+        </select>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Reason for Visit / Chief Complaint</label>
+        <input type="text" name="reason" placeholder="e.g. Tooth pain, 6-week vaccination, fever" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm" required>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Token Type</label>
+        <select name="token_type" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm">
+          <option value="walk_in">Walk-in Patient</option>
+          <option value="appointment">Prior Scheduled Appointment</option>
+        </select>
+      </div>
+      <div class="pt-2 flex justify-end gap-2">
+        <button type="button" onclick="closeModal('token-modal')" class="px-4 py-2 rounded-xl text-slate-600 font-semibold hover:bg-slate-100">Cancel</button>
+        <button type="submit" class="px-4 py-2 rounded-xl bg-rose-500 text-white font-bold hover:bg-rose-600">Issue Token &rarr;</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: CREATE NEW FAMILY -->
+<div id="family-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+      <h3 class="font-heading font-black text-lg text-slate-900">Create Unified Family Profile</h3>
+      <button onclick="closeModal('family-modal')" class="text-slate-400 hover:text-slate-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <form id="family-form" onsubmit="handleFamilySubmit(event)" class="space-y-3 pt-4 text-xs">
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Family Surname / Profile Name</label>
+        <input type="text" name="family_name" placeholder="e.g. Sharma Family" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm" required>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Primary Contact Name (Head of Family)</label>
+        <input type="text" name="primary_contact_name" placeholder="e.g. Rajesh Sharma" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm" required>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Primary WhatsApp Phone</label>
+        <input type="tel" name="primary_phone" placeholder="9822012345" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm" required>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Residential Address (Wanowrie / Pune)</label>
+        <input type="text" name="address" placeholder="Flat No, Society, Wanowrie" value="Wanowrie, Pune" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm">
+      </div>
+      <div class="pt-2 flex justify-end gap-2">
+        <button type="button" onclick="closeModal('family-modal')" class="px-4 py-2 rounded-xl text-slate-600 font-semibold hover:bg-slate-100">Cancel</button>
+        <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700">Save Family Profile</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: ADD DEPENDENT MEMBER TO FAMILY -->
+<div id="member-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+      <h3 class="font-heading font-black text-lg text-slate-900">Add Child Dependent / Relative</h3>
+      <button onclick="closeModal('member-modal')" class="text-slate-400 hover:text-slate-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <form id="member-form" onsubmit="handlePatientSubmit(event)" class="space-y-3 pt-4 text-xs">
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Select Family Record</label>
+        <select name="family_id" required class="w-full p-2.5 rounded-xl border border-slate-200 text-sm">
+          {% for f in families %}
+          <option value="{{ f.id }}">{{ f.family_name }} ({{ f.primary_phone }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Member Full Name</label>
+        <input type="text" name="full_name" placeholder="e.g. Anvi Sharma" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm" required>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Relationship</label>
+          <select name="relationship_to_head" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm">
+            <option value="Child">Child / Dependent</option>
+            <option value="Spouse">Spouse</option>
+            <option value="Parent">Parent</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Age (Years)</label>
+          <input type="number" name="age_years" value="3" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm" required>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Gender</label>
+          <select name="gender" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm">
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Blood Group</label>
+          <input type="text" name="blood_group" value="O+" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm">
+        </div>
+      </div>
+      <div class="pt-2 flex justify-end gap-2">
+        <button type="button" onclick="closeModal('member-modal')" class="px-4 py-2 rounded-xl text-slate-600 font-semibold hover:bg-slate-100">Cancel</button>
+        <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700">Add Dependent</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: GENERATE INVOICE -->
+<div id="invoice-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+      <h3 class="font-heading font-black text-lg text-slate-900">Generate Bill &amp; Record Payment</h3>
+      <button onclick="closeModal('invoice-modal')" class="text-slate-400 hover:text-slate-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <form id="invoice-form" onsubmit="handleInvoiceSubmit(event)" class="space-y-3 pt-4 text-xs">
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Patient</label>
+        <select name="patient_id" required class="w-full p-2.5 rounded-xl border border-slate-200 text-sm">
+          {% for p in patients %}
+          <option value="{{ p.id }}">{{ p.full_name }} ({{ p.phone }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Clinic Specialty</label>
+        <select name="clinic_type" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm">
+          <option value="dental">Roots Dental Clinic (Dr. Sabina)</option>
+          <option value="pediatric">Buds Child Clinic (Dr. Jalil)</option>
+        </select>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Treatment Description</label>
+        <input type="text" name="item_description" placeholder="e.g. Root canal therapy, Vaccination, Dental scaling" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm" required>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Total Fee (₹)</label>
+          <input type="number" id="inv-total" name="total_amount" value="2500" step="50" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm" required>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Paid Amount (₹)</label>
+          <input type="number" id="inv-paid" name="paid_amount" value="2500" step="50" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm" required>
+        </div>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Payment Method</label>
+        <select name="payment_method" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm">
+          <option value="upi">UPI / GPay / PhonePe / QR</option>
+          <option value="cash">Cash</option>
+          <option value="card">Card / POS</option>
+          <option value="partial">Partial Advance</option>
+        </select>
+      </div>
+      <div class="pt-2 flex justify-end gap-2">
+        <button type="button" onclick="closeModal('invoice-modal')" class="px-4 py-2 rounded-xl text-slate-600 font-semibold hover:bg-slate-100">Cancel</button>
+        <button type="submit" class="px-4 py-2 rounded-xl bg-slate-900 text-white font-bold hover:bg-slate-800">Generate &amp; Open Receipt</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.hub-tab-content').forEach(el => el.classList.add('hidden'));
+    document.getElementById(tabId).classList.remove('hidden');
+
+    document.querySelectorAll('#hub-tabs button').forEach(btn => {
+      btn.classList.remove('border-rose-500', 'text-rose-600');
+      btn.classList.add('border-transparent', 'text-slate-500');
+    });
+
+    const activeBtn = document.getElementById('btn-' + tabId);
+    if (activeBtn) {
+      activeBtn.classList.remove('border-transparent', 'text-slate-500');
+      activeBtn.classList.add('border-rose-500', 'text-rose-600');
+    }
+  }
+
+  function openModal(id) {
+    document.getElementById(id).classList.remove('hidden');
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.add('hidden');
+  }
+
+  // Queue Status Updater
+  async function updateQueueStatus(entryId, newStatus) {
+    try {
+      const res = await fetch('/crm/api/queue/status/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entry_id: entryId, status: newStatus })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        window.location.reload();
+      } else {
+        alert('Error: ' + data.message);
+      }
+    } catch (e) {
+      alert('Network request failed');
+    }
+  }
+
+  // Appointment Status Updater
+  async function markRequestAccepted(reqId) {
+    try {
+      await fetch(`/api/requests/${reqId}/status/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'accepted' })
+      });
+    } catch (e) {}
+  }
+
+  // Issue Token Form
+  async function handleTokenSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = {
+      patient_id: form.patient_id.value,
+      clinic_type: form.clinic_type.value,
+      reason: form.reason.value,
+      token_type: form.token_type.value
+    };
+    const res = await fetch('/crm/api/queue/add/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (result.status === 'success') {
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.message);
+    }
+  }
+
+  // Family Form
+  async function handleFamilySubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = {
+      family_name: form.family_name.value,
+      primary_contact_name: form.primary_contact_name.value,
+      primary_phone: form.primary_phone.value,
+      address: form.address.value
+    };
+    const res = await fetch('/crm/api/family/add/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (result.status === 'success') {
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.message);
+    }
+  }
+
+  // Patient / Dependent Form
+  async function handlePatientSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = {
+      family_id: form.family_id.value,
+      full_name: form.full_name.value,
+      relationship_to_head: form.relationship_to_head.value,
+      age_years: form.age_years.value,
+      gender: form.gender.value,
+      blood_group: form.blood_group.value,
+      is_child: true
+    };
+    const res = await fetch('/crm/api/patient/add/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (result.status === 'success') {
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.message);
+    }
+  }
+
+  // Invoice Form
+  async function handleInvoiceSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = {
+      patient_id: form.patient_id.value,
+      clinic_type: form.clinic_type.value,
+      item_description: form.item_description.value,
+      total_amount: form.total_amount.value,
+      paid_amount: form.paid_amount.value,
+      payment_method: form.payment_method.value
+    };
+    const res = await fetch('/crm/api/invoice/create/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (result.status === 'success') {
+      if (result.whatsapp_url) {
+        window.open(result.whatsapp_url, '_blank');
+      }
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.message);
+    }
+  }
+</script>
+{% endblock %}

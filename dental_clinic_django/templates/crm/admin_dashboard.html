@@ -1,0 +1,341 @@
+{% extends "crm/base_crm.html" %}
+
+{% block title %}Owner Master Command Center | Roots &amp; Buds CRM{% endblock %}
+
+{% block page_title %}
+<span class="text-indigo-500">👑</span> Owner Command Center &bull; Master Financials &amp; Audit
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <!-- Admin Master Header Banner -->
+  <div class="bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold mb-2">
+          <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+          <span>Executive Oversight &bull; Roots Dental &amp; Buds Child Clinic</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-heading font-black tracking-tight text-white">
+          Clinic Director &amp; Super-Admin
+        </h1>
+        <p class="text-indigo-200/80 text-xs sm:text-sm mt-0.5 font-medium">
+          Logged in as {{ user.email }} &bull; Unrestricted master access across clinical, financial &amp; audit domains.
+        </p>
+      </div>
+
+      <!-- System Backup & Export -->
+      <div class="flex items-center gap-2">
+        <a href="/crm/api/admin/export/json/" class="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-heading font-bold text-xs flex items-center gap-1.5 backdrop-blur-md transition shadow-sm">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          <span>Full JSON Backup</span>
+        </a>
+        <a href="/crm/api/admin/export/csv/" class="px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-heading font-bold text-xs flex items-center gap-1.5 transition shadow-lg shadow-indigo-600/30">
+          <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+          <span>Export CSV</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Master Financial KPI Summary -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Billed</p>
+        <p class="text-2xl sm:text-3xl font-heading font-black text-slate-900 mt-1">₹ {{ total_revenue }}</p>
+        <span class="text-[10px] text-slate-400">Across both practices</span>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+        <i data-lucide="trending-up" class="w-6 h-6"></i>
+      </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Collected</p>
+        <p class="text-2xl sm:text-3xl font-heading font-black text-emerald-600 mt-1">₹ {{ total_collected }}</p>
+        <span class="text-[10px] text-emerald-600 font-semibold">Realized cash/UPI</span>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+        <i data-lucide="badge-check" class="w-6 h-6"></i>
+      </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Outstanding Dues</p>
+        <p class="text-2xl sm:text-3xl font-heading font-black text-rose-600 mt-1">₹ {{ total_outstanding }}</p>
+        <span class="text-[10px] text-rose-600">Pending patient balance</span>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center">
+        <i data-lucide="clock" class="w-6 h-6"></i>
+      </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Registered Patients</p>
+        <p class="text-2xl sm:text-3xl font-heading font-black text-sky-600 mt-1">{{ total_patients }}</p>
+        <span class="text-[10px] text-slate-400">In {{ total_families }} families</span>
+      </div>
+      <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center">
+        <i data-lucide="users" class="w-6 h-6"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dual-Doctor Revenue Comparison & Payment Channels -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- Doctor Collections Split -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h3 class="font-heading font-black text-base text-slate-900">Revenue Split by Medical Practice</h3>
+          <p class="text-xs text-slate-500">Comparative collection metrics between Dental &amp; Pediatric wings.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <!-- Dr. Sabina -->
+        <div class="p-4 rounded-2xl bg-sky-50/60 border border-sky-200/80 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-lg">🦷</span>
+            <span class="text-[10px] uppercase font-bold text-sky-700 bg-sky-100 px-2 py-0.5 rounded">Dental Care</span>
+          </div>
+          <div>
+            <h4 class="font-heading font-bold text-sm text-slate-900">Dr. Sabina Shaikh</h4>
+            <p class="text-2xl font-heading font-black text-sky-900 mt-1">₹ {{ dental_revenue }}</p>
+          </div>
+          <p class="text-[11px] text-slate-500">Endodontics, Crowns, Implants &amp; Hygiene</p>
+        </div>
+
+        <!-- Dr. Jalil -->
+        <div class="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200/80 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-lg">👶</span>
+            <span class="text-[10px] uppercase font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">Child Clinic</span>
+          </div>
+          <div>
+            <h4 class="font-heading font-bold text-sm text-slate-900">Dr. Jalil Mujawar</h4>
+            <p class="text-2xl font-heading font-black text-emerald-900 mt-1">₹ {{ pediatric_revenue }}</p>
+          </div>
+          <p class="text-[11px] text-slate-500">Pediatric Consultations, Vaccines &amp; Neonatal</p>
+        </div>
+      </div>
+
+      <!-- Visual Percentage Bar -->
+      <div class="space-y-1.5 pt-2">
+        <div class="flex justify-between text-xs font-semibold">
+          <span class="text-sky-700">Roots Dental</span>
+          <span class="text-emerald-700">Buds Child Care</span>
+        </div>
+        <div class="h-3 rounded-full bg-slate-100 overflow-hidden flex">
+          <div class="bg-sky-500 h-full" style="width: 60%"></div>
+          <div class="bg-emerald-500 h-full" style="width: 40%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Methods Breakdown & Review Automation -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h3 class="font-heading font-black text-base text-slate-900">Payment Collection Channels</h3>
+          <p class="text-xs text-slate-500">UPI, Card Machine POS, and Cash settlement summary.</p>
+        </div>
+      </div>
+
+      <div class="space-y-2.5">
+        {% for p in payment_by_method %}
+        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-white border border-slate-200 flex items-center justify-center font-bold text-xs text-slate-700">
+              {% if p.payment_method == 'upi' %}📱{% elif p.payment_method == 'cash' %}💵{% else %}💳{% endif %}
+            </span>
+            <div>
+              <p class="font-bold text-xs text-slate-900 uppercase">{{ p.payment_method }}</p>
+              <p class="text-[10px] text-slate-400">{{ p.count }} Invoices Settled</p>
+            </div>
+          </div>
+          <span class="font-heading font-black text-sm text-slate-900">₹ {{ p.total }}</span>
+        </div>
+        {% empty %}
+        <p class="text-xs text-slate-400">No payment data recorded yet.</p>
+        {% endfor %}
+      </div>
+
+      <!-- Google Review Automation Setting Card -->
+      <div class="p-4 rounded-2xl bg-indigo-50/60 border border-indigo-200/80 flex items-center justify-between">
+        <div>
+          <h4 class="font-bold text-xs text-indigo-950 flex items-center gap-1.5">
+            <i data-lucide="star" class="w-3.5 h-3.5 text-amber-500 fill-amber-500"></i>
+            <span>Google Reviews Auto-Invite</span>
+          </h4>
+          <p class="text-[11px] text-indigo-700 mt-0.5">Automatically trigger review request via WhatsApp after bill clearance.</p>
+        </div>
+        <input type="checkbox" checked class="h-4 w-4 rounded text-indigo-600 focus:ring-0">
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Staff Accounts & Permissions -->
+  <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+      <div>
+        <h3 class="font-heading font-black text-base text-slate-900">Clinic Staff Accounts &amp; RBAC Roles</h3>
+        <p class="text-xs text-slate-500">Manage user credentials, medical modules, and dashboard permissions.</p>
+      </div>
+      <button onclick="openModal('staff-modal')" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 transition">
+        <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+        <span>Add Staff Account</span>
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {% for s in staff_members %}
+      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="w-8 h-8 rounded-xl {{ s.avatar_color }} text-white flex items-center justify-center font-bold text-xs">
+              {% if s.role == 'admin' %}👑{% elif s.role == 'doctor_dental' %}🦷{% elif s.role == 'doctor_pediatric' %}👶{% else %}📋{% endif %}
+            </span>
+            <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase {% if s.role == 'admin' %}bg-indigo-100 text-indigo-800{% elif s.role == 'doctor_dental' %}bg-sky-100 text-sky-800{% elif s.role == 'doctor_pediatric' %}bg-emerald-100 text-emerald-800{% else %}bg-rose-100 text-rose-800{% endif %}">
+              {{ s.get_role_display }}
+            </span>
+          </div>
+          <h4 class="font-heading font-bold text-sm text-slate-900">{{ s.full_name }}</h4>
+          <p class="text-[11px] font-mono text-slate-500 mt-0.5 truncate">{{ s.user.email }}</p>
+          <p class="text-[10px] text-slate-400 mt-2 truncate">{{ s.specialty }}</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-200/60 flex items-center justify-between text-[11px]">
+          <span class="text-emerald-600 font-semibold flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
+          </span>
+          <span class="text-slate-400 font-mono">{{ s.phone }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Immutable Audit Log Trail -->
+  <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+      <div>
+        <h3 class="font-heading font-black text-base text-slate-900 flex items-center gap-2">
+          <i data-lucide="history" class="w-4 h-4 text-indigo-600"></i>
+          <span>System Audit Trail Log</span>
+        </h3>
+        <p class="text-xs text-slate-500">Complete traceability of every bill edit, token status transition, and clinical entry.</p>
+      </div>
+      <span class="text-xs text-slate-400 font-mono">{{ audit_logs.count }} Recent Logged Events</span>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs">
+        <thead class="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-100">
+          <tr>
+            <th class="py-2.5 px-4">Timestamp</th>
+            <th class="py-2.5 px-4">Staff User</th>
+            <th class="py-2.5 px-4">Action</th>
+            <th class="py-2.5 px-4">Entity</th>
+            <th class="py-2.5 px-4">Summary Description</th>
+            <th class="py-2.5 px-4">IP Address</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 font-sans">
+          {% for log in audit_logs %}
+          <tr class="hover:bg-slate-50/50">
+            <td class="py-3 px-4 font-mono text-slate-400 whitespace-nowrap">{{ log.timestamp|date:"d M H:i:s" }}</td>
+            <td class="py-3 px-4 font-bold text-slate-800">{{ log.user_email }}</td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase {% if log.action_type == 'CREATE' %}bg-emerald-100 text-emerald-800{% elif log.action_type == 'BILLING' %}bg-indigo-100 text-indigo-800{% elif log.action_type == 'STATUS_CHANGE' %}bg-amber-100 text-amber-800{% else %}bg-slate-100 text-slate-700{% endif %}">
+                {{ log.action_type }}
+              </span>
+            </td>
+            <td class="py-3 px-4 font-mono text-slate-600">{{ log.target_model }}:{{ log.target_id }}</td>
+            <td class="py-3 px-4 text-slate-700">{{ log.summary }}</td>
+            <td class="py-3 px-4 font-mono text-slate-400">{{ log.ip_address }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="py-6 text-center text-slate-400">No audit events recorded yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL: ADD STAFF ACCOUNT -->
+<div id="staff-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+      <h3 class="font-heading font-black text-base text-slate-900">Create Staff Account &amp; Assign Role</h3>
+      <button onclick="closeModal('staff-modal')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <form id="staff-form" onsubmit="handleStaffSubmit(event)" class="space-y-3 pt-3 text-xs">
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Full Name</label>
+        <input type="text" name="full_name" placeholder="e.g. Dr. Ramesh Gupta" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm" required>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Login Email</label>
+        <input type="email" name="email" placeholder="staff@rootsbuds.com" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm" required>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Role &amp; Permissions</label>
+        <select name="role" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm">
+          <option value="front_desk">Front Desk (No Clinical/Financial Access)</option>
+          <option value="doctor_dental">Dr. Sabina Dental Practice</option>
+          <option value="doctor_pediatric">Dr. Jalil Pediatric Practice</option>
+          <option value="admin">Owner / Super Admin (Unrestricted)</option>
+        </select>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Temporary Password</label>
+        <input type="text" name="password" value="Roots@2026" class="w-full p-2.5 rounded-xl border border-slate-200 text-sm" required>
+      </div>
+      <div class="pt-2 flex justify-end gap-2">
+        <button type="button" onclick="closeModal('staff-modal')" class="px-4 py-2 rounded-xl text-slate-600 font-semibold hover:bg-slate-100">Cancel</button>
+        <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700">Create Account</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+  function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+  async function handleStaffSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const res = await fetch('/crm/api/admin/staff/add/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        full_name: form.full_name.value,
+        email: form.email.value,
+        role: form.role.value,
+        password: form.password.value
+      })
+    });
+    const data = await res.json();
+    if (data.status === 'success') {
+      window.location.reload();
+    } else {
+      alert('Error: ' + data.message);
+    }
+  }
+</script>
+{% endblock %}
