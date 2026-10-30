@@ -5,218 +5,162 @@
 
 {% block content %}
 
-<!-- HERO SECTION: BUDS CHILD CLINIC (APPLE LIQUID UI & POLISHED MESH BACKDROP) -->
-<section class="relative pt-4 sm:pt-6 pb-12 lg:py-20 overflow-hidden liquid-mesh-green border-b border-slate-100">
-  <!-- Subtle ambient decorative glow -->
-  <div class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-pediatric-500/10 blur-3xl pointer-events-none"></div>
-  <div class="absolute top-1/2 -right-32 w-96 h-96 rounded-full bg-emerald-400/10 blur-3xl pointer-events-none"></div>
-
+<!-- ======================================================== -->
+<!-- HERO SECTION: BUDS CHILD CLINIC (EDITORIAL MAGAZINE-STYLE)-->
+<!-- ======================================================== -->
+<section class="relative pt-6 pb-16 lg:py-24 overflow-hidden sanctuary-mesh-pediatric border-b border-slate-100">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
 
-    <!-- MOBILE-FIRST HERO (< md): NATIVE IOS APP LAYOUT (DOCTOR PROMINENT IN FIRST VIEWPORT) -->
-    <div class="block md:hidden space-y-4 text-center">
+    <!-- ---------------------------------------------------- -->
+    <!-- MOBILE HERO (< md): CLEAN NATIVE APP LAYOUT          -->
+    <!-- ---------------------------------------------------- -->
+    <div class="block md:hidden text-left space-y-6">
       
-      <!-- Top Clinic Switcher Capsules (iOS Inset Style) -->
-      <div class="inline-flex p-1 rounded-full bg-slate-200/60 backdrop-blur-md border border-white/80 shadow-xs mb-1">
-        <a href="/dental/" class="px-4 py-1.5 rounded-full text-xs font-heading font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
-          <span>🦷</span>
-          <span>Roots Dental</span>
-        </a>
-        <a href="/pediatric/" class="px-4 py-1.5 rounded-full text-xs font-heading font-bold bg-white text-pediatric-800 shadow-sm flex items-center gap-1.5">
-          <span>👶</span>
-          <span>Buds Child</span>
+      <!-- Eyebrow Pill -->
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200/80">
+        <span class="w-1.5 h-1.5 rounded-full bg-pediatric-600"></span>
+        <span class="text-[11px] font-heading font-semibold uppercase tracking-wider text-slate-700">
+          Wanowrie's Trusted Child Clinic
+        </span>
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="text-4xl font-heading font-extrabold text-slate-900 tracking-tight leading-[1.08]">
+        Expert Neonatal &amp;<br />Pediatric Care.
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="text-sm text-slate-600 font-sans leading-relaxed">
+        Led by Dr. Jalil S. Mujawar, Senior Consultant Pediatrician (MBBS, DCH). Dedicated newborn intensive care, painless IAP vaccinations, and growth milestone guidance for your child.
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3 w-full pt-1">
+        <button type="button" 
+                onclick="window.openBookingModal('pediatric')" 
+                class="flex-1 py-3.5 px-5 rounded-full font-heading font-bold text-xs text-white bg-slate-900 hover:bg-slate-800 shadow-md active:scale-95 transition flex items-center justify-center gap-2 cursor-pointer">
+          <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+          <span>Book Child Visit</span>
+        </button>
+
+        <a href="#reels" 
+           class="px-5 py-3.5 rounded-full font-heading font-semibold text-xs text-slate-700 bg-white border border-slate-200/80 active:scale-95 transition flex items-center justify-center gap-1.5">
+          <span>Parent Reels</span>
+          <i data-lucide="play" class="w-3 h-3 text-slate-400"></i>
         </a>
       </div>
 
-      <!-- Doctor Showcase Center Stage with iOS Floating Glass Micro-Capsules -->
-      <div class="relative w-full max-w-[320px] mx-auto pt-4">
-        
-        <!-- Glowing Frosted Pedestal -->
-        <div class="relative rounded-3xl bg-gradient-to-b from-white/90 via-white/70 to-pediatric-50/80 p-3 pt-6 border border-white shadow-xl backdrop-blur-xl flex items-end justify-center min-h-[340px]">
-          
-          <!-- High-Res Cutout Image of Dr. Jalil -->
+      <!-- Borderless Editorial Portrait Placement (Zero Floating Badges) -->
+      <div class="editorial-portrait pt-4">
+        <div class="relative w-full max-w-sm mx-auto overflow-hidden">
           <img src="{% static 'images/pediatrician_jalil.png' %}" 
                alt="Dr. Jalil S. Mujawar - Senior Pediatric Consultant Wanowrie" 
-               class="relative z-10 w-auto h-[320px] object-contain drop-shadow-[0_15px_25px_rgba(74,124,89,0.25)]"
+               class="w-full h-auto max-h-[380px] object-contain object-bottom mx-auto"
                onerror="this.src='{% static 'images/pediatrician_jalil_full.jpg' %}';">
-
-          <!-- Micro Floating iOS Glass Capsule 1 (Top Left) -->
-          <div class="animate-float glass-capsule absolute top-2 -left-2 z-20 px-3 py-1.5 rounded-full flex items-center gap-1.5">
-            <span class="text-xs">🍼</span>
-            <span class="text-[11px] font-heading font-bold text-slate-800">Newborn Care</span>
-          </div>
-
-          <!-- Micro Floating iOS Glass Capsule 2 (Top Right) -->
-          <div class="animate-float-delayed glass-capsule absolute top-2 -right-2 z-20 px-3 py-1.5 rounded-full flex items-center gap-1.5">
-            <span class="text-xs">🛡️</span>
-            <span class="text-[11px] font-heading font-bold text-pediatric-700">75k+ Parents</span>
-          </div>
-
-          <!-- Micro Floating iOS Glass Capsule 3 (Bottom) -->
-          <div class="glass-capsule absolute -bottom-3 inset-x-8 z-20 py-1.5 px-3 rounded-full flex items-center justify-center gap-1.5 mx-auto">
-            <span class="text-xs">⭐</span>
-            <span class="text-[11px] font-heading font-semibold text-slate-800">15+ Yrs Pediatric Mastery</span>
-          </div>
-
         </div>
-
       </div>
 
-      <!-- Punchy Headline & Value Copy -->
-      <div class="pt-4 space-y-2">
-        <h1 class="text-3xl font-heading font-extrabold text-slate-900 leading-tight tracking-tight">
-          Expert Neonatal &amp; <span class="text-transparent bg-clip-text bg-gradient-to-r from-pediatric-600 to-pediatric-800">Child Care.</span>
-        </h1>
-        <p class="text-xs text-slate-500 font-sans max-w-sm mx-auto leading-relaxed">
-          Led by <strong class="text-slate-800">Dr. Jalil S. Mujawar</strong> (Senior Consultant Pediatrician, MBBS, DCH). Trusted newborn guidance &amp; painless IAP vaccines.
-        </p>
+      <!-- Doctor Introduction (Directly below name in elegant, muted typography) -->
+      <div class="p-4 rounded-2xl bg-white border border-slate-200/70 shadow-xs text-center">
+        <h3 class="font-heading font-bold text-slate-900 text-base leading-tight">Dr. Jalil S. Mujawar</h3>
+        <p class="text-xs text-slate-500 font-sans mt-0.5">Senior Consultant Pediatrician &amp; Neonatologist &bull; MBBS, DCH</p>
+        <p class="text-[11px] text-slate-400 font-sans mt-0.5">15+ Years Clinical Mastery &bull; Trusted by 75,000+ Pune Families</p>
       </div>
 
-      <!-- Direct 1-Tap Booking Pill (Opens Zero-Scroll iOS Sheet) -->
-      <div class="pt-2">
-        <button type="button" onclick="window.openBookingModal('pediatric')" class="w-full py-4 px-6 rounded-full font-heading font-bold text-sm text-white bg-gradient-to-r from-pediatric-600 to-pediatric-700 shadow-xl shadow-pediatric-700/25 active:scale-95 transition-all flex items-center justify-center gap-2">
-          <i data-lucide="calendar" class="w-4 h-4"></i>
-          <span>Book Child Consultation &bull; 60s Request</span>
-        </button>
-      </div>
-
-      <!-- EXACT "Trusted by 75,400+ Mothers" Shield Badge -->
-      <div class="animate-pulse-soft mt-3 bg-gradient-to-r from-pediatric-700 to-pediatric-800 text-white rounded-2xl p-3.5 shadow-md flex items-center justify-center gap-3 max-w-xs mx-auto">
-        <div class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white text-lg flex-shrink-0">
-          <i data-lucide="shield-check" class="w-5 h-5 text-emerald-300"></i>
+      <!-- Metrics Row -->
+      <div class="grid grid-cols-3 gap-3 pt-2">
+        <div class="p-3 rounded-2xl bg-white border border-slate-100 text-center">
+          <div class="font-heading font-black text-slate-900 text-base">75.4k+</div>
+          <div class="text-[10px] text-slate-500 font-medium">Families Consulted</div>
         </div>
-        <div class="text-left">
-          <div class="font-heading font-black text-xs sm:text-sm tracking-tight leading-none text-white">
-            Trusted by 75,400+ Mothers
-          </div>
-          <div class="text-[10px] text-emerald-200 mt-0.5">Wanowrie &amp; South Pune Families</div>
+        <div class="p-3 rounded-2xl bg-white border border-slate-100 text-center">
+          <div class="font-heading font-black text-pediatric-700 text-base">100%</div>
+          <div class="text-[10px] text-slate-500 font-medium">Cold-Chain Vaccines</div>
+        </div>
+        <div class="p-3 rounded-2xl bg-white border border-slate-100 text-center">
+          <div class="font-heading font-black text-slate-900 text-base">NICU</div>
+          <div class="text-[10px] text-slate-500 font-medium">Newborn Specialist</div>
         </div>
       </div>
 
     </div>
 
 
-    <!-- DESKTOP HERO (>= md): LUXURIOUS POLISHED 2-COLUMN VIEW -->
-    <div class="hidden md:grid md:grid-cols-12 gap-8 lg:gap-12 items-center">
+    <!-- ---------------------------------------------------- -->
+    <!-- DESKTOP HERO (>= md): EDITORIAL 2-COLUMN VIEW        -->
+    <!-- ---------------------------------------------------- -->
+    <div class="hidden md:grid md:grid-cols-12 gap-10 lg:gap-16 items-center">
 
-      <!-- Left Column: Copy & Pediatric Authority -->
-      <div class="md:col-span-7 space-y-6 text-left">
-        <!-- Eyebrow Badge -->
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200/80 shadow-xs backdrop-blur-md">
-          <span class="w-2 h-2 rounded-full bg-pediatric-600 animate-ping"></span>
-          <span class="text-xs font-heading font-semibold text-pediatric-800 tracking-wide uppercase">
-            Wanowrie's Trusted Pediatric Sanctuary &bull; 15+ Yrs Experience
+      <!-- Left Column: Copy & Authority -->
+      <div class="md:col-span-7 space-y-7 text-left">
+        
+        <!-- Eyebrow Pill -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100/90 border border-slate-200/80">
+          <span class="w-2 h-2 rounded-full bg-pediatric-600"></span>
+          <span class="text-xs font-heading font-semibold uppercase tracking-wider text-slate-700">
+            Wanowrie's Trusted Child Sanctuary &bull; 15+ Yrs Experience
           </span>
         </div>
 
         <!-- Main Headline -->
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-heading font-extrabold text-slate-900 leading-[1.12] tracking-tight">
-          Expert Neonatal &amp; <span class="text-transparent bg-clip-text bg-gradient-to-r from-pediatric-600 to-pediatric-800">Child Care.</span>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-heading font-extrabold text-slate-900 leading-[1.1] tracking-tight">
+          Expert Neonatal &amp;<br />Child Care in <span class="text-pediatric-700 font-serif italic">Wanowrie.</span>
         </h1>
 
         <!-- Supporting Paragraph -->
         <p class="text-slate-600 text-base sm:text-lg leading-relaxed max-w-2xl font-sans">
-          Led by <strong class="text-slate-800 font-semibold">Dr. Jalil S. Mujawar</strong>, Senior Consultant Pediatrician (MBBS, DCH). From your newborn's first critical checkup and painless IAP vaccinations to developmental milestone assessments, we care for your child like family.
+          Led by <strong class="text-slate-900 font-semibold">Dr. Jalil S. Mujawar</strong>, Senior Consultant Pediatrician (MBBS, DCH). From your newborn's critical first checkup and painless IAP vaccinations to developmental milestone screenings, we care for your child with empathy and clinical precision.
         </p>
 
         <!-- CTA Buttons -->
-        <div class="flex flex-wrap items-center gap-4 pt-2">
-          <button type="button" onclick="window.openBookingModal('pediatric')" class="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-heading font-bold text-sm text-white bg-gradient-to-r from-pediatric-600 to-pediatric-700 hover:from-pediatric-700 hover:to-pediatric-800 shadow-xl shadow-pediatric-700/25 active:scale-95 transition-all duration-200">
+        <div class="flex items-center gap-4 pt-2">
+          <button type="button" 
+                  onclick="window.scrollToBooking('pediatric')" 
+                  class="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-heading font-bold text-sm text-white bg-slate-900 hover:bg-slate-800 shadow-md active:scale-95 transition duration-200 cursor-pointer">
             <i data-lucide="calendar" class="w-4 h-4"></i>
-            <span>Book Child Consultation</span>
+            <span>Reserve Child Consultation</span>
           </button>
           
-          <a href="#reels" class="inline-flex items-center gap-2 px-6 py-4 rounded-full font-heading font-semibold text-sm text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/80 shadow-xs hover:shadow transition-all duration-200">
-            <span>Watch Parent Reels</span>
-            <i data-lucide="play" class="w-4 h-4 text-pediatric-600"></i>
+          <a href="#reels" 
+             class="inline-flex items-center gap-2 px-7 py-4 rounded-full font-heading font-semibold text-sm text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/80 shadow-xs transition duration-200">
+            <span>Watch Parent Guidance</span>
+            <i data-lucide="play" class="w-3.5 h-3.5 text-slate-400"></i>
           </a>
         </div>
 
-        <!-- Trust Metric Strip (Hero Bottom) -->
-        <div class="grid grid-cols-3 gap-6 pt-6 border-t border-slate-200/70 max-w-lg">
+        <!-- Trust Metric Strip -->
+        <div class="grid grid-cols-3 gap-8 pt-8 border-t border-slate-200/80 max-w-lg">
           <div>
-            <div class="text-2xl sm:text-3xl font-heading font-black text-pediatric-700 leading-none">75.4k+</div>
-            <div class="text-xs text-slate-700 font-semibold mt-1">Parents Consulted</div>
-            <div class="text-xs font-sans text-slate-500 font-medium">Over 15 Years</div>
+            <div class="text-3xl font-heading font-black text-slate-900 leading-none">75.4k+</div>
+            <div class="text-xs font-sans text-slate-500 font-medium mt-1">Families Consulted</div>
           </div>
           <div>
-            <div class="text-2xl sm:text-3xl font-heading font-black text-slate-900 leading-none">100%</div>
-            <div class="text-xs text-emerald-600 font-semibold mt-1">IAP Cold-Chain</div>
-            <div class="text-xs font-sans text-slate-500 font-medium">Safe Vaccines</div>
+            <div class="text-3xl font-heading font-black text-pediatric-700 leading-none">100%</div>
+            <div class="text-xs font-sans text-slate-500 font-medium mt-1">IAP Cold-Chain Certified</div>
           </div>
           <div>
-            <div class="text-2xl sm:text-3xl font-heading font-black text-slate-900 leading-none">NICU</div>
-            <div class="text-xs text-pediatric-600 font-semibold mt-1">Trained Expert</div>
-            <div class="text-xs font-sans text-slate-500 font-medium">Newborn Specialist</div>
+            <div class="text-3xl font-heading font-black text-slate-900 leading-none">15+ Yrs</div>
+            <div class="text-xs font-sans text-slate-500 font-medium mt-1">Wanowrie Consultant</div>
           </div>
         </div>
 
       </div>
 
-      <!-- Right Column: Dr. Jalil Portrait & EXACT "Trusted by 75,400+ Mothers" Trust Badge -->
-      <div class="md:col-span-5 relative flex justify-center">
+      <!-- Right Column: Borderless Magazine Portrait Placement (Zero Floating Box/Badges) -->
+      <div class="md:col-span-5 relative flex flex-col items-center">
         
-        <!-- Doctor Image Card with Soft Green Glow -->
-        <div class="relative w-full max-w-lg rounded-4xl p-5 sm:p-7 glass-surface border border-white shadow-2xl backdrop-blur-2xl flex flex-col items-center">
-          
-          <!-- Image Container with Breakout Top -->
-          <div class="relative w-full rounded-3xl overflow-visible flex items-end justify-center min-h-[460px] lg:min-h-[500px] pt-8">
-            
-            <!-- Real High-Res Cutout Image of Dr. Jalil -->
-            <img src="{% static 'images/pediatrician_jalil.png' %}" 
-                 alt="Dr. Jalil S. Mujawar - Senior Pediatric Consultant Wanowrie" 
-                 class="relative z-10 w-auto h-[440px] lg:h-[480px] max-w-full object-contain drop-shadow-[0_25px_35px_rgba(74,124,89,0.25)] transition-transform duration-500 hover:scale-[1.03]"
-                 onerror="this.src='{% static 'images/pediatrician_jalil_full.jpg' %}';">
-
-            <!-- Subtle Inner Decorative Gradient Behind Cutout -->
-            <div class="absolute inset-x-4 bottom-0 top-20 bg-gradient-to-t from-pediatric-600/15 via-transparent to-transparent rounded-3xl -z-0"></div>
-
-          </div>
-
-          <!-- Doctor Info Tag -->
-          <div class="mt-4 text-center w-full pt-3.5 border-t border-slate-100">
-            <h3 class="font-heading font-bold text-slate-900 text-sm sm:text-base">Dr. Jalil S. Mujawar</h3>
-            <p class="text-[11px] sm:text-xs text-pediatric-700 font-semibold font-heading mt-0.5">MBBS &bull; DCH &bull; Senior Consultant Pediatrician</p>
-            <p class="text-[10px] sm:text-[11px] text-slate-500 font-sans mt-0.5">Specialist in Neonatology, Pediatric Nutrition &amp; Immunization</p>
-          </div>
-
-          <!-- HIGHLY STYLIZED TRUST BADGE WITH SHIELD ICON: EXACTLY "Trusted by 75,400+ Mothers" -->
-          <div class="animate-pulse-soft mt-4 w-full bg-gradient-to-r from-pediatric-700 to-pediatric-800 text-white rounded-2xl p-3.5 shadow-md flex items-center justify-center gap-3 border border-pediatric-600/50">
-            <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white text-lg flex-shrink-0">
-              <i data-lucide="shield-check" class="w-5 h-5 text-emerald-300"></i>
-            </div>
-            <div class="text-left">
-              <div class="font-heading font-black text-xs sm:text-sm tracking-tight leading-none text-white">
-                Trusted by 75,400+ Mothers
-              </div>
-              <div class="text-[10px] sm:text-[11px] font-sans text-emerald-200 mt-0.5">
-                Wanowrie &amp; South Pune Families
-              </div>
-            </div>
-          </div>
-
+        <div class="editorial-portrait w-full max-w-md">
+          <img src="{% static 'images/pediatrician_jalil.png' %}" 
+               alt="Dr. Jalil S. Mujawar - Senior Pediatrician Wanowrie" 
+               class="relative z-10 w-auto h-[460px] lg:h-[500px] max-w-full object-contain object-bottom drop-shadow-sm transition-transform duration-500 hover:scale-[1.02]"
+               onerror="this.src='{% static 'images/pediatrician_jalil_full.jpg' %}';">
         </div>
 
-        <!-- Refined Apple iOS Liquid Glass Micro-Capsule 1: Newborn Specialist (Upper Left) -->
-        <div class="animate-float glass-capsule absolute top-6 sm:top-8 -left-4 sm:-left-8 z-20 px-4 py-2.5 rounded-2xl flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-pediatric-600/15 text-pediatric-700 flex items-center justify-center text-sm font-bold border border-pediatric-200/60 shadow-xs">
-            🍼
-          </div>
-          <div>
-            <div class="font-heading font-bold text-slate-900 text-xs leading-none">Newborn Care</div>
-            <div class="text-[10px] text-slate-500 font-sans mt-0.5">NICU Specialist</div>
-          </div>
-        </div>
-
-        <!-- Refined Apple iOS Liquid Glass Micro-Capsule 2: 15+ Yrs Experience (Upper Right Shoulder Level - Repositioned Higher Up) -->
-        <div class="animate-float-delayed glass-capsule absolute top-28 sm:top-32 -right-3 sm:-right-8 z-20 px-4 py-2.5 rounded-2xl flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-emerald-600/15 text-emerald-700 flex items-center justify-center text-sm font-bold border border-emerald-200/60 shadow-xs">
-            ⭐
-          </div>
-          <div>
-            <div class="font-heading font-bold text-slate-900 text-xs leading-none">15+ Yrs Mastery</div>
-            <div class="text-[10px] text-slate-500 font-sans mt-0.5">Senior Consultant</div>
-          </div>
+        <!-- Muted Professional Typography Directly Below Name -->
+        <div class="mt-4 text-center w-full max-w-sm pt-4 border-t border-slate-200/80">
+          <h3 class="font-heading font-bold text-slate-900 text-lg leading-tight">Dr. Jalil S. Mujawar</h3>
+          <p class="text-xs text-slate-500 font-sans mt-0.5">Senior Consultant Pediatrician &amp; Neonatologist &bull; MBBS, DCH</p>
+          <p class="text-[11px] text-slate-400 font-sans mt-0.5">15+ Years of Clinical Mastery &bull; Trusted by 75,000+ Families</p>
         </div>
 
       </div>
@@ -227,106 +171,195 @@
 </section>
 
 
-<!-- PEDIATRIC SERVICES GRID: CLEAN GRID WITH HORIZONTAL SNAP ON MOBILE -->
-<section id="services" class="py-20 bg-pearl">
+<!-- ======================================================== -->
+<!-- TRUST STRIP: CLINICAL PEDIATRIC METRICS                  -->
+<!-- ======================================================== -->
+<section class="py-8 px-4 sm:px-6 lg:px-8 bg-white border-b border-slate-100">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <!-- Column 1: Newborn Safety -->
+      <div class="p-6 rounded-2xl bg-slate-50/60 border border-slate-200/60 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-white text-slate-700 flex items-center justify-center flex-shrink-0 border border-slate-200/80 shadow-xs">
+          <i data-lucide="baby" class="w-5 h-5 text-pediatric-700"></i>
+        </div>
+        <div>
+          <div class="font-heading font-bold text-slate-900 text-sm">Specialized Neonatal Care</div>
+          <p class="text-xs text-slate-500 font-sans mt-0.5">NICU-trained guidance for jaundice, feeding &amp; weight.</p>
+        </div>
+      </div>
+
+      <!-- Column 2: Cold Chain Vaccines -->
+      <div class="p-6 rounded-2xl bg-slate-50/60 border border-slate-200/60 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-white text-slate-700 flex items-center justify-center flex-shrink-0 border border-slate-200/80 shadow-xs">
+          <i data-lucide="shield-check" class="w-5 h-5 text-emerald-600"></i>
+        </div>
+        <div>
+          <div class="font-heading font-bold text-slate-900 text-sm">Strict Cold-Chain Vaccines</div>
+          <p class="text-xs text-slate-500 font-sans mt-0.5">IAP compliant protocols with digital vaccine reminders.</p>
+        </div>
+      </div>
+
+      <!-- Column 3: Milestone Audits -->
+      <div class="p-6 rounded-2xl bg-slate-50/60 border border-slate-200/60 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-white text-slate-700 flex items-center justify-center flex-shrink-0 border border-slate-200/80 shadow-xs">
+          <i data-lucide="line-chart" class="w-5 h-5 text-slate-700"></i>
+        </div>
+        <div>
+          <div class="font-heading font-bold text-slate-900 text-sm">WHO Milestone Tracking</div>
+          <p class="text-xs text-slate-500 font-sans mt-0.5">Physical growth percentiles and developmental audits.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ======================================================== -->
+<!-- SERVICES GRID: 6 PEDIATRIC SUITES (ZERO NATIVE EMOJIS)   -->
+<!-- ======================================================== -->
+<section id="services" class="py-20 bg-[#FAFBFD]">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     
     <!-- Section Header -->
-    <div class="text-center max-w-3xl mx-auto mb-14">
-      <span class="px-4 py-1.5 rounded-full bg-pediatric-100/80 text-pediatric-800 text-xs font-heading font-bold uppercase tracking-wider">
-        👶 Nurturing Every Milestone
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <span class="px-4 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-heading font-semibold uppercase tracking-wider">
+        Child Healthcare Spectrum
       </span>
-      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-heading font-black text-slate-900 mt-4 tracking-tight">
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-heading font-extrabold text-slate-900 mt-4 tracking-tight">
         Comprehensive Child Healthcare
       </h2>
-      <p class="text-slate-600 text-base mt-3 font-sans">
-        Evidence-based, empathetic medical care tailored for infants, children, and teenagers by Dr. Jalil S. Mujawar.
+      <p class="text-slate-600 text-sm sm:text-base mt-3 font-sans">
+        Empathetic, evidence-based medical care tailored for newborns, young children, and adolescents.
       </p>
     </div>
 
-    <!-- 4 Core Services Grid (Horizontal on mobile, 2x2 or 4x1 on desktop) -->
-    <div class="flex overflow-x-auto pb-4 gap-6 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-4 md:overflow-visible">
+    <!-- Cards Grid with Unified Spacing -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-      <!-- Service 1: Newborn Care -->
-      <div class="flex-shrink-0 w-80 sm:w-88 md:w-auto snap-center bg-white rounded-3xl p-7 border border-slate-200/80 shadow-glass-green hover:-translate-y-2 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+      <!-- Suite 1: Newborn Care -->
+      <div class="glass-sanctuary-card rounded-3xl p-8 flex flex-col justify-between group">
         <div>
-          <div class="w-14 h-14 rounded-2xl bg-pediatric-50 text-pediatric-600 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
-            🍼
+          <div class="w-12 h-12 rounded-2xl bg-pediatric-50 text-pediatric-700 flex items-center justify-center mb-6 group-hover:bg-pediatric-100 transition">
+            <i data-lucide="baby" class="w-5 h-5"></i>
           </div>
           <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-pediatric-700">Neonatal Expertise</span>
-          <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Newborn Care</h3>
+          <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Newborn Intensive Care</h3>
           <p class="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed">
-            Newborn jaundice screening, umbilical cord care, latching &amp; lactation support, and NICU-level safety monitoring.
+            Screening for neonatal jaundice, umbilical cord care, latching &amp; lactation guidance, and early weight audits.
           </p>
         </div>
-        <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-400">0 – 12 Months</span>
-          <button type="button" onclick="window.scrollToBooking('pediatric', 'Newborn Care')" class="text-xs font-heading font-bold text-pediatric-700 hover:text-pediatric-900 flex items-center gap-1 group-hover:gap-2 transition-all">
+        <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-400">0 – 12 Months</span>
+          <button type="button" onclick="window.scrollToBooking('pediatric', 'Newborn Care')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <span>Book Visit</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
       </div>
 
-      <!-- Service 2: Vaccination Program -->
-      <div class="flex-shrink-0 w-80 sm:w-88 md:w-auto snap-center bg-white rounded-3xl p-7 border border-slate-200/80 shadow-glass-green hover:-translate-y-2 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+      <!-- Suite 2: Vaccination -->
+      <div class="glass-sanctuary-card rounded-3xl p-8 flex flex-col justify-between group">
         <div>
-          <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
-            💉
+          <div class="w-12 h-12 rounded-2xl bg-pediatric-50 text-pediatric-700 flex items-center justify-center mb-6 group-hover:bg-pediatric-100 transition">
+            <i data-lucide="shield-plus" class="w-5 h-5"></i>
           </div>
-          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-emerald-700">IAP Certified</span>
-          <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Vaccination</h3>
+          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-pediatric-700">IAP Certified</span>
+          <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Complete Immunization</h3>
           <p class="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed">
-            Pain-less modern needles, strict cold-chain maintenance, digital vaccine cards, and automated WhatsApp dose reminders.
+            Painless micro-needle technology, verified 2°C–8°C cold-chain storage, digital vaccination cards, and WhatsApp schedule reminders.
           </p>
         </div>
-        <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-400">Strict Cold-Chain</span>
-          <button type="button" onclick="window.scrollToBooking('pediatric', 'Vaccination Program')" class="text-xs font-heading font-bold text-pediatric-700 hover:text-pediatric-900 flex items-center gap-1 group-hover:gap-2 transition-all">
+        <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-400">Strict Cold-Chain</span>
+          <button type="button" onclick="window.scrollToBooking('pediatric', 'Vaccination Program')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <span>Book Visit</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
       </div>
 
-      <!-- Service 3: Growth & Development -->
-      <div class="flex-shrink-0 w-80 sm:w-88 md:w-auto snap-center bg-white rounded-3xl p-7 border border-slate-200/80 shadow-glass-green hover:-translate-y-2 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+      <!-- Suite 3: Growth & Milestones -->
+      <div class="glass-sanctuary-card rounded-3xl p-8 flex flex-col justify-between group">
         <div>
-          <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
-            📈
+          <div class="w-12 h-12 rounded-2xl bg-pediatric-50 text-pediatric-700 flex items-center justify-center mb-6 group-hover:bg-pediatric-100 transition">
+            <i data-lucide="line-chart" class="w-5 h-5"></i>
           </div>
-          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-amber-700">Milestone Audits</span>
-          <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Growth &amp; Development</h3>
+          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-pediatric-700">Milestone Audits</span>
+          <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Growth &amp; Milestones</h3>
           <p class="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed">
-            Percentile tracking (height, weight, head circumference), motor skill audits, nutritional plans for picky eaters.
+            Standardized WHO percentile mapping for height, weight, and head circumference, plus early motor and cognitive milestone audits.
           </p>
         </div>
-        <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-400">WHO Guidelines</span>
-          <button type="button" onclick="window.scrollToBooking('pediatric', 'Growth & Development')" class="text-xs font-heading font-bold text-pediatric-700 hover:text-pediatric-900 flex items-center gap-1 group-hover:gap-2 transition-all">
+        <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-400">WHO Standards</span>
+          <button type="button" onclick="window.scrollToBooking('pediatric', 'Growth & Development')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <span>Book Visit</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
       </div>
 
-      <!-- Service 4: Childhood Illnesses -->
-      <div class="flex-shrink-0 w-80 sm:w-88 md:w-auto snap-center bg-white rounded-3xl p-7 border border-slate-200/80 shadow-glass-green hover:-translate-y-2 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+      <!-- Suite 4: Childhood Illnesses -->
+      <div class="glass-sanctuary-card rounded-3xl p-8 flex flex-col justify-between group">
         <div>
-          <div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
-            🩺
+          <div class="w-12 h-12 rounded-2xl bg-pediatric-50 text-pediatric-700 flex items-center justify-center mb-6 group-hover:bg-pediatric-100 transition">
+            <i data-lucide="stethoscope" class="w-5 h-5"></i>
           </div>
-          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-rose-700">Acute Illness Care</span>
+          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-pediatric-700">Acute Illness Care</span>
           <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Childhood Illnesses</h3>
           <p class="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed">
-            Rapid diagnosis and compassionate treatment for viral fevers, croup, wheezing, pediatric asthma, stomach bugs &amp; allergies.
+            Swift diagnostic evaluation and gentle relief for viral fevers, croup, wheezing, stomach infections, and seasonal allergies.
           </p>
         </div>
-        <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-400">Same-Day Relief</span>
-          <button type="button" onclick="window.scrollToBooking('pediatric', 'Childhood Illnesses')" class="text-xs font-heading font-bold text-pediatric-700 hover:text-pediatric-900 flex items-center gap-1 group-hover:gap-2 transition-all">
+        <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-400">Same-Day Relief</span>
+          <button type="button" onclick="window.scrollToBooking('pediatric', 'Childhood Illnesses')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <span>Book Visit</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Suite 5: Pediatric Nutrition -->
+      <div class="glass-sanctuary-card rounded-3xl p-8 flex flex-col justify-between group">
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-pediatric-50 text-pediatric-700 flex items-center justify-center mb-6 group-hover:bg-pediatric-100 transition">
+            <i data-lucide="apple" class="w-5 h-5"></i>
+          </div>
+          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-pediatric-700">Feeding &amp; Weaning</span>
+          <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Infant Nutrition &amp; Weaning</h3>
+          <p class="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed">
+            Structured 6-month solid food transitions, addressing picky eating habits, food intolerances, and micro-nutrient optimization.
+          </p>
+        </div>
+        <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-400">Holistic Diet</span>
+          <button type="button" onclick="window.scrollToBooking('pediatric', 'Infant Feeding & Nutrition')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
+            <span>Book Visit</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Suite 6: Allergy & Asthma -->
+      <div class="glass-sanctuary-card rounded-3xl p-8 flex flex-col justify-between group">
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-pediatric-50 text-pediatric-700 flex items-center justify-center mb-6 group-hover:bg-pediatric-100 transition">
+            <i data-lucide="wind" class="w-5 h-5"></i>
+          </div>
+          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-pediatric-700">Respiratory Care</span>
+          <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Pediatric Allergy &amp; Asthma</h3>
+          <p class="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed">
+            Long-term management for recurrent bronchitis, allergic rhinitis, inhaler technique mastery, and eczema care plans.
+          </p>
+        </div>
+        <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-400">Long-Term Relief</span>
+          <button type="button" onclick="window.scrollToBooking('pediatric', 'Pediatric Allergy & Asthma')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
+            <span>Book Visit</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
       </div>
@@ -337,163 +370,159 @@
 </section>
 
 
-<!-- INSTAGRAM REELS GRID (CRUCIAL): TITLE "Expert Advice for Parents" -->
-<!-- 4-COLUMN ON DESKTOP, 2-COLUMN ON MOBILE, 9:16 VERTICAL CARDS, DARK OVERLAY GRADIENTS, SLEEK WHITE PLAY ICON -->
+<!-- ======================================================== -->
+<!-- REELS / VIDEO SECTION: SLEEK PLAY CIRCLE (ZERO PINK)     -->
+<!-- ======================================================== -->
 <section id="reels" class="py-20 bg-slate-950 text-white">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     
     <!-- Section Header -->
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
       <div>
-        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-pediatric-900/60 border border-pediatric-700/50 text-pediatric-300 text-xs font-heading font-bold uppercase tracking-wider mb-3">
-          <i data-lucide="instagram" class="w-3.5 h-3.5 text-pink-400"></i>
-          <span>Dr. Jalil's Instagram Series</span>
-        </div>
+        <span class="px-3.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 text-xs font-heading font-semibold uppercase tracking-wider mb-3 inline-block">
+          Dr. Jalil's Video Guidance Series
+        </span>
         <h2 class="text-3xl sm:text-4xl lg:text-5xl font-heading font-black tracking-tight">
-          Expert Advice for Parents
+          Expert Guidance for Parents
         </h2>
         <p class="text-slate-400 text-sm sm:text-base mt-2 font-sans max-w-xl">
-          Quick medical breakdowns by Dr. Jalil S. Mujawar answering the questions every mother asks.
+          Quick medical breakdowns by Dr. Jalil S. Mujawar answering the critical health questions every parent asks.
         </p>
       </div>
 
       <div class="mt-4 md:mt-0">
-        <a href="https://instagram.com" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white font-heading font-bold text-xs shadow-lg shadow-pink-600/20 transition-all">
-          <i data-lucide="instagram" class="w-4 h-4"></i>
+        <a href="https://instagram.com" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-800 hover:bg-slate-700 text-white font-heading font-semibold text-xs border border-slate-700 transition">
+          <i data-lucide="video" class="w-4 h-4 text-emerald-400"></i>
           <span>Follow @BudsChildClinic</span>
         </a>
       </div>
     </div>
 
-    <!-- 4-Column Reels Grid (2-column on mobile) with 9:16 Aspect Ratio -->
+    <!-- 4-Column Reels Grid with Sleek Central Semi-Transparent Play Icons -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
 
       <!-- Reel 1: Breast Milk vs Formula -->
-      <div class="relative aspect-[9/16] rounded-3xl overflow-hidden shadow-2xl group cursor-pointer border border-white/10 bg-slate-900">
-        <!-- Background Mock Visual -->
+      <div class="relative aspect-[9/16] rounded-3xl overflow-hidden shadow-xl group cursor-pointer border border-white/10 bg-slate-900">
         <img src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?auto=format&fit=crop&w=600&q=80" 
              alt="Breast Milk vs Formula Reel" 
              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80">
         
-        <!-- Dark Overlay Gradient at Bottom -->
         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-black/20"></div>
 
-        <!-- Sleek White Play Icon in Center -->
-        <div class="absolute inset-0 flex items-center justify-center">
-          <div class="w-14 h-14 rounded-full bg-white/30 backdrop-blur-md border border-white/60 flex items-center justify-center text-white shadow-xl group-hover:scale-110 group-hover:bg-white/40 transition-all duration-300">
+        <!-- Sleek Semi-Transparent Play Icon in Center -->
+        <div class="video-play-center">
+          <div class="video-play-disc">
             <i data-lucide="play" class="w-6 h-6 fill-white ml-0.5"></i>
           </div>
         </div>
 
-        <!-- Top Badges -->
         <div class="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between text-[11px] font-heading font-semibold">
           <span class="px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-md text-white border border-white/10">Nutrition</span>
-          <span class="px-2.5 py-1 rounded-full bg-pink-500/80 text-white">Reel</span>
+          <span class="text-xs text-slate-300">2:14</span>
         </div>
 
-        <!-- Bottom Content -->
         <div class="absolute bottom-4 inset-x-4">
-          <div class="text-[11px] text-pink-300 font-semibold mb-1 flex items-center gap-1">
+          <div class="text-[11px] text-slate-400 font-sans mb-1 flex items-center gap-1">
             <i data-lucide="eye" class="w-3 h-3"></i>
             <span>42.8k Views</span>
           </div>
           <h4 class="font-heading font-bold text-white text-sm sm:text-base leading-snug line-clamp-2">
-            Breast Milk vs Formula — What's Really Best?
+            Breast Milk vs Formula — Practical Guidance for Moms
           </h4>
-          <p class="text-[11px] text-slate-300 font-sans mt-1">Dr. Jalil explains practical guidance for new moms.</p>
+          <p class="text-[11px] text-slate-400 font-sans mt-1">Dr. Jalil answers common feeding dilemmas.</p>
         </div>
       </div>
 
       <!-- Reel 2: Managing Baby Fever -->
-      <div class="relative aspect-[9/16] rounded-3xl overflow-hidden shadow-2xl group cursor-pointer border border-white/10 bg-slate-900">
+      <div class="relative aspect-[9/16] rounded-3xl overflow-hidden shadow-xl group cursor-pointer border border-white/10 bg-slate-900">
         <img src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80" 
              alt="Managing Baby Fever Reel" 
              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80">
         
         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-black/20"></div>
 
-        <div class="absolute inset-0 flex items-center justify-center">
-          <div class="w-14 h-14 rounded-full bg-white/30 backdrop-blur-md border border-white/60 flex items-center justify-center text-white shadow-xl group-hover:scale-110 group-hover:bg-white/40 transition-all duration-300">
+        <div class="video-play-center">
+          <div class="video-play-disc">
             <i data-lucide="play" class="w-6 h-6 fill-white ml-0.5"></i>
           </div>
         </div>
 
         <div class="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between text-[11px] font-heading font-semibold">
-          <span class="px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-md text-white border border-white/10">Emergency</span>
-          <span class="px-2.5 py-1 rounded-full bg-pink-500/80 text-white">Reel</span>
+          <span class="px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-md text-white border border-white/10">First Aid</span>
+          <span class="text-xs text-slate-300">3:02</span>
         </div>
 
         <div class="absolute bottom-4 inset-x-4">
-          <div class="text-[11px] text-rose-300 font-semibold mb-1 flex items-center gap-1">
+          <div class="text-[11px] text-slate-400 font-sans mb-1 flex items-center gap-1">
             <i data-lucide="eye" class="w-3 h-3"></i>
             <span>68.2k Views</span>
           </div>
           <h4 class="font-heading font-bold text-white text-sm sm:text-base leading-snug line-clamp-2">
             Managing Baby Fever at Home Safely
           </h4>
-          <p class="text-[11px] text-slate-300 font-sans mt-1">When to sponge, when to give paracetamol, and red flags.</p>
+          <p class="text-[11px] text-slate-400 font-sans mt-1">When to sponge, when to medicate, and red flags.</p>
         </div>
       </div>
 
-      <!-- Reel 3: 2026 Vaccine Schedule -->
-      <div class="relative aspect-[9/16] rounded-3xl overflow-hidden shadow-2xl group cursor-pointer border border-white/10 bg-slate-900">
+      <!-- Reel 3: Vaccine Schedule -->
+      <div class="relative aspect-[9/16] rounded-3xl overflow-hidden shadow-xl group cursor-pointer border border-white/10 bg-slate-900">
         <img src="https://images.unsplash.com/photo-1632053001830-6e3e57303f90?auto=format&fit=crop&w=600&q=80" 
              alt="Vaccine Schedule Reel" 
              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80">
         
         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-black/20"></div>
 
-        <div class="absolute inset-0 flex items-center justify-center">
-          <div class="w-14 h-14 rounded-full bg-white/30 backdrop-blur-md border border-white/60 flex items-center justify-center text-white shadow-xl group-hover:scale-110 group-hover:bg-white/40 transition-all duration-300">
+        <div class="video-play-center">
+          <div class="video-play-disc">
             <i data-lucide="play" class="w-6 h-6 fill-white ml-0.5"></i>
           </div>
         </div>
 
         <div class="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between text-[11px] font-heading font-semibold">
           <span class="px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-md text-white border border-white/10">Immunization</span>
-          <span class="px-2.5 py-1 rounded-full bg-pink-500/80 text-white">Reel</span>
+          <span class="text-xs text-slate-300">4:15</span>
         </div>
 
         <div class="absolute bottom-4 inset-x-4">
-          <div class="text-[11px] text-emerald-300 font-semibold mb-1 flex items-center gap-1">
+          <div class="text-[11px] text-slate-400 font-sans mb-1 flex items-center gap-1">
             <i data-lucide="eye" class="w-3 h-3"></i>
             <span>51.4k Views</span>
           </div>
           <h4 class="font-heading font-bold text-white text-sm sm:text-base leading-snug line-clamp-2">
             2026 IAP Vaccine Schedule Made Simple
           </h4>
-          <p class="text-[11px] text-slate-300 font-sans mt-1">Painless vs standard vaccines explained clearly.</p>
+          <p class="text-[11px] text-slate-400 font-sans mt-1">Painless vs standard vaccine options explained.</p>
         </div>
       </div>
 
       <!-- Reel 4: Weaning & Solid Foods -->
-      <div class="relative aspect-[9/16] rounded-3xl overflow-hidden shadow-2xl group cursor-pointer border border-white/10 bg-slate-900">
+      <div class="relative aspect-[9/16] rounded-3xl overflow-hidden shadow-xl group cursor-pointer border border-white/10 bg-slate-900">
         <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80" 
              alt="Solid Foods Reel" 
              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80">
         
         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-black/20"></div>
 
-        <div class="absolute inset-0 flex items-center justify-center">
-          <div class="w-14 h-14 rounded-full bg-white/30 backdrop-blur-md border border-white/60 flex items-center justify-center text-white shadow-xl group-hover:scale-110 group-hover:bg-white/40 transition-all duration-300">
+        <div class="video-play-center">
+          <div class="video-play-disc">
             <i data-lucide="play" class="w-6 h-6 fill-white ml-0.5"></i>
           </div>
         </div>
 
         <div class="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between text-[11px] font-heading font-semibold">
           <span class="px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-md text-white border border-white/10">Milestones</span>
-          <span class="px-2.5 py-1 rounded-full bg-pink-500/80 text-white">Reel</span>
+          <span class="text-xs text-slate-300">1:58</span>
         </div>
 
         <div class="absolute bottom-4 inset-x-4">
-          <div class="text-[11px] text-amber-300 font-semibold mb-1 flex items-center gap-1">
+          <div class="text-[11px] text-slate-400 font-sans mb-1 flex items-center gap-1">
             <i data-lucide="eye" class="w-3 h-3"></i>
             <span>39.1k Views</span>
           </div>
           <h4 class="font-heading font-bold text-white text-sm sm:text-base leading-snug line-clamp-2">
             Starting Solid Foods: What to Introduce First
           </h4>
-          <p class="text-[11px] text-slate-300 font-sans mt-1">From purees to finger foods — 6 month starter guide.</p>
+          <p class="text-[11px] text-slate-400 font-sans mt-1">From purees to finger foods — 6 month starter guide.</p>
         </div>
       </div>
 
@@ -503,361 +532,336 @@
 </section>
 
 
-<!-- VISIT CHECKLIST: MODERN CARD FOR PARENTS -->
-<section class="py-16 px-4 sm:px-6 lg:px-8 bg-warmcream">
-  <div class="max-w-4xl mx-auto">
-    <div class="glass-surface p-8 sm:p-10 rounded-4xl border border-white/80 shadow-xl">
-      
-      <div class="text-center max-w-xl mx-auto mb-8">
-        <span class="px-3.5 py-1 rounded-full bg-pediatric-100 text-pediatric-800 text-xs font-heading font-bold uppercase tracking-wider">
-          📋 Smooth Clinic Experience
-        </span>
-        <h3 class="text-2xl sm:text-3xl font-heading font-black text-slate-900 mt-2">
-          Parent Visit Checklist
-        </h3>
-        <p class="text-xs sm:text-sm text-slate-500 font-sans mt-1">
-          Follow these 3 simple steps to ensure a calm, unhurried appointment for your little one.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        <!-- Step 1: Take appointment -->
-        <div class="bg-white/90 p-5 rounded-3xl border border-slate-200/60 shadow-sm flex flex-col justify-between">
-          <div>
-            <div class="w-10 h-10 rounded-2xl bg-pediatric-50 text-pediatric-700 flex items-center justify-center font-heading font-black text-sm mb-3">
-              1
-            </div>
-            <h4 class="font-heading font-bold text-slate-900 text-base mb-1">Take Appointment</h4>
-            <p class="text-xs text-slate-600 font-sans leading-relaxed">
-              Book online or call ahead. We schedule dedicated time windows to eliminate lobby wait times.
-            </p>
-          </div>
-          <div class="pt-4 mt-3 border-t border-slate-100 text-[11px] font-bold text-pediatric-700">
-            &bull; Avoid crowded waiting
-          </div>
-        </div>
-
-        <!-- Step 2: Bring clinic file -->
-        <div class="bg-white/90 p-5 rounded-3xl border border-slate-200/60 shadow-sm flex flex-col justify-between">
-          <div>
-            <div class="w-10 h-10 rounded-2xl bg-pediatric-50 text-pediatric-700 flex items-center justify-center font-heading font-black text-sm mb-3">
-              2
-            </div>
-            <h4 class="font-heading font-bold text-slate-900 text-base mb-1">Bring Clinic File</h4>
-            <p class="text-xs text-slate-600 font-sans leading-relaxed">
-              Carry your child's immunization card, previous prescriptions, and birth discharge summary if newborn.
-            </p>
-          </div>
-          <div class="pt-4 mt-3 border-t border-slate-100 text-[11px] font-bold text-pediatric-700">
-            &bull; Continuity of care
-          </div>
-        </div>
-
-        <!-- Step 3: Feed baby before visit -->
-        <div class="bg-white/90 p-5 rounded-3xl border border-slate-200/60 shadow-sm flex flex-col justify-between">
-          <div>
-            <div class="w-10 h-10 rounded-2xl bg-pediatric-50 text-pediatric-700 flex items-center justify-center font-heading font-black text-sm mb-3">
-              3
-            </div>
-            <h4 class="font-heading font-bold text-slate-900 text-base mb-1">Feed Baby Before Visit</h4>
-            <p class="text-xs text-slate-600 font-sans leading-relaxed">
-              Feed your infant 30 minutes before arrival so they are content and relaxed during physical examination.
-            </p>
-          </div>
-          <div class="pt-4 mt-3 border-t border-slate-100 text-[11px] font-bold text-pediatric-700">
-            &bull; Calm, smiling examination
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Pro-Tip Box -->
-      <div class="mt-8 p-4 rounded-2xl bg-pediatric-50/90 border border-pediatric-200/80 flex items-center gap-3 text-xs text-pediatric-900">
-        <span class="text-xl">💡</span>
-        <p class="font-sans">
-          <strong>Mother's Pro-Tip:</strong> If your child has a fever or rash, take a quick smartphone photo/video when it is most pronounced to show Dr. Jalil during consultation.
-        </p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-<!-- BRIDGE BANNER BACK TO DENTAL -->
-<section class="py-12 px-4 sm:px-6 lg:px-8 bg-pearl">
+<!-- ======================================================== -->
+<!-- BRIDGE BANNER: ROUTING TO ROOTS DENTAL CLINIC            -->
+<!-- ======================================================== -->
+<section class="py-12 px-4 sm:px-6 lg:px-8 bg-white border-y border-slate-100">
   <div class="max-w-7xl mx-auto">
-    <div class="relative rounded-4xl bg-gradient-to-r from-dental-800 via-dental-700 to-dental-900 p-8 sm:p-12 shadow-2xl overflow-hidden text-white">
-      
+    <div class="relative rounded-3xl bg-slate-950 p-8 sm:p-12 overflow-hidden text-white">
       <div class="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
+        
         <div class="space-y-4 text-center lg:text-left">
-          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-dental-100 text-xs font-heading font-semibold">
-            <span>🦷 2-in-1 Medical Sanctuary &bull; Wanowrie</span>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-slate-300 text-xs font-heading">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-dental-400"></i>
+            <span>Family Dental Care &bull; Same Address</span>
           </div>
-          <h2 class="text-3xl sm:text-4xl font-heading font-black tracking-tight leading-tight">
-            Need Dental Treatment?<br />
-            Visit <span class="underline decoration-dental-300 underline-offset-4">Roots Dental Clinic</span>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-heading font-bold tracking-tight leading-tight">
+            Comprehensive Dental Care for Parents &amp; Kids<br />
+            Visit <span class="text-dental-400">Roots Dental Clinic</span>
           </h2>
-          <p class="text-dental-100 text-sm sm:text-base max-w-xl font-sans">
-            Consult <strong class="text-white">Dr. Sabina Firoj Shaikh</strong> (MDS Gold Medalist). Painless single-visit root canals, cosmetic smile designs, and invisible aligners in the adjacent clinical wing.
+          <p class="text-slate-400 text-sm max-w-xl font-sans">
+            Consult <strong class="text-white">Dr. Sabina Firoj Shaikh</strong>, MDS Gold Medalist. Single-visit pain-free root canals, invisible aligners, and gentle primary dental care under the same trusted roof in Wanowrie.
           </p>
         </div>
 
         <div class="flex flex-col sm:flex-row items-center gap-4 flex-shrink-0">
-          <a href="/dental/" class="px-8 py-4 rounded-full bg-white text-dental-800 hover:bg-dental-50 font-heading font-bold text-sm shadow-xl hover:shadow-2xl active:scale-95 transition-all duration-200 flex items-center gap-2">
+          <div class="flex items-center gap-3 bg-slate-900 px-5 py-3 rounded-2xl border border-slate-800">
+            <i data-lucide="award" class="w-5 h-5 text-dental-400"></i>
+            <div>
+              <div class="font-heading font-bold text-sm text-white">MDS Gold Medalist</div>
+              <div class="text-[11px] text-slate-400">Prosthodontist &bull; 10+ Yrs</div>
+            </div>
+          </div>
+
+          <a href="/dental/" class="px-7 py-3.5 rounded-full bg-white text-slate-950 hover:bg-slate-100 font-heading font-bold text-xs shadow-md transition duration-200 flex items-center gap-2">
             <span>Explore Roots Dental</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </a>
         </div>
-      </div>
 
+      </div>
     </div>
   </div>
 </section>
 
 
-<!-- THE INTERACTIVE MORPHING BOOKING HERO / WIDGET (#booking-wrapper) -->
-<!-- PRE-INITIALIZED TO PEDIATRIC CHILD CARE MODE -->
-<section id="booking-wrapper" class="min-h-[90vh] py-16 px-4 sm:px-6 lg:px-8 flex items-center justify-center bg-gradient-to-b from-pearl via-slate-100/50 to-pearl">
+<!-- ======================================================== -->
+<!-- PROGRESSIVE 3-STEP IN-PAGE BOOKING ENGINE (#booking-wrapper)-->
+<!-- ======================================================== -->
+<section id="booking-wrapper" class="min-h-[85vh] py-16 px-4 sm:px-6 lg:px-8 flex items-center justify-center bg-white border-t border-slate-100">
   <div class="max-w-6xl w-full mx-auto my-auto">
     
+    <!-- Top Section Header -->
     <div class="text-center mb-8">
-      <span id="booking-pill" class="px-4 py-1.5 rounded-full bg-pediatric-100 text-pediatric-800 text-xs font-heading font-bold uppercase tracking-wider transition-colors duration-500">
-        👶 Buds Pediatric Request Engine
+      <span id="booking-pill" class="px-4 py-1.5 rounded-full bg-slate-100 text-slate-800 text-xs font-heading font-semibold uppercase tracking-wider">
+        Reservation Engine
       </span>
-      <h2 id="booking-title" class="text-3xl sm:text-4xl font-heading font-black text-slate-900 mt-2 tracking-tight transition-all duration-500">
-        Request Your Child's Appointment
+      <h2 id="booking-title" class="text-3xl sm:text-4xl font-heading font-black text-slate-900 mt-2 tracking-tight">
+        Reserve Your Child's Visit
       </h2>
-      <p class="text-slate-500 text-xs sm:text-sm font-sans mt-2 max-w-lg mx-auto">
-        Select your clinic, enter your child and parent details, and our front desk will confirm your slot on WhatsApp.
+      <p class="text-slate-500 text-xs sm:text-sm font-sans mt-1.5 max-w-lg mx-auto">
+        Complete your details in 3 quick steps. Our front desk will confirm your reserved slot directly on WhatsApp.
       </p>
     </div>
 
-    <div class="glass-surface rounded-4xl shadow-2xl border border-white/90 overflow-hidden">
-      <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px]">
+    <!-- Main Split-Panel Sanctuary Card -->
+    <div class="rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden bg-white">
+      <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[560px]">
 
-        <!-- DYNAMIC LEFT PANEL (Hidden on mobile to guarantee immediate, zero-scroll booking form) -->
-        <div id="dynamic-doctor-panel" class="hidden lg:flex lg:col-span-5 relative p-8 sm:p-10 flex-col justify-between overflow-hidden bg-gradient-to-br from-pediatric-600 to-pediatric-800 text-white transition-all duration-700 ease-in-out">
+        <!-- DYNAMIC LEFT PANEL: Editorial Doctor Presentation (Desktop Only) -->
+        <div id="dynamic-doctor-panel" class="hidden lg:flex lg:col-span-5 relative p-10 flex-col justify-between overflow-hidden bg-gradient-to-br from-pediatric-700 via-pediatric-800 to-pediatric-950 text-white transition-all duration-700 ease-in-out">
           
-          <div class="absolute -top-20 -left-20 w-64 h-64 rounded-full bg-white/10 blur-3xl pointer-events-none"></div>
-          <div class="absolute -bottom-20 -right-20 w-64 h-64 rounded-full bg-emerald-400/20 blur-3xl pointer-events-none"></div>
-
+          <!-- Identity Info -->
           <div class="relative z-10 space-y-2">
-            <span id="panel-clinic-tag" class="px-3.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-[11px] font-heading font-semibold uppercase tracking-wider inline-block">
+            <span id="panel-clinic-tag" class="px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-[10px] font-heading font-semibold uppercase tracking-wider inline-block text-slate-200">
               Buds Child Clinic
             </span>
             <h3 id="panel-doctor-name" class="text-2xl sm:text-3xl font-heading font-black tracking-tight leading-tight">
               Dr. Jalil S. Mujawar
             </h3>
-            <p id="panel-doctor-title" class="text-xs sm:text-sm text-pediatric-100 font-sans">
+            <p id="panel-doctor-subline" class="text-xs text-slate-300 font-sans leading-relaxed">
               Senior Consultant Pediatrician &bull; MBBS, DCH &bull; 15+ Yrs Clinical Mastery
             </p>
           </div>
 
-          <!-- Center Doctor Cutout Visual with 3D Pop -->
-          <div class="relative z-10 my-6 flex justify-center items-center">
-            <div class="relative w-full max-w-[320px] sm:max-w-[360px] h-[320px] sm:h-[370px] rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 shadow-inner flex items-end justify-center overflow-visible pt-4">
-              
-              <!-- Doctor Cutout Image (Guaranteed visible) -->
-              <img id="panel-doctor-img" 
-                   src="{% static 'images/pediatrician_jalil.png' %}" 
-                   alt="Consulting Pediatrician" 
-                   class="h-[310px] sm:h-[360px] w-auto max-w-full object-contain drop-shadow-[0_20px_25px_rgba(0,0,0,0.35)] transition-all duration-700 transform scale-105"
-                   style="opacity: 1 !important; display: block !important;"
-                   onerror="this.src='{% static 'images/pediatrician_jalil_full.jpg' %}';">
-
-              <!-- Floating Micro-Badge 1 -->
-              <div id="badge-top" class="animate-float absolute -top-4 -right-2 glass-surface text-slate-800 px-3.5 py-1.5 rounded-xl shadow-lg border border-white text-[11px] font-heading font-bold flex items-center gap-1.5 z-20">
-                <span id="badge-top-icon">🍼</span>
-                <span id="badge-top-text">Newborn Specialist</span>
-              </div>
-
-              <!-- Floating Micro-Badge 2 -->
-              <div id="badge-bottom" class="animate-float-delayed absolute -bottom-3 -left-2 glass-surface text-slate-800 px-3.5 py-1.5 rounded-xl shadow-lg border border-white text-[11px] font-heading font-bold flex items-center gap-1.5 z-20">
-                <span id="badge-bottom-icon">🛡️</span>
-                <span id="badge-bottom-text">75k+ Parents Trust</span>
-              </div>
-
-            </div>
+          <!-- Clean Borderless Portrait Stage -->
+          <div class="relative z-10 my-4 flex justify-center items-end">
+            <img id="panel-doctor-img" 
+                 src="{% static 'images/pediatrician_jalil.png' %}" 
+                 alt="Consulting Doctor" 
+                 class="h-[320px] w-auto max-w-full object-contain object-bottom drop-shadow-md transition-all duration-500"
+                 onerror="this.src='/static/images/pediatrician_jalil.png';">
           </div>
 
-          <div id="panel-bottom-trust" class="relative z-10 pt-4 border-t border-white/15 flex items-center justify-between text-xs text-pediatric-100 font-sans">
+          <!-- Bottom Trust Guarantee -->
+          <div class="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-300 font-sans">
             <div class="flex items-center gap-1.5">
-              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-300"></i>
-              <span id="panel-guarantee-text">Trusted by 75,400+ Mothers</span>
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+              <span>Guaranteed Zero Double-Booking</span>
             </div>
-            <span class="text-white/80 font-heading font-semibold">Wanowrie, Pune</span>
+            <span class="text-slate-400">Wanowrie, Pune</span>
           </div>
 
         </div>
 
-        <!-- DYNAMIC RIGHT PANEL (Full width on mobile, immediate zero-scroll view) -->
-        <div class="lg:col-span-7 p-5 sm:p-10 flex flex-col justify-between bg-white/90 backdrop-blur-xl">
-          
+        <!-- DYNAMIC RIGHT PANEL: Progressive 3-Step Slide-Through Form -->
+        <div class="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-between bg-white">
           <div>
-            <!-- Mobile Compact Doctor Pill (Shows directly on mobile above toggle so no scrolling is needed) -->
-            <div id="mobile-doctor-pill" class="lg:hidden flex items-center gap-3 p-3 rounded-2xl bg-pediatric-50 border border-pediatric-200/80 mb-4 transition-all">
-              <div class="w-11 h-11 rounded-xl bg-pediatric-600/10 overflow-hidden flex-shrink-0 flex items-center justify-center border border-pediatric-200">
+            
+            <!-- Mobile Compact Doctor Banner -->
+            <div id="mobile-doctor-pill" class="lg:hidden flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200/80 mb-5">
+              <div class="w-11 h-11 rounded-xl bg-slate-200/60 overflow-hidden flex-shrink-0 flex items-center justify-center border border-slate-200">
                 <img id="mobile-pill-avatar" src="{% static 'images/pediatrician_jalil.png' %}" alt="Doctor" class="w-full h-full object-contain">
               </div>
               <div class="flex-1 min-w-0 text-left">
                 <div id="mobile-pill-name" class="font-heading font-bold text-slate-900 text-xs sm:text-sm truncate">Dr. Jalil S. Mujawar</div>
-                <div id="mobile-pill-desc" class="text-[11px] text-pediatric-700 font-sans truncate">Senior Consultant Pediatrician &bull; MBBS, DCH</div>
+                <div id="mobile-pill-desc" class="text-[11px] text-slate-500 font-sans truncate">Senior Pediatrician &bull; MBBS, DCH</div>
               </div>
-              <span id="mobile-pill-badge" class="px-2.5 py-1 rounded-full bg-white text-pediatric-700 text-[10px] font-heading font-bold shadow-xs border border-pediatric-200 flex-shrink-0">
-                75k+ 🛡️
-              </span>
             </div>
 
-            <!-- Large Top Toggle Buttons -->
-            <div class="flex p-1.5 rounded-2xl bg-slate-100/90 border border-slate-200/80 mb-6 max-w-md mx-auto">
+            <!-- Clinic Switcher Toggle -->
+            <div class="flex p-1.5 rounded-2xl bg-slate-100 border border-slate-200/70 mb-6 max-w-md mx-auto">
               <button type="button" 
                       id="btn-toggle-dental" 
                       onclick="window.switchClinicBooking('dental')"
-                      class="flex-1 py-3 px-4 rounded-xl font-heading font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-300 text-slate-500 hover:text-slate-800">
-                <span class="text-base">🦷</span>
+                      class="flex-1 py-2.5 px-4 rounded-xl font-heading font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all text-slate-500 hover:text-slate-800 cursor-pointer">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-dental-600"></i>
                 <span>Dental Care</span>
               </button>
 
               <button type="button" 
                       id="btn-toggle-pediatric" 
                       onclick="window.switchClinicBooking('pediatric')"
-                      class="flex-1 py-3 px-4 rounded-xl font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-300 bg-white text-pediatric-700 shadow-md">
-                <span class="text-base">👶</span>
+                      class="flex-1 py-2.5 px-4 rounded-xl font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all bg-white text-pediatric-700 shadow-xs cursor-pointer">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-pediatric-600"></i>
                 <span>Child Care</span>
               </button>
             </div>
 
-            <!-- Booking Form -->
-            <form id="appointment-form" onsubmit="window.handleBookingSubmit(event)" class="space-y-4">
+            <!-- Progressive Stepper Header -->
+            <div class="py-2.5 border-b border-slate-100 mb-6">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span id="booking-step-indicator-1" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold bg-pediatric-600 text-white shadow-xs">1</span>
+                  <span id="booking-step-text-1" class="text-xs font-heading font-semibold text-slate-800">Child &amp; Service</span>
+                </div>
+                <div class="h-0.5 flex-1 mx-3 bg-slate-100"></div>
+                <div class="flex items-center gap-2">
+                  <span id="booking-step-indicator-2" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium bg-slate-100 text-slate-400">2</span>
+                  <span id="booking-step-text-2" class="text-xs font-heading text-slate-400 hidden sm:inline">Schedule</span>
+                </div>
+                <div class="h-0.5 flex-1 mx-3 bg-slate-100"></div>
+                <div class="flex items-center gap-2">
+                  <span id="booking-step-indicator-3" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium bg-slate-100 text-slate-400">3</span>
+                  <span id="booking-step-text-3" class="text-xs font-heading text-slate-400 hidden sm:inline">Contact</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- PROGRESSIVE FORM CONTAINER -->
+            <form id="appointment-form" onsubmit="window.handleBookingSubmit(event)">
               <input type="hidden" id="form-clinic-type" name="clinic_type" value="pediatric">
 
-              <!-- Row 1: Child's Full Name -->
-              <div>
-                <label id="label-patient-name" for="patient-name" class="block text-xs font-heading font-bold text-pediatric-800 uppercase tracking-wider mb-1.5">
-                  Child's Full Name <span class="text-rose-500">*</span>
-                </label>
-                <div class="relative">
-                  <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-4 top-3.5"></i>
-                  <input type="text" id="patient-name" name="patient_name" required placeholder="e.g. Aarav Mehta (4 yrs)"
-                         class="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-sans focus:bg-white focus:outline-none focus:ring-2 focus:ring-pediatric-500 transition">
-                </div>
-              </div>
-
-              <!-- Row 1.5: Parent / Guardian Name (Visible for Pediatric) -->
-              <div id="parent-name-group" class="block transition-all duration-500">
-                <label for="parent-name" class="block text-xs font-heading font-bold text-pediatric-800 uppercase tracking-wider mb-1.5">
-                  Parent / Guardian Name <span class="text-rose-500">*</span>
-                </label>
-                <div class="relative">
-                  <i data-lucide="users" class="w-4 h-4 text-slate-400 absolute left-4 top-3.5"></i>
-                  <input type="text" id="parent-name" name="parent_name" required placeholder="e.g. Sneha Mehta"
-                         class="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-sans focus:bg-white focus:outline-none focus:ring-2 focus:ring-pediatric-500 transition">
-                </div>
-              </div>
-
-              <!-- Row 2: Phone & Service -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
+              <!-- =================== STEP 1: PATIENT & SERVICE =================== -->
+              <div id="booking-step-1" class="step-pane active-step space-y-4">
                 <div>
-                  <label for="phone-number" class="block text-xs font-heading font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Mobile Number (WhatsApp) <span class="text-rose-500">*</span>
+                  <h4 class="font-heading font-bold text-slate-900 text-base">Step 1: Who is the appointment for?</h4>
+                  <p class="text-xs text-slate-500 font-sans mt-0.5">Enter your child's name, your name, and choose the care service.</p>
+                </div>
+
+                <div>
+                  <label id="label-patient-name" for="patient-name" class="block text-xs font-heading font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Child's Full Name <span class="text-rose-500">*</span>
                   </label>
                   <div class="relative">
-                    <span class="absolute left-4 top-3 text-xs font-bold text-slate-400">+91</span>
-                    <input type="tel" id="phone-number" name="phone_number" required placeholder="98901 23456" pattern="[0-9]{10}" maxlength="10"
-                           class="w-full pl-12 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-sans focus:bg-white focus:outline-none focus:ring-2 focus:ring-pediatric-500 transition">
+                    <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-4 top-3.5"></i>
+                    <input type="text" id="patient-name" name="patient_name" required placeholder="e.g. Aarav Mehta (4 yrs)"
+                           class="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-sans focus:bg-white focus:outline-none transition">
+                  </div>
+                </div>
+
+                <div id="parent-name-group" class="transition-all duration-300">
+                  <label for="parent-name" class="block text-xs font-heading font-semibold text-pediatric-800 uppercase tracking-wider mb-1.5">
+                    Parent / Guardian Name <span class="text-rose-500">*</span>
+                  </label>
+                  <div class="relative">
+                    <i data-lucide="users" class="w-4 h-4 text-slate-400 absolute left-4 top-3.5"></i>
+                    <input type="text" id="parent-name" name="parent_name" required placeholder="e.g. Sneha Mehta"
+                           class="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-sans focus:bg-white focus:outline-none transition">
                   </div>
                 </div>
 
                 <div>
-                  <label for="service-needed" class="block text-xs font-heading font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Consultation Type
+                  <label for="service-needed" class="block text-xs font-heading font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Service Needed
                   </label>
                   <div class="relative">
                     <select id="service-needed" name="service_needed"
-                            class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-sm font-sans focus:bg-white focus:outline-none focus:ring-2 focus:ring-pediatric-500 transition appearance-none">
-                      <!-- Populated via JavaScript dynamically -->
+                            class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-sm font-sans focus:bg-white focus:outline-none transition appearance-none">
                     </select>
                     <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-4 top-3.5 pointer-events-none"></i>
                   </div>
                 </div>
 
+                <div class="pt-2">
+                  <button type="button" onclick="window.goToBookingStep(2)" class="w-full py-4 px-6 rounded-2xl font-heading font-bold text-sm text-white bg-slate-900 hover:bg-slate-800 shadow-md active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer">
+                    <span>Continue to Schedule</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                  </button>
+                </div>
               </div>
 
-              <!-- Row 3: Preferred Date & Time Window -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
+              <!-- =================== STEP 2: DATE & TIME =================== -->
+              <div id="booking-step-2" class="step-pane hidden-step space-y-4">
                 <div>
-                  <label for="preferred-date" class="block text-xs font-heading font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <h4 class="font-heading font-bold text-slate-900 text-base">Step 2: When should we schedule?</h4>
+                  <p class="text-xs text-slate-500 font-sans mt-0.5">Select your preferred date and time slot for minimal lobby waiting.</p>
+                </div>
+
+                <div>
+                  <label for="preferred-date" class="block text-xs font-heading font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                     Preferred Date <span class="text-rose-500">*</span>
                   </label>
                   <div class="relative">
                     <i data-lucide="calendar" class="w-4 h-4 text-slate-400 absolute left-4 top-3.5"></i>
                     <input type="date" id="preferred-date" name="preferred_date" required
-                           class="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-sm font-sans focus:bg-white focus:outline-none focus:ring-2 focus:ring-pediatric-500 transition">
+                           class="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-sm font-sans focus:bg-white focus:outline-none transition">
                   </div>
                 </div>
 
                 <div>
-                  <label for="preferred-time" class="block text-xs font-heading font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label class="block text-xs font-heading font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                     Preferred Time Window
                   </label>
-                  <div class="relative">
-                    <select id="preferred-time" name="preferred_time"
-                            class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-sm font-sans focus:bg-white focus:outline-none focus:ring-2 focus:ring-pediatric-500 transition appearance-none">
-                      <option value="Morning (10:00 AM - 1:00 PM)">Morning (10:00 AM – 1:00 PM)</option>
-                      <option value="Afternoon (1:00 PM - 4:00 PM)">Afternoon (1:00 PM – 4:00 PM)</option>
-                      <option value="Evening (4:00 PM - 8:00 PM)">Evening (4:00 PM – 8:00 PM)</option>
-                    </select>
-                    <i data-lucide="clock" class="w-4 h-4 text-slate-400 absolute right-4 top-3.5 pointer-events-none"></i>
+                  <input type="hidden" id="preferred-time" name="preferred_time" value="Morning (10:00 AM - 1:00 PM)">
+
+                  <div class="grid grid-cols-3 gap-3">
+                    <button type="button" id="slot-morning" data-value="Morning (10:00 AM - 1:00 PM)" onclick="window.selectTimeSlot('Morning (10:00 AM - 1:00 PM)', false)" class="py-3 px-3 rounded-2xl text-xs font-heading font-bold text-center border-2 border-slate-900 bg-slate-50 text-slate-900 cursor-pointer transition">
+                      Morning<br><span class="text-[10px] font-normal text-slate-500">10:00 AM – 1:00 PM</span>
+                    </button>
+                    <button type="button" id="slot-afternoon" data-value="Afternoon (1:00 PM - 4:00 PM)" onclick="window.selectTimeSlot('Afternoon (1:00 PM - 4:00 PM)', false)" class="py-3 px-3 rounded-2xl text-xs font-heading font-medium text-center border border-slate-200 bg-white text-slate-600 hover:border-slate-300 cursor-pointer transition">
+                      Afternoon<br><span class="text-[10px] font-normal text-slate-500">1:00 PM – 4:00 PM</span>
+                    </button>
+                    <button type="button" id="slot-evening" data-value="Evening (4:00 PM - 8:00 PM)" onclick="window.selectTimeSlot('Evening (4:00 PM - 8:00 PM)', false)" class="py-3 px-3 rounded-2xl text-xs font-heading font-medium text-center border border-slate-200 bg-white text-slate-600 hover:border-slate-300 cursor-pointer transition">
+                      Evening<br><span class="text-[10px] font-normal text-slate-500">4:00 PM – 8:00 PM</span>
+                    </button>
                   </div>
                 </div>
 
+                <div class="flex items-center gap-3 pt-2">
+                  <button type="button" onclick="window.goToBookingStep(1)" class="w-1/3 py-4 px-4 rounded-2xl font-heading font-semibold text-xs text-slate-600 bg-slate-100 hover:bg-slate-200 transition cursor-pointer">
+                    &larr; Back
+                  </button>
+                  <button type="button" onclick="window.goToBookingStep(3)" class="flex-1 py-4 px-6 rounded-2xl font-heading font-bold text-sm text-white bg-slate-900 hover:bg-slate-800 shadow-md active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer">
+                    <span>Continue to Contact</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                  </button>
+                </div>
               </div>
 
-              <!-- Row 4: Notes -->
-              <div>
-                <label for="notes" class="block text-xs font-heading font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Child's Symptoms / Notes <span class="text-slate-400 font-normal lowercase">(optional)</span>
-                </label>
-                <textarea id="notes" name="notes" rows="2" placeholder="e.g. Mild fever since yesterday, due for MMR booster..."
-                          class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-sans focus:bg-white focus:outline-none focus:ring-2 focus:ring-pediatric-500 transition resize-none"></textarea>
+              <!-- =================== STEP 3: CONTACT & WHATSAPP =================== -->
+              <div id="booking-step-3" class="step-pane hidden-step space-y-4">
+                <div>
+                  <h4 class="font-heading font-bold text-slate-900 text-base">Step 3: How can we reach you?</h4>
+                  <p class="text-xs text-slate-500 font-sans mt-0.5">Enter your WhatsApp mobile number to receive your instant time confirmation.</p>
+                </div>
+
+                <div>
+                  <label for="phone-number" class="block text-xs font-heading font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                    WhatsApp Phone Number <span class="text-rose-500">*</span>
+                  </label>
+                  <!-- Numeric keypad trigger automatically on mobile devices -->
+                  <div class="relative">
+                    <span class="absolute left-4 top-3.5 text-xs font-bold text-slate-400">+91</span>
+                    <input type="tel" 
+                           id="phone-number" 
+                           name="phone_number" 
+                           required 
+                           inputmode="numeric" 
+                           pattern="[0-9]*" 
+                           maxlength="10" 
+                           placeholder="98220 12345"
+                           class="w-full pl-12 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-sans focus:bg-white focus:outline-none transition">
+                  </div>
+                  <p class="text-[11px] text-slate-400 font-sans mt-1">Our front desk sends your instant reservation time via WhatsApp.</p>
+                </div>
+
+                <div>
+                  <label for="notes" class="block text-xs font-heading font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Symptoms or Questions for Dr. Jalil <span class="text-slate-400 font-normal lowercase">(optional)</span>
+                  </label>
+                  <textarea id="notes" name="notes" rows="2" placeholder="e.g. Mild fever since yesterday, feeding hesitation..."
+                            class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-sans focus:bg-white focus:outline-none transition resize-none"></textarea>
+                </div>
+
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs text-slate-600 font-sans flex items-start gap-2.5">
+                  <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+                  <span>Dedicated time slots allocated for every child to eliminate waiting room stress.</span>
+                </div>
+
+                <div class="flex items-center gap-3 pt-2">
+                  <button type="button" onclick="window.goToBookingStep(2)" class="w-1/3 py-4 px-4 rounded-2xl font-heading font-semibold text-xs text-slate-600 bg-slate-100 hover:bg-slate-200 transition cursor-pointer">
+                    &larr; Back
+                  </button>
+                  <button type="submit" 
+                          id="btn-submit-booking"
+                          class="flex-1 py-4 px-6 rounded-2xl font-heading font-bold text-sm text-white bg-pediatric-600 hover:bg-pediatric-700 shadow-lg active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer">
+                    <span id="submit-btn-text">Confirm &amp; Request Child Appointment</span>
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                  </button>
+                </div>
               </div>
-
-              <!-- Submit Button -->
-              <button type="submit" 
-                      id="btn-submit-booking"
-                      class="w-full py-4 px-6 rounded-2xl font-heading font-bold text-sm text-white bg-pediatric-600 hover:bg-pediatric-700 shadow-xl shadow-pediatric-700/25 active:scale-98 transition-all duration-300 flex items-center justify-center gap-2">
-                <span id="submit-btn-text">Request Child Care Appointment</span>
-                <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              </button>
-
-              <p class="text-center text-xs text-slate-500 font-sans leading-relaxed pt-1">
-                🔒 <strong class="text-slate-700 font-semibold">Our front desk will confirm your exact time via WhatsApp</strong> to avoid double-booking.
-              </p>
 
             </form>
-          </div>
 
-          <!-- Toast -->
-          <div id="booking-toast" class="hidden mt-4 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm font-sans transition-all duration-300">
-            <div class="flex items-start gap-3">
-              <span class="text-xl">✅</span>
-              <div>
-                <div class="font-heading font-bold text-emerald-900" id="toast-title">Appointment Request Received!</div>
-                <div class="mt-0.5" id="toast-message">We have queued your slot. Our front desk will WhatsApp you shortly with the exact confirmation.</div>
-                <div id="toast-whatsapp-action" class="mt-3 hidden">
-                  <a id="toast-whatsapp-link" href="#" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 text-white font-heading font-bold text-xs hover:bg-emerald-700 transition">
-                    <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
-                    <span>Open Instant WhatsApp Confirmation</span>
-                  </a>
+            <!-- Feedback Toast Container -->
+            <div id="booking-toast" class="hidden mt-4 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm font-sans transition-all duration-300">
+              <div class="flex items-start gap-3">
+                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+                <div>
+                  <div class="font-heading font-bold text-emerald-900" id="toast-title">Appointment Request Received!</div>
+                  <div class="mt-0.5" id="toast-message">We have queued your slot. Our front desk will WhatsApp you shortly with the exact confirmation.</div>
+                  <div id="toast-whatsapp-action" class="mt-3 hidden">
+                    <a id="toast-whatsapp-link" href="#" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 text-white font-heading font-bold text-xs hover:bg-emerald-700 transition">
+                      <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                      <span>Open Instant WhatsApp Confirmation</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
+          </div>
         </div>
 
       </div>

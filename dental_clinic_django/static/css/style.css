@@ -1,119 +1,187 @@
-/* Roots Dental Clinic & Buds Child Clinic — Custom Medical Styling */
+/* ==========================================================================
+   Roots Dental Clinic & Buds Child Clinic — Ultra-Premium Sanctuary Styling
+   Creative Direction: High-End Healthcare Sanctuary • Modern • Trustworthy
+   ========================================================================== */
+
 :root {
-  --dental-primary: #1E487A;
-  --dental-dark: #122945;
-  --dental-light: #255B98;
-  --pediatric-primary: #4A7C59;
-  --pediatric-dark: #243C2B;
-  --pediatric-light: #588157;
-  --pearl: #F8FAFC;
+  /* Roots Dental (Deep Trust-Building Navy) */
+  --dental-950: #08101D;
+  --dental-900: #0C1B30;
+  --dental-800: #122846;
+  --dental-700: #18375F;
+  --dental-600: #1E4679;
+  --dental-500: #295C9E;
+  --dental-400: #4B7EC2;
+  --dental-100: #E6EFF8;
+  --dental-50:  #F2F7FC;
+
+  /* Buds Child Clinic (Calming Deep Botanical Sage / Forest) */
+  --pediatric-950: #0E1D15;
+  --pediatric-900: #152C20;
+  --pediatric-800: #1E3F2E;
+  --pediatric-700: #28543E;
+  --pediatric-600: #356E52;
+  --pediatric-500: #468E6B;
+  --pediatric-400: #68AE8B;
+  --pediatric-100: #E7F3EC;
+  --pediatric-50:  #F3F9F5;
+
+  /* Neutrals & Sanctuary Canvas */
+  --sanctuary-bg: #FAFBFD;
+  --sanctuary-card: #FFFFFF;
+  --sanctuary-border: rgba(15, 23, 42, 0.08);
 }
 
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 88px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #1E293B;
-  background-color: #F8FAFC;
+  color: #0F172A;
+  background-color: var(--sanctuary-bg);
   overflow-x: hidden;
+  letter-spacing: -0.01em;
 }
 
-h1, h2, h3, h4 {
-  font-family: 'Poppins', sans-serif;
-  letter-spacing: -0.02em;
+/* Editorial & Heading Typography */
+h1, h2, h3, h4, .font-heading {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.025em;
 }
 
-/* Luminous Apple-Style Mesh Background (No harsh flat blues) */
-.liquid-mesh-bg {
+.font-editorial {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Luminous Ambient Sanctuary Backdrops */
+.sanctuary-mesh-dental {
   background-color: #FAFBFD;
   background-image: 
-    radial-gradient(ellipse 65% 55% at 80% 20%, rgba(37, 91, 152, 0.08) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 50% at 15% 80%, rgba(74, 124, 89, 0.06) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 40% at 50% 40%, rgba(255, 255, 255, 0.8) 0%, transparent 100%);
+    radial-gradient(ellipse 70% 60% at 85% 15%, rgba(30, 70, 121, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 65% 55% at 10% 85%, rgba(40, 84, 62, 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255, 255, 255, 0.9) 0%, transparent 100%);
 }
 
-.liquid-mesh-green {
+.sanctuary-mesh-pediatric {
   background-color: #FAFBF9;
   background-image: 
-    radial-gradient(ellipse 65% 55% at 80% 20%, rgba(74, 124, 89, 0.09) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 50% at 15% 80%, rgba(37, 91, 152, 0.05) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 40% at 50% 40%, rgba(255, 255, 255, 0.8) 0%, transparent 100%);
+    radial-gradient(ellipse 70% 60% at 85% 15%, rgba(40, 84, 62, 0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 65% 55% at 10% 85%, rgba(30, 70, 121, 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255, 255, 255, 0.9) 0%, transparent 100%);
 }
 
-/* Apple Liquid Glass Panels */
-.glass-surface {
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.06);
+/* Ultra-Refined Frosted Sanctuary Glass */
+.glass-sanctuary {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.05);
 }
 
-.glass-surface-dark {
-  background: rgba(15, 23, 42, 0.82);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+.glass-sanctuary-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.03);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
 }
 
-/* iOS 17/18 Floating Liquid Glass Micro-Capsule (Translucent Apple Glass) */
-.glass-capsule {
-  background: rgba(255, 255, 255, 0.58) !important;
-  backdrop-filter: blur(22px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(190%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.75) !important;
-  box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.09), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.95) !important;
+.glass-sanctuary-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.08);
+  border-color: rgba(30, 70, 121, 0.2);
 }
 
-/* Horizontal Card Swiping on Touch Devices */
-.snap-x {
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-}
-.snap-center {
-  scroll-snap-align: center;
-}
-
-/* Subtle Micro-Floating Animations */
-@keyframes floatGentle {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-5px); }
+/* Borderless Magazine-Style Portrait Framing */
+.editorial-portrait {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
-@keyframes floatDelayed {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-7px); }
+.editorial-portrait img {
+  mask-image: linear-gradient(to bottom, black 82%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 82%, transparent 100%);
 }
 
-@keyframes slideUpSheet {
-  0% {
-    opacity: 0;
-    transform: translateY(35px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Central Video Play Trigger (Zero Pink Buttons) */
+.video-play-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
 }
 
-.animate-float {
-  animation: floatGentle 4.5s ease-in-out infinite;
+.video-play-disc {
+  width: 54px;
+  height: 54px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
 }
 
-.animate-float-delayed {
-  animation: floatDelayed 5.5s ease-in-out infinite;
-  animation-delay: 1.5s;
+.group:hover .video-play-disc {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.45);
 }
 
-.animate-slide-up {
-  animation: slideUpSheet 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* Progressive Stepper Smooth Transitions */
+.step-pane {
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Form input custom highlights */
+.step-pane.hidden-step {
+  display: none !important;
+  opacity: 0;
+  transform: translateX(16px);
+}
+
+.step-pane.active-step {
+  display: block !important;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Form Inputs Focus & Styling */
+input, select, textarea {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
 input:focus, select:focus, textarea:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(30, 72, 122, 0.15);
+  border-color: var(--dental-500) !important;
+  box-shadow: 0 0 0 3px rgba(30, 70, 121, 0.12) !important;
+}
+
+.input-pediatric:focus {
+  border-color: var(--pediatric-500) !important;
+  box-shadow: 0 0 0 3px rgba(40, 84, 62, 0.12) !important;
+}
+
+/* Custom Scrollbar Hide */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Mobile Safe Areas */
+.safe-pb {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
 }

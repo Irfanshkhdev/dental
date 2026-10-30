@@ -6,81 +6,79 @@
 {% block content %}
 
 <!-- Hero Header -->
-<section class="py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-slate-100/70 via-pearl to-pearl text-center">
+<section class="py-16 lg:py-24 px-4 sm:px-6 lg:px-8 sanctuary-mesh-dental text-center border-b border-slate-100">
   <div class="max-w-4xl mx-auto space-y-4">
-    <span class="px-4 py-1.5 rounded-full bg-slate-200/80 text-slate-700 text-xs font-heading font-bold uppercase tracking-wider">
-      👨‍⚕️ Clinical Leadership &bull; Wanowrie, Pune
-    </span>
-    <h1 class="text-4xl sm:text-5xl font-heading font-extrabold text-slate-900 tracking-tight">
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200/80">
+      <span class="w-1.5 h-1.5 rounded-full bg-slate-700"></span>
+      <span class="text-[11px] font-heading font-semibold uppercase tracking-wider text-slate-700">
+        Clinical Leadership &bull; Wanowrie, Pune
+      </span>
+    </div>
+    <h1 class="text-4xl sm:text-5xl font-heading font-extrabold text-slate-900 tracking-tight leading-[1.1]">
       Two Premier Specialists.<br />
-      <span class="text-transparent bg-clip-text bg-gradient-to-r from-dental-600 via-slate-800 to-pediatric-600">
+      <span class="text-slate-700 font-serif italic">
         One Harmonious Sanctuary.
       </span>
     </h1>
     <p class="text-slate-600 text-base sm:text-lg font-sans max-w-2xl mx-auto leading-relaxed">
-      Roots Dental Clinic and Buds Child Clinic unite under one roof to deliver unmatched dental mastery and trusted pediatric healthcare to Pune families.
+      Roots Dental Clinic and Buds Child Clinic unite under one roof to deliver unmatched restorative dental mastery and trusted pediatric healthcare to Pune families.
     </p>
   </div>
 </section>
 
 <!-- Doctor 1: Dr. Sabina Firoj Shaikh (Roots Dental) -->
-<section class="py-12 px-4 sm:px-6 lg:px-8">
+<section class="py-16 px-4 sm:px-6 lg:px-8 bg-white border-b border-slate-100">
   <div class="max-w-6xl mx-auto">
-    <div class="glass-surface rounded-4xl p-8 sm:p-12 border border-white/80 shadow-2xl overflow-hidden">
+    <div class="rounded-3xl p-8 sm:p-12 border border-slate-200/80 shadow-sm overflow-hidden bg-[#FAFBFD]">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         
-        <!-- Image with Breakout Framing -->
+        <!-- Image with Borderless Presentation -->
         <div class="lg:col-span-5 flex justify-center">
-          <div class="relative w-full max-w-md rounded-3xl bg-gradient-to-tr from-dental-800 to-dental-600 p-6 shadow-2xl flex flex-col items-center text-white">
-            <div class="w-full h-80 sm:h-96 rounded-2xl bg-white/10 border border-white/20 shadow-inner mb-4 flex items-end justify-center overflow-visible pt-4">
-              <img src="{% static 'images/dentist_sabina.png' %}" 
-                   alt="Dr. Sabina Firoj Shaikh - MDS Gold Medalist" 
-                   class="h-[300px] sm:h-[350px] w-auto max-w-full object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.35)] transition-transform duration-500 hover:scale-105"
-                   onerror="this.src='{% static 'images/dentist_sabina_full.jpg' %}';">
-            </div>
-            <div class="text-center w-full pt-2 border-t border-white/20">
-              <div class="font-heading font-bold text-lg sm:text-xl">Dr. Sabina Firoj Shaikh</div>
-              <div class="text-xs text-dental-100 font-sans mt-0.5">MDS &bull; Prosthodontics &bull; Gold Medalist</div>
-              <span class="mt-2.5 inline-block px-3 py-1 rounded-full bg-white/20 text-[10px] font-heading font-bold uppercase tracking-wider">
-                Founder, Roots Dental Clinic
-              </span>
-            </div>
+          <div class="editorial-portrait w-full max-w-sm">
+            <img src="{% static 'images/dentist_sabina.png' %}" 
+                 alt="Dr. Sabina Firoj Shaikh - MDS Gold Medalist" 
+                 class="h-[340px] sm:h-[400px] w-auto max-w-full object-contain object-bottom drop-shadow-sm transition-transform duration-500 hover:scale-[1.02]"
+                 onerror="this.src='{% static 'images/dentist_sabina_full.jpg' %}';">
           </div>
         </div>
 
         <!-- Details -->
         <div class="lg:col-span-7 space-y-5">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-dental-50 border border-dental-200 text-dental-700 text-xs font-heading font-bold">
-            <span>🏆 Highest Academic Honors</span>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-heading font-semibold">
+            <i data-lucide="award" class="w-3.5 h-3.5 text-dental-600"></i>
+            <span>Highest Academic Honors &bull; MDS Gold Medalist</span>
           </div>
           <h2 class="text-3xl font-heading font-extrabold text-slate-900 tracking-tight">
             Dr. Sabina Firoj Shaikh
           </h2>
+          <p class="text-xs text-slate-500 font-sans -mt-2">
+            MDS &bull; Prosthodontics &bull; Gold Medalist &bull; Founder, Roots Dental Clinic
+          </p>
           <p class="text-slate-600 font-sans text-sm sm:text-base leading-relaxed">
-            With over a decade of clinical experience in Wanowrie, Dr. Sabina earned her Master of Dental Surgery (MDS) in Prosthodontics with the prestigious <strong>Gold Medal</strong>. Her philosophy blends microscopic precision with artistic facial balance.
+            With over a decade of clinical experience in Wanowrie, Dr. Sabina earned her Master of Dental Surgery (MDS) in Prosthodontics with the prestigious <strong>Gold Medal</strong>. Her treatment philosophy blends microscopic precision with natural facial aesthetics.
           </p>
           
           <div class="grid grid-cols-2 gap-3 pt-2">
-            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+            <div class="p-4 rounded-2xl bg-white border border-slate-200/70">
               <div class="text-xs font-heading font-bold text-slate-900">Full Mouth Rehab</div>
               <div class="text-[11px] text-slate-500 font-sans mt-0.5">Occlusal restoration &amp; balance</div>
             </div>
-            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+            <div class="p-4 rounded-2xl bg-white border border-slate-200/70">
               <div class="text-xs font-heading font-bold text-slate-900">Porcelain Veneers</div>
               <div class="text-[11px] text-slate-500 font-sans mt-0.5">Micro-thin cosmetic smile designs</div>
             </div>
-            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+            <div class="p-4 rounded-2xl bg-white border border-slate-200/70">
               <div class="text-xs font-heading font-bold text-slate-900">Single-Sitting RCT</div>
               <div class="text-[11px] text-slate-500 font-sans mt-0.5">Pain-free rotary endodontics</div>
             </div>
-            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+            <div class="p-4 rounded-2xl bg-white border border-slate-200/70">
               <div class="text-xs font-heading font-bold text-slate-900">Dental Implants</div>
               <div class="text-[11px] text-slate-500 font-sans mt-0.5">Permanent titanium restoration</div>
             </div>
           </div>
 
           <div class="pt-4">
-            <a href="/#booking-wrapper" onclick="if(window.innerWidth < 768){ (event || window.event).preventDefault(); window.openBookingModal('dental'); }" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-dental-600 hover:bg-dental-700 text-white font-heading font-bold text-xs shadow-md transition">
+            <a href="/dental/#booking-wrapper" onclick="if(window.innerWidth < 768){ (event || window.event).preventDefault(); window.openBookingModal('dental'); }" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-heading font-bold text-xs shadow-sm transition">
               <span>Book Appointment with Dr. Sabina</span>
               <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
             </a>
@@ -93,63 +91,58 @@
 </section>
 
 <!-- Doctor 2: Dr. Jalil S. Mujawar (Buds Child Clinic) -->
-<section class="py-12 px-4 sm:px-6 lg:px-8">
+<section class="py-16 px-4 sm:px-6 lg:px-8 bg-[#FAFBFD]">
   <div class="max-w-6xl mx-auto">
-    <div class="glass-surface rounded-4xl p-8 sm:p-12 border border-white/80 shadow-2xl overflow-hidden">
+    <div class="rounded-3xl p-8 sm:p-12 border border-slate-200/80 shadow-sm overflow-hidden bg-white">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         
-        <!-- Image with Breakout Framing -->
+        <!-- Image with Borderless Presentation -->
         <div class="lg:col-span-5 flex justify-center order-first lg:order-last">
-          <div class="relative w-full max-w-md rounded-3xl bg-gradient-to-tr from-pediatric-800 to-pediatric-600 p-6 shadow-2xl flex flex-col items-center text-white">
-            <div class="w-full h-80 sm:h-96 rounded-2xl bg-white/10 border border-white/20 shadow-inner mb-4 flex items-end justify-center overflow-visible pt-4">
-              <img src="{% static 'images/pediatrician_jalil.png' %}" 
-                   alt="Dr. Jalil S. Mujawar - Senior Pediatric Consultant" 
-                   class="h-[300px] sm:h-[350px] w-auto max-w-full object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.35)] transition-transform duration-500 hover:scale-105"
-                   onerror="this.src='{% static 'images/pediatrician_jalil_full.jpg' %}';">
-            </div>
-            <div class="text-center w-full pt-2 border-t border-white/20">
-              <div class="font-heading font-bold text-lg sm:text-xl">Dr. Jalil S. Mujawar</div>
-              <div class="text-xs text-pediatric-100 font-sans mt-0.5">MBBS &bull; DCH &bull; Senior Consultant Pediatrician</div>
-              <span class="mt-2.5 inline-block px-3 py-1 rounded-full bg-white/20 text-[10px] font-heading font-bold uppercase tracking-wider">
-                Founder, Buds Child Clinic
-              </span>
-            </div>
+          <div class="editorial-portrait w-full max-w-sm">
+            <img src="{% static 'images/pediatrician_jalil.png' %}" 
+                 alt="Dr. Jalil S. Mujawar - Senior Pediatric Consultant" 
+                 class="h-[340px] sm:h-[400px] w-auto max-w-full object-contain object-bottom drop-shadow-sm transition-transform duration-500 hover:scale-[1.02]"
+                 onerror="this.src='{% static 'images/pediatrician_jalil_full.jpg' %}';">
           </div>
         </div>
 
         <!-- Details -->
         <div class="lg:col-span-7 space-y-5">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pediatric-50 border border-pediatric-200 text-pediatric-800 text-xs font-heading font-bold">
-            <span>🛡️ Trusted by 75,400+ Mothers</span>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-heading font-semibold">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span>Trusted by 75,400+ Families &bull; 15+ Yrs Mastery</span>
           </div>
           <h2 class="text-3xl font-heading font-extrabold text-slate-900 tracking-tight">
             Dr. Jalil S. Mujawar
           </h2>
+          <p class="text-xs text-slate-500 font-sans -mt-2">
+            MBBS &bull; DCH &bull; Senior Consultant Pediatrician &bull; Founder, Buds Child Clinic
+          </p>
           <p class="text-slate-600 font-sans text-sm sm:text-base leading-relaxed">
-            With 15+ years of clinical excellence in pediatrics and neonatology, Dr. Jalil is one of South Pune's most beloved pediatric consultants. He is renowned for his patient, gentle communication with anxious children and his evidence-based guidance for new parents.
+            With 15+ years of clinical excellence in pediatrics and neonatology, Dr. Jalil is one of South Pune's most beloved pediatric consultants. He is renowned for his gentle communication with anxious children and evidence-based guidance for new parents.
           </p>
           
           <div class="grid grid-cols-2 gap-3 pt-2">
-            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
               <div class="text-xs font-heading font-bold text-slate-900">Neonatal ICU Care</div>
               <div class="text-[11px] text-slate-500 font-sans mt-0.5">Premature &amp; newborn monitoring</div>
             </div>
-            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
               <div class="text-xs font-heading font-bold text-slate-900">IAP Immunization</div>
               <div class="text-[11px] text-slate-500 font-sans mt-0.5">Cold-chain certified vaccines</div>
             </div>
-            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
               <div class="text-xs font-heading font-bold text-slate-900">Growth &amp; Milestones</div>
               <div class="text-[11px] text-slate-500 font-sans mt-0.5">Cognitive &amp; motor development</div>
             </div>
-            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
               <div class="text-xs font-heading font-bold text-slate-900">Childhood Illnesses</div>
               <div class="text-[11px] text-slate-500 font-sans mt-0.5">Fever, asthma &amp; infection care</div>
             </div>
           </div>
 
           <div class="pt-4">
-            <a href="/pediatric/#booking-wrapper" onclick="if(window.innerWidth < 768){ (event || window.event).preventDefault(); window.openBookingModal('pediatric'); }" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-pediatric-600 hover:bg-pediatric-700 text-white font-heading font-bold text-xs shadow-md transition">
+            <a href="/pediatric/#booking-wrapper" onclick="if(window.innerWidth < 768){ (event || window.event).preventDefault(); window.openBookingModal('pediatric'); }" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-heading font-bold text-xs shadow-sm transition">
               <span>Book Appointment with Dr. Jalil</span>
               <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
             </a>

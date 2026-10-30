@@ -5,233 +5,162 @@
 
 {% block content %}
 
-<!-- HERO SECTION: ROOTS DENTAL (APPLE LIQUID UI & POLISHED MESH BACKDROP) -->
-<section class="relative pt-4 sm:pt-6 pb-12 lg:py-20 overflow-hidden liquid-mesh-bg border-b border-slate-100">
-  <!-- Subtle ambient decorative glow -->
-  <div class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-dental-500/10 blur-3xl pointer-events-none"></div>
-  <div class="absolute top-1/2 -right-32 w-96 h-96 rounded-full bg-dental-400/10 blur-3xl pointer-events-none"></div>
-
+<!-- ======================================================== -->
+<!-- HERO SECTION: ROOTS DENTAL (EDITORIAL MAGAZINE-STYLE)     -->
+<!-- ======================================================== -->
+<section class="relative pt-6 pb-16 lg:py-24 overflow-hidden sanctuary-mesh-dental border-b border-slate-100">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
 
-    <!-- MOBILE-FIRST HERO (< md): APPLE "TODAY" CARD / HEALTH PAGE (IMAGE FIRST + OVERLAPPING BOTTOM SHEET) -->
-    <div class="block md:hidden -mx-4 sm:-mx-6 -mt-4 sm:-mt-6">
+    <!-- ---------------------------------------------------- -->
+    <!-- MOBILE HERO (< md): CLEAN NATIVE APP LAYOUT          -->
+    <!-- ---------------------------------------------------- -->
+    <div class="block md:hidden text-left space-y-6">
       
-      <!-- 1. Large Edge-to-Edge Hero Image Container (Image First!) -->
-      <div class="relative w-full h-[390px] sm:h-[440px] overflow-hidden bg-gradient-to-b from-blue-50/60 via-slate-100/50 to-slate-200/60 shadow-inner">
-        <img src="{% static 'images/dentist_sabina.png' %}" 
-             alt="Dr. Sabina Firoj Shaikh - MDS Gold Medalist Dentist" 
-             class="w-full h-full object-cover object-top"
-             onerror="this.src='{% static 'images/dentist_sabina_full.jpg' %}';">
+      <!-- Eyebrow Pill -->
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200/80">
+        <span class="w-1.5 h-1.5 rounded-full bg-dental-600"></span>
+        <span class="text-[11px] font-heading font-semibold uppercase tracking-wider text-slate-700">
+          Wanowrie's Premier Dental Clinic
+        </span>
+      </div>
 
-        <!-- Soft vignette gradient at base of image -->
-        <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none"></div>
+      <!-- Main Headline -->
+      <h1 class="text-4xl font-heading font-extrabold text-slate-900 tracking-tight leading-[1.08]">
+        Advanced, Painless<br />Dental Artistry.
+      </h1>
 
-        <!-- 2. Floating iOS Glass Badges (Positioned for 100% Visibility Above Sheet & Elbow) -->
-        <!-- Floating Badge 1: MDS Gold Medalist (Upper Left - Crystal Clear & Prominent) -->
-        <div class="animate-float absolute top-5 left-4 z-20 bg-white/85 backdrop-blur-2xl border border-white/90 text-slate-900 shadow-xl rounded-2xl p-2.5 px-3.5 flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-dental-600/15 text-dental-700 flex items-center justify-center text-sm font-bold border border-dental-200/60 flex-shrink-0 shadow-xs">
-            🏅
-          </div>
-          <div class="text-left">
-            <p class="font-heading font-extrabold text-xs text-slate-900 leading-tight">MDS Gold Medalist</p>
-            <div class="flex items-center gap-0.5 mt-0.5">
-              <span class="text-amber-400 text-[9px]">★★★★★</span>
-              <span class="text-[10px] font-bold text-slate-700 ml-1">5.0 Star</span>
-            </div>
-          </div>
-        </div>
+      <!-- Subtitle -->
+      <p class="text-sm text-slate-600 font-sans leading-relaxed">
+        Led by MDS Gold Medalist Dr. Sabina Firoj Shaikh. Specializing in single-visit root canals, clear aligners, and precision smile makeovers in a calming clinical sanctuary.
+      </p>
 
-        <!-- Floating Badge 2: Painless Care (Positioned Above Her Elbow on Right Side) -->
-        <div class="animate-float-delayed absolute top-44 sm:top-48 right-4 z-20 bg-white/85 backdrop-blur-2xl border border-white/90 text-slate-900 shadow-xl rounded-2xl p-2.5 px-3.5 flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-emerald-600/15 text-emerald-700 flex items-center justify-center text-sm font-bold border border-emerald-200/60 flex-shrink-0 shadow-xs">
-            ✨
-          </div>
-          <div class="text-left">
-            <p class="font-heading font-extrabold text-xs text-slate-900 leading-tight">100% Painless Protocol</p>
-            <p class="text-[10px] font-medium text-slate-600">Digital Anaesthesia</p>
-          </div>
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3 w-full pt-1">
+        <button type="button" 
+                onclick="window.openBookingModal('dental')" 
+                class="flex-1 py-3.5 px-5 rounded-full font-heading font-bold text-xs text-white bg-slate-900 hover:bg-slate-800 shadow-md active:scale-95 transition flex items-center justify-center gap-2 cursor-pointer">
+          <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+          <span>Book Consultation</span>
+        </button>
+
+        <a href="#services" 
+           class="px-5 py-3.5 rounded-full font-heading font-semibold text-xs text-slate-700 bg-white border border-slate-200/80 active:scale-95 transition flex items-center justify-center gap-1.5">
+          <span>Treatments</span>
+          <i data-lucide="arrow-down" class="w-3 h-3 text-slate-400"></i>
+        </a>
+      </div>
+
+      <!-- Borderless Editorial Portrait Placement (Zero Floating Clutter) -->
+      <div class="editorial-portrait pt-4">
+        <div class="relative w-full max-w-sm mx-auto overflow-hidden">
+          <img src="{% static 'images/dentist_sabina.png' %}" 
+               alt="Dr. Sabina Firoj Shaikh - MDS Gold Medalist Dentist" 
+               class="w-full h-auto max-h-[380px] object-contain object-bottom mx-auto"
+               onerror="this.src='{% static 'images/dentist_sabina_full.jpg' %}';">
         </div>
       </div>
 
-      <!-- 3. The Overlapping Text Card (Bottom Sheet Style: -mt-12, rounded-t-[40px]) -->
-      <div class="-mt-12 relative z-10 bg-white rounded-t-[40px] px-6 pt-5 pb-8 shadow-2xl border-t border-slate-100 animate-slide-up">
-        <!-- iOS Sheet Drag Indicator -->
-        <div class="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-3"></div>
+      <!-- Doctor Introduction (Directly below name in elegant, muted typography) -->
+      <div class="p-4 rounded-2xl bg-white border border-slate-200/70 shadow-xs text-center">
+        <h3 class="font-heading font-bold text-slate-900 text-base leading-tight">Dr. Sabina Firoj Shaikh</h3>
+        <p class="text-xs text-slate-500 font-sans mt-0.5">MDS Gold Medalist &bull; Prosthodontics &bull; Implant Specialist</p>
+        <p class="text-[11px] text-slate-400 font-sans mt-0.5">10+ Years of Restorative Excellence &bull; Wanowrie, Pune</p>
+      </div>
 
-        <!-- Tiny Bold Uppercase Pill -->
-        <p class="text-[11px] font-heading font-bold tracking-widest text-slate-400 uppercase text-left mb-1.5">
-          Wanowrie's Premier Clinic
-        </p>
-
-        <!-- H1: Massive, Ultra-Bold, Compact (tracking-tighter, leading-[1.05]) -->
-        <h1 class="text-4xl sm:text-5xl font-heading font-black text-slate-900 tracking-tighter leading-[1.05] text-left mb-3">
-          Advanced, Painless<br />Dental Care.
-        </h1>
-
-        <!-- Subtitle: Clean 2-Line Description -->
-        <p class="text-xs sm:text-sm text-slate-500 font-sans leading-relaxed text-left mb-5">
-          Precision smile makeovers and single-visit root canals by MDS Gold Medalist Dr. Sabina.
-        </p>
-
-        <!-- Buttons: Side-by-Side Flex -->
-        <div class="flex items-center gap-3 w-full mb-6">
-          <button type="button" 
-                  onclick="window.openBookingModal('dental')" 
-                  class="flex-1 py-4 px-5 rounded-full font-heading font-bold text-xs text-white bg-dental-600 hover:bg-dental-700 shadow-xl shadow-dental-700/25 active:scale-95 transition-all flex items-center justify-center gap-2">
-            <i data-lucide="calendar" class="w-4 h-4"></i>
-            <span>Book Consultation</span>
-          </button>
-
-          <a href="#services" 
-             class="px-6 py-4 rounded-full font-heading font-bold text-xs text-slate-700 bg-slate-100 hover:bg-slate-200 active:scale-95 transition-all flex items-center justify-center gap-1.5">
-            <span>Explore</span>
-            <i data-lucide="arrow-down" class="w-3.5 h-3.5 text-slate-500"></i>
-          </a>
+      <!-- Metrics Row -->
+      <div class="grid grid-cols-3 gap-3 pt-2">
+        <div class="p-3 rounded-2xl bg-white border border-slate-100 text-center">
+          <div class="font-heading font-black text-slate-900 text-base">103+</div>
+          <div class="text-[10px] text-slate-500 font-medium">Google Reviews</div>
         </div>
-
-        <!-- 4. Stats: Compact Horizontal Scrolling Row Below Buttons -->
-        <div class="pt-4 border-t border-slate-100">
-          <div class="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
-            <!-- Stat 1 -->
-            <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100 min-w-[105px] flex-shrink-0 text-left">
-              <p class="font-heading font-black text-slate-900 text-sm">103+</p>
-              <div class="flex text-amber-400 text-[8px] my-0.5">★★★★★</div>
-              <p class="text-[10px] text-slate-400 font-sans">Reviews</p>
-            </div>
-
-            <!-- Stat 2 -->
-            <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100 min-w-[105px] flex-shrink-0 text-left">
-              <p class="font-heading font-black text-dental-600 text-sm">10+ Yrs</p>
-              <p class="text-[10px] text-emerald-600 font-semibold my-0.5">Wanowrie</p>
-              <p class="text-[10px] text-slate-400 font-sans">Experience</p>
-            </div>
-
-            <!-- Stat 3 -->
-            <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100 min-w-[105px] flex-shrink-0 text-left">
-              <p class="font-heading font-black text-slate-900 text-sm">3D Tech</p>
-              <p class="text-[10px] text-slate-600 font-semibold my-0.5">Cone Beam CT</p>
-              <p class="text-[10px] text-slate-400 font-sans">Precision</p>
-            </div>
-          </div>
+        <div class="p-3 rounded-2xl bg-white border border-slate-100 text-center">
+          <div class="font-heading font-black text-dental-700 text-base">10+ Yrs</div>
+          <div class="text-[10px] text-slate-500 font-medium">Wanowrie Clinic</div>
+        </div>
+        <div class="p-3 rounded-2xl bg-white border border-slate-100 text-center">
+          <div class="font-heading font-black text-slate-900 text-base">MDS</div>
+          <div class="text-[10px] text-slate-500 font-medium">Gold Medalist</div>
         </div>
       </div>
 
     </div>
 
 
-    <!-- DESKTOP HERO (>= md): LUXURIOUS POLISHED 2-COLUMN VIEW -->
-    <div class="hidden md:grid md:grid-cols-12 gap-8 lg:gap-12 items-center">
+    <!-- ---------------------------------------------------- -->
+    <!-- DESKTOP HERO (>= md): EDITORIAL 2-COLUMN VIEW        -->
+    <!-- ---------------------------------------------------- -->
+    <div class="hidden md:grid md:grid-cols-12 gap-10 lg:gap-16 items-center">
 
-      <!-- Left Column: Copy & Value Proposition -->
-      <div class="md:col-span-7 space-y-6 text-left">
-        <!-- Eyebrow Badge -->
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200/80 shadow-xs backdrop-blur-md">
-          <span class="w-2 h-2 rounded-full bg-dental-600 animate-ping"></span>
-          <span class="text-xs font-heading font-semibold text-dental-700 tracking-wide uppercase">
+      <!-- Left Column: Copy & Credibility -->
+      <div class="md:col-span-7 space-y-7 text-left">
+        
+        <!-- Eyebrow Pill -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100/90 border border-slate-200/80">
+          <span class="w-2 h-2 rounded-full bg-dental-600"></span>
+          <span class="text-xs font-heading font-semibold uppercase tracking-wider text-slate-700">
             Wanowrie's Premier Dental Clinic &bull; MDS Gold Medalist
           </span>
         </div>
 
         <!-- Main Headline -->
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-heading font-extrabold text-slate-900 leading-[1.12] tracking-tight">
-          Advanced, Painless Dental Care in <span class="text-transparent bg-clip-text bg-gradient-to-r from-dental-600 to-dental-800">Wanowrie.</span>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-heading font-extrabold text-slate-900 leading-[1.1] tracking-tight">
+          Advanced, Painless<br />Dental Care in <span class="text-dental-700 font-serif italic">Wanowrie.</span>
         </h1>
 
         <!-- Supporting Paragraph -->
         <p class="text-slate-600 text-base sm:text-lg leading-relaxed max-w-2xl font-sans">
-          Led by <strong class="text-slate-800 font-semibold">Dr. Sabina Firoj Shaikh</strong> (MDS Gold Medalist, Prosthodontist), Roots Dental Clinic delivers precision smile makeovers, single-visit pain-free root canals, and invisible aligners in a calming, five-star clinical sanctuary.
+          Led by <strong class="text-slate-900 font-semibold">Dr. Sabina Firoj Shaikh</strong> (MDS Gold Medalist, Prosthodontist), Roots Dental Clinic delivers precision smile makeovers, single-visit pain-free root canals, and invisible aligners in a calming, five-star clinical sanctuary.
         </p>
 
         <!-- CTA Buttons -->
-        <div class="flex flex-wrap items-center gap-4 pt-2">
-          <button type="button" onclick="window.openBookingModal('dental')" class="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-heading font-bold text-sm text-white bg-gradient-to-r from-dental-600 to-dental-700 hover:from-dental-700 hover:to-dental-800 shadow-xl shadow-dental-700/25 active:scale-95 transition-all duration-200">
+        <div class="flex items-center gap-4 pt-2">
+          <button type="button" 
+                  onclick="window.scrollToBooking('dental')" 
+                  class="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-heading font-bold text-sm text-white bg-slate-900 hover:bg-slate-800 shadow-md active:scale-95 transition duration-200 cursor-pointer">
             <i data-lucide="calendar" class="w-4 h-4"></i>
-            <span>Book Dental Consultation</span>
+            <span>Reserve Dental Consultation</span>
           </button>
           
-          <a href="#services" class="inline-flex items-center gap-2 px-6 py-4 rounded-full font-heading font-semibold text-sm text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/80 shadow-xs hover:shadow transition-all duration-200">
+          <a href="#services" 
+             class="inline-flex items-center gap-2 px-7 py-4 rounded-full font-heading font-semibold text-sm text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/80 shadow-xs transition duration-200">
             <span>Explore Treatments</span>
-            <i data-lucide="arrow-down" class="w-4 h-4 text-slate-400"></i>
+            <i data-lucide="arrow-down" class="w-3.5 h-3.5 text-slate-400"></i>
           </a>
         </div>
 
-        <!-- Trust Metric Strip (Hero Bottom) -->
-        <div class="grid grid-cols-3 gap-6 pt-6 border-t border-slate-200/70 max-w-lg">
+        <!-- Trust Metric Strip -->
+        <div class="grid grid-cols-3 gap-8 pt-8 border-t border-slate-200/80 max-w-lg">
           <div>
-            <div class="text-2xl sm:text-3xl font-heading font-black text-slate-900 leading-none">103+</div>
-            <div class="flex items-center gap-0.5 text-amber-400 text-xs mt-1">★★★★★</div>
-            <div class="text-xs font-sans text-slate-500 font-medium">Google Reviews</div>
+            <div class="text-3xl font-heading font-black text-slate-900 leading-none">103+</div>
+            <div class="text-xs font-sans text-slate-500 font-medium mt-1">Verified 5-Star Reviews</div>
           </div>
           <div>
-            <div class="text-2xl sm:text-3xl font-heading font-black text-dental-700 leading-none">10+ Yrs</div>
-            <div class="text-xs text-emerald-600 font-semibold mt-1">Since 2014</div>
-            <div class="text-xs font-sans text-slate-500 font-medium">Wanowrie Clinic</div>
+            <div class="text-3xl font-heading font-black text-dental-700 leading-none">10+ Yrs</div>
+            <div class="text-xs font-sans text-slate-500 font-medium mt-1">Wanowrie Practice</div>
           </div>
           <div>
-            <div class="text-2xl sm:text-3xl font-heading font-black text-slate-900 leading-none">MDS</div>
-            <div class="text-xs text-dental-600 font-semibold mt-1">Gold Medal</div>
-            <div class="text-xs font-sans text-slate-500 font-medium">Highest Honor</div>
+            <div class="text-3xl font-heading font-black text-slate-900 leading-none">MDS</div>
+            <div class="text-xs font-sans text-slate-500 font-medium mt-1">Gold Medal Honor</div>
           </div>
         </div>
 
       </div>
 
-      <!-- Right Column: Doctor Portrait with Breakout 3D Frame & Refined iOS Micro-Capsules -->
-      <div class="md:col-span-5 relative flex justify-center">
+      <!-- Right Column: Borderless Magazine Portrait Placement (Zero Floating Box/Badges) -->
+      <div class="md:col-span-5 relative flex flex-col items-center">
         
-        <!-- Background Soft Backdrop Glow Card -->
-        <div class="relative w-full max-w-lg rounded-4xl p-5 sm:p-7 glass-surface border border-white shadow-2xl backdrop-blur-2xl">
-          
-          <!-- Image Container with Breakout Top -->
-          <div class="relative rounded-3xl overflow-visible flex items-end justify-center min-h-[460px] lg:min-h-[500px] pt-8">
-            
-            <!-- Real High-Res Cutout Image of Dr. Sabina -->
-            <img src="{% static 'images/dentist_sabina.png' %}" 
-                 alt="Dr. Sabina Firoj Shaikh - MDS Gold Medalist Dentist Wanowrie" 
-                 class="relative z-10 w-auto h-[440px] lg:h-[480px] max-w-full object-contain drop-shadow-[0_25px_35px_rgba(30,72,122,0.25)] transition-transform duration-500 hover:scale-[1.03]"
-                 onerror="this.src='{% static 'images/dentist_sabina_full.jpg' %}';">
-
-            <!-- Subtle Inner Decorative Gradient Behind Cutout -->
-            <div class="absolute inset-x-4 bottom-0 top-20 bg-gradient-to-t from-dental-600/15 via-transparent to-transparent rounded-3xl -z-0"></div>
-
-          </div>
-
-          <!-- Doctor Tag at Card Bottom -->
-          <div class="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between">
-            <div>
-              <div class="font-heading font-bold text-slate-900 text-sm sm:text-base">Dr. Sabina Firoj Shaikh</div>
-              <div class="text-[11px] sm:text-xs text-dental-700 font-medium font-sans">MDS &bull; Prosthodontist &bull; Implant Specialist</div>
-            </div>
-            <span class="px-3 py-1 rounded-full bg-dental-50 text-dental-700 text-[10px] sm:text-xs font-heading font-bold shadow-xs border border-dental-200">
-              Gold Medalist
-            </span>
-          </div>
-
+        <div class="editorial-portrait w-full max-w-md">
+          <img src="{% static 'images/dentist_sabina.png' %}" 
+               alt="Dr. Sabina Firoj Shaikh - MDS Gold Medalist Dentist Wanowrie" 
+               class="relative z-10 w-auto h-[460px] lg:h-[500px] max-w-full object-contain object-bottom drop-shadow-sm transition-transform duration-500 hover:scale-[1.02]"
+               onerror="this.src='{% static 'images/dentist_sabina_full.jpg' %}';">
         </div>
 
-        <!-- Refined Apple iOS Liquid Glass Micro-Capsule 1: MDS Gold Medalist (Upper Left) -->
-        <div class="animate-float glass-capsule absolute top-6 sm:top-8 -left-4 sm:-left-8 z-20 px-4 py-2.5 rounded-2xl flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-dental-600/15 text-dental-700 flex items-center justify-center text-sm font-bold border border-dental-200/60 shadow-xs">
-            🦷
-          </div>
-          <div>
-            <div class="font-heading font-bold text-slate-900 text-xs leading-none">MDS Gold Medalist</div>
-            <div class="text-[10px] text-amber-500 font-sans flex items-center gap-0.5 mt-1">
-              <span>★★★★★</span>
-              <span class="font-bold text-slate-700 ml-0.5">5.0 Star</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Refined Apple iOS Liquid Glass Micro-Capsule 2: Painless Care (Upper Right Shoulder Level - Repositioned Higher Up) -->
-        <div class="animate-float-delayed glass-capsule absolute top-28 sm:top-32 -right-3 sm:-right-8 z-20 px-4 py-2.5 rounded-2xl flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-emerald-600/15 text-emerald-700 flex items-center justify-center text-sm font-bold border border-emerald-200/60 shadow-xs">
-            ✨
-          </div>
-          <div>
-            <div class="font-heading font-bold text-slate-900 text-xs leading-none">100% Painless Protocol</div>
-            <div class="text-[10px] text-slate-500 font-sans mt-0.5">Digital Anaesthesia</div>
-          </div>
+        <!-- Muted Professional Typography Directly Below Name -->
+        <div class="mt-4 text-center w-full max-w-sm pt-4 border-t border-slate-200/80">
+          <h3 class="font-heading font-bold text-slate-900 text-lg leading-tight">Dr. Sabina Firoj Shaikh</h3>
+          <p class="text-xs text-slate-500 font-sans mt-0.5">MDS Gold Medalist &bull; Prosthodontist &amp; Oral Implantologist</p>
+          <p class="text-[11px] text-slate-400 font-sans mt-0.5">10+ Years of Clinical Mastery &bull; Wanowrie, Pune</p>
         </div>
 
       </div>
@@ -242,43 +171,42 @@
 </section>
 
 
-<!-- TRUST STRIP: 3-COLUMN HIGHLY STYLED BANNER -->
-<section class="py-6 px-4 sm:px-6 lg:px-8 bg-white border-y border-slate-100">
+<!-- ======================================================== -->
+<!-- TRUST STRIP: CLEAN EDITORIAL CREDIBILITY                 -->
+<!-- ======================================================== -->
+<section class="py-8 px-4 sm:px-6 lg:px-8 bg-white border-b border-slate-100">
   <div class="max-w-7xl mx-auto">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
       <!-- Column 1: Google Reviews -->
-      <div class="glass-surface p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4 hover:shadow-md transition">
-        <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0 text-2xl border border-amber-100">
-          ⭐
+      <div class="p-6 rounded-2xl bg-slate-50/60 border border-slate-200/60 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-white text-slate-700 flex items-center justify-center flex-shrink-0 border border-slate-200/80 shadow-xs">
+          <i data-lucide="star" class="w-5 h-5 text-amber-500"></i>
         </div>
         <div>
-          <div class="flex items-center gap-1 text-amber-400 text-sm">★★★★★</div>
-          <div class="font-heading font-bold text-slate-900 text-base mt-0.5">103+ Google Reviews</div>
-          <p class="text-xs text-slate-500 font-sans mt-0.5">5.0 Star verified patient ratings in Wanowrie.</p>
+          <div class="font-heading font-bold text-slate-900 text-sm">103+ Google Reviews</div>
+          <p class="text-xs text-slate-500 font-sans mt-0.5">5.0 Star verified local patient ratings in Wanowrie.</p>
         </div>
       </div>
 
       <!-- Column 2: 10+ Years Experience -->
-      <div class="glass-surface p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4 hover:shadow-md transition">
-        <div class="w-14 h-14 rounded-2xl bg-dental-50 text-dental-600 flex items-center justify-center flex-shrink-0 text-2xl border border-dental-100">
-          🏅
+      <div class="p-6 rounded-2xl bg-slate-50/60 border border-slate-200/60 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-white text-slate-700 flex items-center justify-center flex-shrink-0 border border-slate-200/80 shadow-xs">
+          <i data-lucide="award" class="w-5 h-5 text-dental-700"></i>
         </div>
         <div>
-          <span class="text-xs font-heading font-bold uppercase tracking-wider text-dental-600">Clinical Mastery</span>
-          <div class="font-heading font-bold text-slate-900 text-base mt-0.5">10+ Years Experience</div>
-          <p class="text-xs text-slate-500 font-sans mt-0.5">Led by MDS Gold Medalist Dr. Sabina Shaikh.</p>
+          <div class="font-heading font-bold text-slate-900 text-sm">MDS Gold Medalist</div>
+          <p class="text-xs text-slate-500 font-sans mt-0.5">Led personally by Dr. Sabina Shaikh for every case.</p>
         </div>
       </div>
 
       <!-- Column 3: Advanced 3D Tech -->
-      <div class="glass-surface p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4 hover:shadow-md transition">
-        <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0 text-2xl border border-indigo-100">
-          🔬
+      <div class="p-6 rounded-2xl bg-slate-50/60 border border-slate-200/60 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-white text-slate-700 flex items-center justify-center flex-shrink-0 border border-slate-200/80 shadow-xs">
+          <i data-lucide="scan" class="w-5 h-5 text-slate-700"></i>
         </div>
         <div>
-          <span class="text-xs font-heading font-bold uppercase tracking-wider text-indigo-600">Digital Precision</span>
-          <div class="font-heading font-bold text-slate-900 text-base mt-0.5">Advanced 3D Tech</div>
+          <div class="font-heading font-bold text-slate-900 text-sm">Precision 3D Diagnostics</div>
           <p class="text-xs text-slate-500 font-sans mt-0.5">Digital intraoral scanners &amp; rotary endodontics.</p>
         </div>
       </div>
@@ -288,148 +216,150 @@
 </section>
 
 
-<!-- SERVICES GRID: 6 BEAUTIFUL CARDS WITH HORIZONTAL SNAP ON MOBILE -->
-<section id="services" class="py-20 bg-pearl">
+<!-- ======================================================== -->
+<!-- SERVICES GRID: 6 CURATED SUITES (ZERO NATIVE EMOJIS)     -->
+<!-- ======================================================== -->
+<section id="services" class="py-20 bg-[#FAFBFD]">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     
     <!-- Section Header -->
-    <div class="text-center max-w-3xl mx-auto mb-14">
-      <span class="px-4 py-1.5 rounded-full bg-dental-100/80 text-dental-700 text-xs font-heading font-bold uppercase tracking-wider">
-        🦷 Comprehensive Dental Suites
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <span class="px-4 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-heading font-semibold uppercase tracking-wider">
+        Comprehensive Clinical Suites
       </span>
-      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-heading font-black text-slate-900 mt-4 tracking-tight">
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-heading font-extrabold text-slate-900 mt-4 tracking-tight">
         Curated Dental Care <br class="hidden sm:inline" />Under One Roof
       </h2>
-      <p class="text-slate-600 text-base mt-3 font-sans">
-        Every treatment at Roots Dental is performed with high-magnification optics and patient comfort protocols.
+      <p class="text-slate-600 text-sm sm:text-base mt-3 font-sans">
+        Every treatment at Roots Dental is performed with high-magnification optics and strict gentle anaesthesia protocols.
       </p>
     </div>
 
-    <!-- Cards Container: Horizontal Swiping on Mobile, 3-Col Grid on Desktop -->
-    <div class="flex overflow-x-auto pb-4 gap-6 snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-3 md:overflow-visible">
+    <!-- Cards Grid with Unified Spacing -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-      <!-- Card 1: General Dentistry -->
-      <div class="flex-shrink-0 w-80 sm:w-88 md:w-auto snap-center bg-white rounded-3xl p-7 border border-slate-200/80 shadow-glass hover:-translate-y-2 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+      <!-- Suite 1: General Dentistry -->
+      <div class="glass-sanctuary-card rounded-3xl p-8 flex flex-col justify-between group">
         <div>
-          <div class="w-14 h-14 rounded-2xl bg-dental-50 text-dental-600 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
-            🦷
+          <div class="w-12 h-12 rounded-2xl bg-dental-50 text-dental-700 flex items-center justify-center mb-6 group-hover:bg-dental-100 transition">
+            <i data-lucide="activity" class="w-5 h-5"></i>
           </div>
           <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-dental-600">Preventive Care</span>
           <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">General Dentistry</h3>
           <p class="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed">
-            Routine checkups, ultrasonic scaling, digital cavities detection, and gentle composite tooth-colored fillings.
+            Routine checkups, ultrasonic calculus scaling, digital cavity mapping, and tooth-colored composite restorations.
           </p>
         </div>
-        <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-400">Painless &bull; Routine</span>
-          <button type="button" onclick="window.scrollToBooking('dental', 'General Dentistry')" class="text-xs font-heading font-bold text-dental-600 hover:text-dental-800 flex items-center gap-1 group-hover:gap-2 transition-all">
+        <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-400">Painless &bull; Preventive</span>
+          <button type="button" onclick="window.scrollToBooking('dental', 'General Dentistry')" class="text-xs font-heading font-semibold text-dental-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <span>Book Visit</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
       </div>
 
-      <!-- Card 2: Root Canal Treatment -->
-      <div class="flex-shrink-0 w-80 sm:w-88 md:w-auto snap-center bg-white rounded-3xl p-7 border border-slate-200/80 shadow-glass hover:-translate-y-2 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+      <!-- Suite 2: Single-Visit RCT -->
+      <div class="glass-sanctuary-card rounded-3xl p-8 flex flex-col justify-between group">
         <div>
-          <div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
-            ⚡
+          <div class="w-12 h-12 rounded-2xl bg-dental-50 text-dental-700 flex items-center justify-center mb-6 group-hover:bg-dental-100 transition">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
           </div>
-          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-rose-600">Endodontics</span>
-          <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Root Canal Treatment</h3>
+          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-dental-600">Endodontic Artistry</span>
+          <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Single-Visit Root Canal</h3>
           <p class="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed">
-            Pain-free single-sitting root canals using advanced rotary instruments and apex locators to save your natural tooth.
+            Fast, pain-free root canals utilizing rotary apex locators and computerized anaesthesia to preserve your natural tooth.
           </p>
         </div>
-        <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-400">Single-Sitting RCT</span>
-          <button type="button" onclick="window.scrollToBooking('dental', 'Root Canal Treatment')" class="text-xs font-heading font-bold text-dental-600 hover:text-dental-800 flex items-center gap-1 group-hover:gap-2 transition-all">
+        <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-400">Single Sitting</span>
+          <button type="button" onclick="window.scrollToBooking('dental', 'Root Canal Treatment')" class="text-xs font-heading font-semibold text-dental-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <span>Book Visit</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
       </div>
 
-      <!-- Card 3: Braces & Aligners -->
-      <div class="flex-shrink-0 w-80 sm:w-88 md:w-auto snap-center bg-white rounded-3xl p-7 border border-slate-200/80 shadow-glass hover:-translate-y-2 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+      <!-- Suite 3: Clear Aligners -->
+      <div class="glass-sanctuary-card rounded-3xl p-8 flex flex-col justify-between group">
         <div>
-          <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
-            ✨
+          <div class="w-12 h-12 rounded-2xl bg-dental-50 text-dental-700 flex items-center justify-center mb-6 group-hover:bg-dental-100 transition">
+            <i data-lucide="smile" class="w-5 h-5"></i>
           </div>
-          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-indigo-600">Orthodontics</span>
-          <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Braces &amp; Clear Aligners</h3>
+          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-dental-600">Orthodontics</span>
+          <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Clear Invisible Aligners</h3>
           <p class="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed">
-            Invisible aligners and precision ceramic braces designed to correct crowding, gaps, and overbites discreetly.
+            Virtually invisible aligners and aesthetic ceramic braces engineered to correct spacing and misalignment discreetly.
           </p>
         </div>
-        <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-400">3D Simulation</span>
-          <button type="button" onclick="window.scrollToBooking('dental', 'Braces & Clear Aligners')" class="text-xs font-heading font-bold text-dental-600 hover:text-dental-800 flex items-center gap-1 group-hover:gap-2 transition-all">
+        <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-400">3D Simulation</span>
+          <button type="button" onclick="window.scrollToBooking('dental', 'Braces & Clear Aligners')" class="text-xs font-heading font-semibold text-dental-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <span>Book Visit</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
       </div>
 
-      <!-- Card 4: Pediatric Dentistry -->
-      <div class="flex-shrink-0 w-80 sm:w-88 md:w-auto snap-center bg-white rounded-3xl p-7 border border-slate-200/80 shadow-glass hover:-translate-y-2 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+      <!-- Suite 4: Cosmetic Makeovers -->
+      <div class="glass-sanctuary-card rounded-3xl p-8 flex flex-col justify-between group">
         <div>
-          <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
-            🧸
+          <div class="w-12 h-12 rounded-2xl bg-dental-50 text-dental-700 flex items-center justify-center mb-6 group-hover:bg-dental-100 transition">
+            <i data-lucide="gem" class="w-5 h-5"></i>
           </div>
-          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-emerald-600">Kid-Friendly Dental</span>
+          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-dental-600">Aesthetic Studio</span>
+          <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Porcelain Veneers &amp; Smile Design</h3>
+          <p class="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed">
+            Handcrafted ultra-thin porcelain veneers, laser whitening, and composite bonding tailored to your facial harmony.
+          </p>
+        </div>
+        <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-400">Gold Standard</span>
+          <button type="button" onclick="window.scrollToBooking('dental', 'Cosmetic Veneers')" class="text-xs font-heading font-semibold text-dental-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
+            <span>Book Visit</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Suite 5: Dental Implants -->
+      <div class="glass-sanctuary-card rounded-3xl p-8 flex flex-col justify-between group">
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-dental-50 text-dental-700 flex items-center justify-center mb-6 group-hover:bg-dental-100 transition">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          </div>
+          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-dental-600">Implantology</span>
+          <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Permanent Dental Implants</h3>
+          <p class="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed">
+            Biocompatible grade-IV titanium implants that restore natural biting strength, clear speech, and bone preservation.
+          </p>
+        </div>
+        <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-400">Lifetime Restoration</span>
+          <button type="button" onclick="window.scrollToBooking('dental', 'Dental Implants')" class="text-xs font-heading font-semibold text-dental-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
+            <span>Book Visit</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Suite 6: Gentle Kids Dentistry -->
+      <div class="glass-sanctuary-card rounded-3xl p-8 flex flex-col justify-between group">
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-pediatric-50 text-pediatric-700 flex items-center justify-center mb-6 group-hover:bg-pediatric-100 transition">
+            <i data-lucide="heart" class="w-5 h-5"></i>
+          </div>
+          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-pediatric-700">Family Dental</span>
           <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Pediatric Dentistry</h3>
           <p class="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed">
-            Fear-free dentistry for kids. Fluoride treatments, pit &amp; fissure sealants, gentle milk tooth care in a warm atmosphere.
+            Warm, anxiety-free care for growing smiles. Fluoride treatments, fissure sealants, and gentle primary tooth care.
           </p>
         </div>
-        <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-400">Gentle Care</span>
-          <button type="button" onclick="window.scrollToBooking('dental', 'Pediatric Dentistry')" class="text-xs font-heading font-bold text-dental-600 hover:text-dental-800 flex items-center gap-1 group-hover:gap-2 transition-all">
+        <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-400">Fear-Free Protocol</span>
+          <button type="button" onclick="window.scrollToBooking('dental', 'Pediatric Dentistry')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <span>Book Visit</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- Card 5: Cosmetic & Veneers -->
-      <div class="flex-shrink-0 w-80 sm:w-88 md:w-auto snap-center bg-white rounded-3xl p-7 border border-slate-200/80 shadow-glass hover:-translate-y-2 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
-        <div>
-          <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
-            💎
-          </div>
-          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-amber-600">Aesthetic Studio</span>
-          <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Cosmetic Smile Makeover</h3>
-          <p class="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed">
-            Ultra-thin porcelain veneers, laser teeth whitening, and complete composite bonding to create radiant, natural smiles.
-          </p>
-        </div>
-        <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-400">Gold Standard</span>
-          <button type="button" onclick="window.scrollToBooking('dental', 'Cosmetic Veneers')" class="text-xs font-heading font-bold text-dental-600 hover:text-dental-800 flex items-center gap-1 group-hover:gap-2 transition-all">
-            <span>Book Visit</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- Card 6: Gum Care & Implants -->
-      <div class="flex-shrink-0 w-80 sm:w-88 md:w-auto snap-center bg-white rounded-3xl p-7 border border-slate-200/80 shadow-glass hover:-translate-y-2 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
-        <div>
-          <div class="w-14 h-14 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
-            🛡️
-          </div>
-          <span class="text-[11px] font-heading font-bold uppercase tracking-wider text-sky-600">Periodontics &amp; Surgery</span>
-          <h3 class="text-xl font-heading font-bold text-slate-900 mt-1 mb-2.5">Gum Care &amp; Dental Implants</h3>
-          <p class="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed">
-            Deep gum therapy, laser flap surgeries, and permanent titanium dental implants restoring full biting strength and speech.
-          </p>
-        </div>
-        <div class="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-400">Permanent Relief</span>
-          <button type="button" onclick="window.scrollToBooking('dental', 'Dental Implants')" class="text-xs font-heading font-bold text-dental-600 hover:text-dental-800 flex items-center gap-1 group-hover:gap-2 transition-all">
-            <span>Book Visit</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
       </div>
@@ -440,45 +370,106 @@
 </section>
 
 
-<!-- BRIDGE BANNER: SOFT SAGE GREEN ROUTING TO PEDIATRIC CLINIC -->
-<section class="py-12 px-4 sm:px-6 lg:px-8 bg-pearl">
+<!-- ======================================================== -->
+<!-- BRIDGE BANNER: CALMING SAGE TO BUDS CHILD CLINIC         -->
+<!-- ======================================================== -->
+<section class="py-12 px-4 sm:px-6 lg:px-8 bg-white border-y border-slate-100">
   <div class="max-w-7xl mx-auto">
-    <div class="relative rounded-4xl bg-gradient-to-r from-pediatric-700 via-pediatric-600 to-pediatric-800 p-8 sm:p-12 shadow-2xl overflow-hidden text-white">
-      
-      <!-- Decorative Backdrop circles -->
-      <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
-      <div class="absolute -left-20 -bottom-20 w-80 h-80 rounded-full bg-emerald-400/20 blur-2xl pointer-events-none"></div>
-
+    <div class="relative rounded-3xl bg-slate-950 p-8 sm:p-12 overflow-hidden text-white">
       <div class="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
         
         <div class="space-y-4 text-center lg:text-left">
-          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-emerald-100 text-xs font-heading font-semibold">
-            <span>👶 2-in-1 Medical Sanctuary &bull; Wanowrie</span>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-slate-300 text-xs font-heading">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>Dual Medical Sanctuary &bull; Wanowrie</span>
           </div>
-          <h2 class="text-3xl sm:text-4xl font-heading font-black tracking-tight leading-tight">
-            Looking for Expert Child Care?<br />
-            Visit <span class="underline decoration-emerald-300 underline-offset-4">Buds Child Clinic</span>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-heading font-bold tracking-tight leading-tight">
+            Looking for Dedicated Child Healthcare?<br />
+            Visit <span class="text-pediatric-400">Buds Child Clinic</span>
           </h2>
-          <p class="text-emerald-100 text-sm sm:text-base max-w-xl font-sans">
-            Consult <strong class="text-white">Dr. Jalil S. Mujawar</strong>, Senior Consultant Pediatrician. Specialized newborn care, complete vaccination, and developmental screening under the same trusted roof.
+          <p class="text-slate-400 text-sm max-w-xl font-sans">
+            Consult <strong class="text-white">Dr. Jalil S. Mujawar</strong>, Senior Consultant Pediatrician (MBBS, DCH). Specialized newborn guidance, complete cold-chain vaccination, and developmental care under the same trusted roof.
           </p>
         </div>
 
         <div class="flex flex-col sm:flex-row items-center gap-4 flex-shrink-0">
-          <div class="flex items-center gap-3 bg-white/15 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/20">
-            <span class="text-2xl">🛡️</span>
+          <div class="flex items-center gap-3 bg-slate-900 px-5 py-3 rounded-2xl border border-slate-800">
+            <i data-lucide="users" class="w-5 h-5 text-emerald-400"></i>
             <div>
-              <div class="font-heading font-bold text-sm text-white">Trusted by 75,400+</div>
-              <div class="text-[11px] text-emerald-200">Wanowrie &amp; Pune Mothers</div>
+              <div class="font-heading font-bold text-sm text-white">75,400+ Families</div>
+              <div class="text-[11px] text-slate-400">Wanowrie &amp; South Pune</div>
             </div>
           </div>
 
-          <a href="/pediatric/" class="px-8 py-4 rounded-full bg-white text-pediatric-800 hover:bg-emerald-50 font-heading font-bold text-sm shadow-xl hover:shadow-2xl active:scale-95 transition-all duration-200 flex items-center gap-2">
+          <a href="/pediatric/" class="px-7 py-3.5 rounded-full bg-white text-slate-950 hover:bg-slate-100 font-heading font-bold text-xs shadow-md transition duration-200 flex items-center gap-2">
             <span>Explore Buds Child Clinic</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </a>
         </div>
 
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ======================================================== -->
+<!-- SANCTUARY CLINICAL TOUR / VIDEO HIGHLIGHT (NO PINK)      -->
+<!-- ======================================================== -->
+<section class="py-16 bg-[#FAFBFD]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      
+      <div class="lg:col-span-5 space-y-5 text-left">
+        <span class="px-3.5 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-heading font-semibold uppercase tracking-wider">
+          Patient Experience
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-heading font-black text-slate-900 tracking-tight">
+          A Healthcare Sanctuary Designed for Comfort
+        </h2>
+        <p class="text-slate-600 text-sm leading-relaxed font-sans">
+          Step inside our clinic designed to dispel dental anxiety. From private ergonomic treatment suites and air sterilization to comforting music and digital previews, your visit is calm from the moment you arrive.
+        </p>
+        <div class="space-y-3 pt-2">
+          <div class="flex items-center gap-3 text-xs text-slate-700 font-sans">
+            <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+            <span>Zero-wait appointment scheduling protocol</span>
+          </div>
+          <div class="flex items-center gap-3 text-xs text-slate-700 font-sans">
+            <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+            <span>Hospital-grade 4-step autoclave sterilization</span>
+          </div>
+          <div class="flex items-center gap-3 text-xs text-slate-700 font-sans">
+            <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+            <span>Personalized WhatsApp slot confirmation</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Tour Thumbnail with Central Sleek Semi-Transparent Play Circle -->
+      <div class="lg:col-span-7">
+        <div class="relative aspect-video rounded-3xl overflow-hidden shadow-xl border border-slate-200/80 group cursor-pointer bg-slate-900">
+          <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=80" 
+               alt="Roots Dental Sanctuary Tour" 
+               class="w-full h-full object-cover opacity-85 transition-transform duration-700 group-hover:scale-105">
+          
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-black/20 to-transparent"></div>
+
+          <!-- Sleek Semi-Transparent White Play Circle Overlay -->
+          <div class="video-play-center">
+            <div class="video-play-disc">
+              <i data-lucide="play" class="w-6 h-6 fill-white ml-0.5"></i>
+            </div>
+          </div>
+
+          <div class="absolute bottom-6 left-6 right-6 flex items-center justify-between text-white">
+            <div>
+              <p class="font-heading font-bold text-sm sm:text-base">Experience the Roots Dental Sanctuary</p>
+              <p class="text-xs text-slate-300 font-sans mt-0.5">A virtual walk through our sterile suites and diagnostics room</p>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-sans">1:30 min</span>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -486,253 +477,293 @@
 </section>
 
 
-<!-- THE INTERACTIVE MORPHING BOOKING HERO / WIDGET (#booking-wrapper) -->
-<!-- MIN-H-[90VH] AND CENTERED TO PREVENT HALF-SCROLLED CUTOFF ISSUE -->
-<section id="booking-wrapper" class="min-h-[90vh] py-16 px-4 sm:px-6 lg:px-8 flex items-center justify-center bg-gradient-to-b from-pearl via-slate-100/50 to-pearl">
+<!-- ======================================================== -->
+<!-- PROGRESSIVE 3-STEP IN-PAGE BOOKING ENGINE (#booking-wrapper)-->
+<!-- ======================================================== -->
+<section id="booking-wrapper" class="min-h-[85vh] py-16 px-4 sm:px-6 lg:px-8 flex items-center justify-center bg-white border-t border-slate-100">
   <div class="max-w-6xl w-full mx-auto my-auto">
     
     <!-- Top Section Header -->
     <div class="text-center mb-8">
-      <span id="booking-pill" class="px-4 py-1.5 rounded-full bg-dental-100 text-dental-700 text-xs font-heading font-bold uppercase tracking-wider transition-colors duration-500">
-        ⚡ Live Real-Time Request Engine
+      <span id="booking-pill" class="px-4 py-1.5 rounded-full bg-slate-100 text-slate-800 text-xs font-heading font-semibold uppercase tracking-wider">
+        Reservation Engine
       </span>
-      <h2 id="booking-title" class="text-3xl sm:text-4xl font-heading font-black text-slate-900 mt-2 tracking-tight transition-all duration-500">
-        Request Your Appointment in 60 Seconds
+      <h2 id="booking-title" class="text-3xl sm:text-4xl font-heading font-black text-slate-900 mt-2 tracking-tight">
+        Reserve Your Consultation
       </h2>
-      <p class="text-slate-500 text-xs sm:text-sm font-sans mt-2 max-w-lg mx-auto">
-        Select your clinic, enter your details, and our front desk will confirm your reserved slot directly on WhatsApp.
+      <p class="text-slate-500 text-xs sm:text-sm font-sans mt-1.5 max-w-lg mx-auto">
+        Complete your details in 3 quick steps. Our front desk will confirm your reserved slot directly on WhatsApp.
       </p>
     </div>
 
-    <!-- Main Liquid Glass Split Panel Card -->
-    <div class="glass-surface rounded-4xl shadow-2xl border border-white/90 overflow-hidden">
-      <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px]">
+    <!-- Main Split-Panel Sanctuary Card -->
+    <div class="rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden bg-white">
+      <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[560px]">
 
-        <!-- DYNAMIC LEFT PANEL: Desktop only (Hidden on mobile to keep form immediately accessible in viewport) -->
-        <div id="dynamic-doctor-panel" class="hidden lg:flex lg:col-span-5 relative p-8 sm:p-10 flex-col justify-between overflow-hidden bg-gradient-to-br from-dental-600 to-dental-800 text-white transition-all duration-700 ease-in-out">
+        <!-- DYNAMIC LEFT PANEL: Editorial Doctor Presentation (Desktop Only) -->
+        <div id="dynamic-doctor-panel" class="hidden lg:flex lg:col-span-5 relative p-10 flex-col justify-between overflow-hidden bg-gradient-to-br from-dental-700 via-dental-800 to-dental-950 text-white transition-all duration-700 ease-in-out">
           
-          <!-- Background Ambient Glow -->
-          <div class="absolute -top-20 -left-20 w-64 h-64 rounded-full bg-white/10 blur-3xl pointer-events-none"></div>
-          <div class="absolute -bottom-20 -right-20 w-64 h-64 rounded-full bg-dental-400/20 blur-3xl pointer-events-none"></div>
-
-          <!-- Top Panel Info (Doctor Identity & Clinic Type) -->
+          <!-- Identity Info -->
           <div class="relative z-10 space-y-2">
-            <span id="panel-clinic-tag" class="px-3.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-[11px] font-heading font-semibold uppercase tracking-wider inline-block">
+            <span id="panel-clinic-tag" class="px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-[10px] font-heading font-semibold uppercase tracking-wider inline-block text-slate-200">
               Roots Dental Clinic
             </span>
             <h3 id="panel-doctor-name" class="text-2xl sm:text-3xl font-heading font-black tracking-tight leading-tight">
               Dr. Sabina Firoj Shaikh
             </h3>
-            <p id="panel-doctor-title" class="text-xs sm:text-sm text-dental-100 font-sans">
+            <p id="panel-doctor-subline" class="text-xs text-slate-300 font-sans leading-relaxed">
               MDS Gold Medalist &bull; Prosthodontics &bull; 10+ Yrs Clinical Mastery
             </p>
           </div>
 
-          <!-- Center Doctor Cutout Visual with 3D Pop -->
-          <div class="relative z-10 my-6 flex justify-center items-center">
-            <div class="relative w-full max-w-[320px] h-[340px] rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 shadow-inner flex items-end justify-center overflow-visible pt-4">
-              
-              <!-- Doctor Cutout Image (Explicit opacity & styling to ensure zero vanishing bug) -->
-              <img id="panel-doctor-img" 
-                   src="{% static 'images/dentist_sabina.png' %}" 
-                   alt="Consulting Doctor" 
-                   class="h-[320px] w-auto max-w-full object-contain drop-shadow-[0_20px_25px_rgba(0,0,0,0.35)] transition-all duration-500 transform scale-105"
-                   style="opacity: 1 !important; display: block !important;"
-                   onerror="this.src='/static/images/dentist_sabina.png';">
-
-              <!-- Floating Micro-Badge 1 -->
-              <div id="badge-top" class="animate-float glass-capsule absolute -top-4 -right-2 text-slate-800 px-3.5 py-1.5 rounded-xl shadow-lg border border-white text-[11px] font-heading font-bold flex items-center gap-1.5 z-20">
-                <span id="badge-top-icon">🦷</span>
-                <span id="badge-top-text">Painless Care</span>
-              </div>
-
-              <!-- Floating Micro-Badge 2 -->
-              <div id="badge-bottom" class="animate-float-delayed glass-capsule absolute -bottom-3 -left-2 text-slate-800 px-3.5 py-1.5 rounded-xl shadow-lg border border-white text-[11px] font-heading font-bold flex items-center gap-1.5 z-20">
-                <span id="badge-bottom-icon">🏅</span>
-                <span id="badge-bottom-text">MDS Gold Medalist</span>
-              </div>
-
-            </div>
+          <!-- Clean Borderless Portrait Stage -->
+          <div class="relative z-10 my-4 flex justify-center items-end">
+            <img id="panel-doctor-img" 
+                 src="{% static 'images/dentist_sabina.png' %}" 
+                 alt="Consulting Doctor" 
+                 class="h-[320px] w-auto max-w-full object-contain object-bottom drop-shadow-md transition-all duration-500"
+                 onerror="this.src='/static/images/dentist_sabina.png';">
           </div>
 
-          <!-- Bottom Panel Trust Guarantee -->
-          <div id="panel-bottom-trust" class="relative z-10 pt-4 border-t border-white/15 flex items-center justify-between text-xs text-dental-100 font-sans">
+          <!-- Bottom Trust Guarantee -->
+          <div class="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-300 font-sans">
             <div class="flex items-center gap-1.5">
-              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-300"></i>
-              <span id="panel-guarantee-text">No Double Booking &bull; 100% Guaranteed</span>
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+              <span>Guaranteed Zero Double-Booking</span>
             </div>
-            <span class="text-white/80 font-heading font-semibold">Wanowrie, Pune</span>
+            <span class="text-slate-400">Wanowrie, Pune</span>
           </div>
 
         </div>
 
-        <!-- DYNAMIC RIGHT PANEL: Toggle & Request Form (Full width on mobile, immediate zero-scroll view) -->
-        <div class="lg:col-span-7 p-5 sm:p-10 flex flex-col justify-between bg-white/90 backdrop-blur-xl">
-          
+        <!-- DYNAMIC RIGHT PANEL: Progressive 3-Step Slide-Through Form -->
+        <div class="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-between bg-white">
           <div>
-            <!-- Mobile Compact Doctor Pill (Shows directly on mobile above toggle so no scrolling is needed) -->
-            <div id="mobile-doctor-pill" class="lg:hidden flex items-center gap-3 p-3 rounded-2xl bg-dental-50 border border-dental-200/80 mb-4 transition-all">
-              <div class="w-11 h-11 rounded-xl bg-dental-600/10 overflow-hidden flex-shrink-0 flex items-center justify-center border border-dental-200">
+            
+            <!-- Mobile Compact Doctor Banner -->
+            <div id="mobile-doctor-pill" class="lg:hidden flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200/80 mb-5">
+              <div class="w-11 h-11 rounded-xl bg-slate-200/60 overflow-hidden flex-shrink-0 flex items-center justify-center border border-slate-200">
                 <img id="mobile-pill-avatar" src="{% static 'images/dentist_sabina.png' %}" alt="Doctor" class="w-full h-full object-contain">
               </div>
               <div class="flex-1 min-w-0 text-left">
                 <div id="mobile-pill-name" class="font-heading font-bold text-slate-900 text-xs sm:text-sm truncate">Dr. Sabina Firoj Shaikh</div>
-                <div id="mobile-pill-desc" class="text-[11px] text-dental-700 font-sans truncate">MDS Gold Medalist &bull; Prosthodontist</div>
+                <div id="mobile-pill-desc" class="text-[11px] text-slate-500 font-sans truncate">MDS Gold Medalist &bull; Prosthodontist</div>
               </div>
-              <span id="mobile-pill-badge" class="px-2.5 py-1 rounded-full bg-white text-dental-700 text-[10px] font-heading font-bold shadow-xs border border-dental-200 flex-shrink-0">
-                5.0 ⭐
-              </span>
             </div>
 
-            <!-- Large Top Toggle Buttons -->
-            <div class="flex p-1.5 rounded-2xl bg-slate-100/90 border border-slate-200/80 mb-6 max-w-md mx-auto">
+            <!-- Clinic Switcher Toggle -->
+            <div class="flex p-1.5 rounded-2xl bg-slate-100 border border-slate-200/70 mb-6 max-w-md mx-auto">
               <button type="button" 
                       id="btn-toggle-dental" 
                       onclick="window.switchClinicBooking('dental')"
-                      class="flex-1 py-3 px-4 rounded-xl font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-300 bg-white text-dental-700 shadow-md">
-                <span class="text-base">🦷</span>
+                      class="flex-1 py-2.5 px-4 rounded-xl font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all bg-white text-dental-700 shadow-xs cursor-pointer">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-dental-600"></i>
                 <span>Dental Care</span>
               </button>
 
               <button type="button" 
                       id="btn-toggle-pediatric" 
                       onclick="window.switchClinicBooking('pediatric')"
-                      class="flex-1 py-3 px-4 rounded-xl font-heading font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-300 text-slate-500 hover:text-slate-800">
-                <span class="text-base">👶</span>
+                      class="flex-1 py-2.5 px-4 rounded-xl font-heading font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all text-slate-500 hover:text-slate-800 cursor-pointer">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-pediatric-600"></i>
                 <span>Child Care</span>
               </button>
             </div>
 
-            <!-- Booking Form -->
-            <form id="appointment-form" onsubmit="window.handleBookingSubmit(event)" class="space-y-4">
+            <!-- Progressive Stepper Header -->
+            <div class="py-2.5 border-b border-slate-100 mb-6">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span id="booking-step-indicator-1" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold bg-dental-600 text-white shadow-xs">1</span>
+                  <span id="booking-step-text-1" class="text-xs font-heading font-semibold text-slate-800">Patient &amp; Service</span>
+                </div>
+                <div class="h-0.5 flex-1 mx-3 bg-slate-100"></div>
+                <div class="flex items-center gap-2">
+                  <span id="booking-step-indicator-2" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium bg-slate-100 text-slate-400">2</span>
+                  <span id="booking-step-text-2" class="text-xs font-heading text-slate-400 hidden sm:inline">Schedule</span>
+                </div>
+                <div class="h-0.5 flex-1 mx-3 bg-slate-100"></div>
+                <div class="flex items-center gap-2">
+                  <span id="booking-step-indicator-3" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium bg-slate-100 text-slate-400">3</span>
+                  <span id="booking-step-text-3" class="text-xs font-heading text-slate-400 hidden sm:inline">Contact</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- PROGRESSIVE FORM CONTAINER -->
+            <form id="appointment-form" onsubmit="window.handleBookingSubmit(event)">
               <input type="hidden" id="form-clinic-type" name="clinic_type" value="dental">
 
-              <!-- Row 1: Patient / Child Full Name -->
-              <div>
-                <label id="label-patient-name" for="patient-name" class="block text-xs font-heading font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Patient Full Name <span class="text-rose-500">*</span>
-                </label>
-                <div class="relative">
-                  <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-4 top-3.5"></i>
-                  <input type="text" id="patient-name" name="patient_name" required placeholder="e.g. Rahul Kulkarni"
-                         class="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-sans focus:bg-white focus:outline-none focus:ring-2 focus:ring-dental-500 transition">
-                </div>
-              </div>
-
-              <!-- Row 1.5: Parent / Guardian Name (Dynamically revealed when Child Care is selected) -->
-              <div id="parent-name-group" class="hidden transition-all duration-500">
-                <label for="parent-name" class="block text-xs font-heading font-bold text-pediatric-700 uppercase tracking-wider mb-1.5">
-                  Parent / Guardian Name <span class="text-rose-500">*</span>
-                </label>
-                <div class="relative">
-                  <i data-lucide="users" class="w-4 h-4 text-slate-400 absolute left-4 top-3.5"></i>
-                  <input type="text" id="parent-name" name="parent_name" placeholder="e.g. Sneha Kulkarni"
-                         class="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-sans focus:bg-white focus:outline-none focus:ring-2 focus:ring-pediatric-500 transition">
-                </div>
-              </div>
-
-              <!-- Row 2: Phone Number & Service Needed -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
+              <!-- =================== STEP 1: PATIENT & SERVICE =================== -->
+              <div id="booking-step-1" class="step-pane active-step space-y-4">
                 <div>
-                  <label for="phone-number" class="block text-xs font-heading font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Mobile Number (WhatsApp) <span class="text-rose-500">*</span>
+                  <h4 class="font-heading font-bold text-slate-900 text-base">Step 1: Who is the appointment for?</h4>
+                  <p class="text-xs text-slate-500 font-sans mt-0.5">Enter patient name and select the desired consultation service.</p>
+                </div>
+
+                <div>
+                  <label id="label-patient-name" for="patient-name" class="block text-xs font-heading font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Patient Full Name <span class="text-rose-500">*</span>
                   </label>
                   <div class="relative">
-                    <span class="absolute left-4 top-3 text-xs font-bold text-slate-400">+91</span>
-                    <input type="tel" id="phone-number" name="phone_number" required placeholder="98220 12345" pattern="[0-9]{10}" maxlength="10"
-                           class="w-full pl-12 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-sans focus:bg-white focus:outline-none focus:ring-2 focus:ring-dental-500 transition">
+                    <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-4 top-3.5"></i>
+                    <input type="text" id="patient-name" name="patient_name" required placeholder="e.g. Rahul Kulkarni"
+                           class="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-sans focus:bg-white focus:outline-none transition">
+                  </div>
+                </div>
+
+                <div id="parent-name-group" class="hidden transition-all duration-300">
+                  <label for="parent-name" class="block text-xs font-heading font-semibold text-pediatric-800 uppercase tracking-wider mb-1.5">
+                    Parent / Guardian Name <span class="text-rose-500">*</span>
+                  </label>
+                  <div class="relative">
+                    <i data-lucide="users" class="w-4 h-4 text-slate-400 absolute left-4 top-3.5"></i>
+                    <input type="text" id="parent-name" name="parent_name" placeholder="e.g. Sneha Kulkarni"
+                           class="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-sans focus:bg-white focus:outline-none transition">
                   </div>
                 </div>
 
                 <div>
-                  <label for="service-needed" class="block text-xs font-heading font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label for="service-needed" class="block text-xs font-heading font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                     Service Needed
                   </label>
                   <div class="relative">
                     <select id="service-needed" name="service_needed"
-                            class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-sm font-sans focus:bg-white focus:outline-none focus:ring-2 focus:ring-dental-500 transition appearance-none">
-                      <!-- Populated via JavaScript dynamically -->
+                            class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-sm font-sans focus:bg-white focus:outline-none transition appearance-none">
                     </select>
                     <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-4 top-3.5 pointer-events-none"></i>
                   </div>
                 </div>
 
+                <div class="pt-2">
+                  <button type="button" onclick="window.goToBookingStep(2)" class="w-full py-4 px-6 rounded-2xl font-heading font-bold text-sm text-white bg-slate-900 hover:bg-slate-800 shadow-md active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer">
+                    <span>Continue to Schedule</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                  </button>
+                </div>
               </div>
 
-              <!-- Row 3: Preferred Date & Time Slot -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
+              <!-- =================== STEP 2: DATE & TIME =================== -->
+              <div id="booking-step-2" class="step-pane hidden-step space-y-4">
                 <div>
-                  <label for="preferred-date" class="block text-xs font-heading font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <h4 class="font-heading font-bold text-slate-900 text-base">Step 2: When should we schedule?</h4>
+                  <p class="text-xs text-slate-500 font-sans mt-0.5">Select your preferred date and time slot for minimal lobby waiting.</p>
+                </div>
+
+                <div>
+                  <label for="preferred-date" class="block text-xs font-heading font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                     Preferred Date <span class="text-rose-500">*</span>
                   </label>
                   <div class="relative">
                     <i data-lucide="calendar" class="w-4 h-4 text-slate-400 absolute left-4 top-3.5"></i>
                     <input type="date" id="preferred-date" name="preferred_date" required
-                           class="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-sm font-sans focus:bg-white focus:outline-none focus:ring-2 focus:ring-dental-500 transition">
+                           class="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-sm font-sans focus:bg-white focus:outline-none transition">
                   </div>
                 </div>
 
                 <div>
-                  <label for="preferred-time" class="block text-xs font-heading font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label class="block text-xs font-heading font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                     Preferred Time Window
                   </label>
-                  <div class="relative">
-                    <select id="preferred-time" name="preferred_time"
-                            class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-sm font-sans focus:bg-white focus:outline-none focus:ring-2 focus:ring-dental-500 transition appearance-none">
-                      <option value="Morning (10:00 AM - 1:00 PM)">Morning (10:00 AM – 1:00 PM)</option>
-                      <option value="Afternoon (1:00 PM - 4:00 PM)">Afternoon (1:00 PM – 4:00 PM)</option>
-                      <option value="Evening (4:00 PM - 8:00 PM)">Evening (4:00 PM – 8:00 PM)</option>
-                    </select>
-                    <i data-lucide="clock" class="w-4 h-4 text-slate-400 absolute right-4 top-3.5 pointer-events-none"></i>
+                  <input type="hidden" id="preferred-time" name="preferred_time" value="Morning (10:00 AM - 1:00 PM)">
+
+                  <div class="grid grid-cols-3 gap-3">
+                    <button type="button" id="slot-morning" data-value="Morning (10:00 AM - 1:00 PM)" onclick="window.selectTimeSlot('Morning (10:00 AM - 1:00 PM)', false)" class="py-3 px-3 rounded-2xl text-xs font-heading font-bold text-center border-2 border-slate-900 bg-slate-50 text-slate-900 cursor-pointer transition">
+                      Morning<br><span class="text-[10px] font-normal text-slate-500">10:00 AM – 1:00 PM</span>
+                    </button>
+                    <button type="button" id="slot-afternoon" data-value="Afternoon (1:00 PM - 4:00 PM)" onclick="window.selectTimeSlot('Afternoon (1:00 PM - 4:00 PM)', false)" class="py-3 px-3 rounded-2xl text-xs font-heading font-medium text-center border border-slate-200 bg-white text-slate-600 hover:border-slate-300 cursor-pointer transition">
+                      Afternoon<br><span class="text-[10px] font-normal text-slate-500">1:00 PM – 4:00 PM</span>
+                    </button>
+                    <button type="button" id="slot-evening" data-value="Evening (4:00 PM - 8:00 PM)" onclick="window.selectTimeSlot('Evening (4:00 PM - 8:00 PM)', false)" class="py-3 px-3 rounded-2xl text-xs font-heading font-medium text-center border border-slate-200 bg-white text-slate-600 hover:border-slate-300 cursor-pointer transition">
+                      Evening<br><span class="text-[10px] font-normal text-slate-500">4:00 PM – 8:00 PM</span>
+                    </button>
                   </div>
                 </div>
 
+                <div class="flex items-center gap-3 pt-2">
+                  <button type="button" onclick="window.goToBookingStep(1)" class="w-1/3 py-4 px-4 rounded-2xl font-heading font-semibold text-xs text-slate-600 bg-slate-100 hover:bg-slate-200 transition cursor-pointer">
+                    &larr; Back
+                  </button>
+                  <button type="button" onclick="window.goToBookingStep(3)" class="flex-1 py-4 px-6 rounded-2xl font-heading font-bold text-sm text-white bg-slate-900 hover:bg-slate-800 shadow-md active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer">
+                    <span>Continue to Contact</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                  </button>
+                </div>
               </div>
 
-              <!-- Row 4: Any Specific Concern (Optional) -->
-              <div>
-                <label for="notes" class="block text-xs font-heading font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Specific Concern or Symptoms <span class="text-slate-400 font-normal lowercase">(optional)</span>
-                </label>
-                <textarea id="notes" name="notes" rows="2" placeholder="e.g. Sensitive to cold drinks, pain while chewing..."
-                          class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-sans focus:bg-white focus:outline-none focus:ring-2 focus:ring-dental-500 transition resize-none"></textarea>
+              <!-- =================== STEP 3: CONTACT & WHATSAPP =================== -->
+              <div id="booking-step-3" class="step-pane hidden-step space-y-4">
+                <div>
+                  <h4 class="font-heading font-bold text-slate-900 text-base">Step 3: How can we reach you?</h4>
+                  <p class="text-xs text-slate-500 font-sans mt-0.5">Enter your WhatsApp mobile number to receive your instant time confirmation.</p>
+                </div>
+
+                <div>
+                  <label for="phone-number" class="block text-xs font-heading font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                    WhatsApp Phone Number <span class="text-rose-500">*</span>
+                  </label>
+                  <!-- Numeric keypad trigger automatically on mobile devices -->
+                  <div class="relative">
+                    <span class="absolute left-4 top-3.5 text-xs font-bold text-slate-400">+91</span>
+                    <input type="tel" 
+                           id="phone-number" 
+                           name="phone_number" 
+                           required 
+                           inputmode="numeric" 
+                           pattern="[0-9]*" 
+                           maxlength="10" 
+                           placeholder="98220 12345"
+                           class="w-full pl-12 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-sans focus:bg-white focus:outline-none transition">
+                  </div>
+                  <p class="text-[11px] text-slate-400 font-sans mt-1">Our front desk sends your instant reservation time via WhatsApp.</p>
+                </div>
+
+                <div>
+                  <label for="notes" class="block text-xs font-heading font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Specific Symptoms or Requests <span class="text-slate-400 font-normal lowercase">(optional)</span>
+                  </label>
+                  <textarea id="notes" name="notes" rows="2" placeholder="e.g. Sensitivity to cold, emergency toothache..."
+                            class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm font-sans focus:bg-white focus:outline-none transition resize-none"></textarea>
+                </div>
+
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs text-slate-600 font-sans flex items-start gap-2.5">
+                  <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+                  <span>Zero double-booking protocol. Dedicated time is allocated to ensure minimal waiting in our lounge.</span>
+                </div>
+
+                <div class="flex items-center gap-3 pt-2">
+                  <button type="button" onclick="window.goToBookingStep(2)" class="w-1/3 py-4 px-4 rounded-2xl font-heading font-semibold text-xs text-slate-600 bg-slate-100 hover:bg-slate-200 transition cursor-pointer">
+                    &larr; Back
+                  </button>
+                  <button type="submit" 
+                          id="btn-submit-booking"
+                          class="flex-1 py-4 px-6 rounded-2xl font-heading font-bold text-sm text-white bg-dental-600 hover:bg-dental-700 shadow-lg active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer">
+                    <span id="submit-btn-text">Confirm &amp; Request Appointment</span>
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                  </button>
+                </div>
               </div>
-
-              <!-- Submit Button -->
-              <button type="submit" 
-                      id="btn-submit-booking"
-                      class="w-full py-4 px-6 rounded-2xl font-heading font-bold text-sm text-white bg-dental-600 hover:bg-dental-700 shadow-xl shadow-dental-700/25 active:scale-98 transition-all duration-300 flex items-center justify-center gap-2">
-                <span id="submit-btn-text">Request Dental Appointment</span>
-                <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              </button>
-
-              <!-- Front Desk Disclaimer (Crucial) -->
-              <p class="text-center text-xs text-slate-500 font-sans leading-relaxed pt-1">
-                🔒 <strong class="text-slate-700 font-semibold">Our front desk will confirm your exact time via WhatsApp</strong> to avoid double-booking.
-              </p>
 
             </form>
-          </div>
 
-          <!-- Feedback Toast Container -->
-          <div id="booking-toast" class="hidden mt-4 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm font-sans transition-all duration-300">
-            <div class="flex items-start gap-3">
-              <span class="text-xl">✅</span>
-              <div>
-                <div class="font-heading font-bold text-emerald-900" id="toast-title">Appointment Request Received!</div>
-                <div class="mt-0.5" id="toast-message">We have queued your slot. Our front desk will WhatsApp you shortly with the exact confirmation.</div>
-                <div id="toast-whatsapp-action" class="mt-3 hidden">
-                  <a id="toast-whatsapp-link" href="#" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 text-white font-heading font-bold text-xs hover:bg-emerald-700 transition">
-                    <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
-                    <span>Open Instant WhatsApp Confirmation</span>
-                  </a>
+            <!-- Feedback Toast Container -->
+            <div id="booking-toast" class="hidden mt-4 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm font-sans transition-all duration-300">
+              <div class="flex items-start gap-3">
+                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+                <div>
+                  <div class="font-heading font-bold text-emerald-900" id="toast-title">Appointment Request Received!</div>
+                  <div class="mt-0.5" id="toast-message">We have queued your slot. Our front desk will WhatsApp you shortly with the exact confirmation.</div>
+                  <div id="toast-whatsapp-action" class="mt-3 hidden">
+                    <a id="toast-whatsapp-link" href="#" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 text-white font-heading font-bold text-xs hover:bg-emerald-700 transition">
+                      <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                      <span>Open Instant WhatsApp Confirmation</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
+          </div>
         </div>
 
       </div>

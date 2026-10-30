@@ -1,44 +1,147 @@
 /**
- * Roots Dental & Buds Child Clinic — Interactive Liquid Glass Engine
+ * Roots Dental Clinic & Buds Child Clinic — Interactive Medical Sanctuary Engine
  * Features:
- *  1. Native iOS 17/18-style Zero-Scroll Booking Modal Sheet (openBookingModal / closeBookingModal)
- *  2. Morphing Booking Split-Panel state machine with guaranteed image visibility
- *  3. Contextual routing: Mobile 1-tap sheet vs Desktop header-offset smooth scrolling
- *  4. Request-based booking submission to Django AJAX API (/api/book/) with WhatsApp confirmation
- *  5. Mobile drawer navigation and scroll-aware glass header blur
+ *  1. Progressive 3-Step Slide-Through Booking Engine (In-Page & Mobile Modal)
+ *     - Step 1: "Who is the appointment for?" (Name, Clinic & Service)
+ *     - Step 2: "When should we schedule?" (Interactive Date & Time Slot)
+ *     - Step 3: "How can we reach you?" (WhatsApp Mobile with Numeric Keypad Trigger)
+ *  2. Clean Editorial Doctor Identity Machine (Zero Cluttered Floating Badges)
+ *  3. Minimalist SVG Iconography (Zero Childish Native Emojis)
+ *  4. Native Mobile Touch App UX with Instant Zero-Scroll Modals
+ *  5. Direct Django AJAX Integration (/api/book/) with WhatsApp Routing
  */
 
 (function () {
   'use strict';
 
-  // Service datasets for dynamic dropdowns
+  // Curated Medical Datasets
   const DENTAL_SERVICES = [
-    'General Dentistry & Routine Checkup',
-    'Root Canal Treatment (Single-Sitting)',
-    'Braces & Clear Invisible Aligners',
-    'Pediatric Dentistry (Kids Care)',
-    'Cosmetic Smile Makeover & Veneers',
-    'Dental Implants & Replacement',
-    'Gum Care & Laser Therapy',
-    'Emergency Toothache Relief'
+    'General Dentistry & Oral Assessment',
+    'Root Canal Treatment (Single-Visit Rotary)',
+    'Clear Aligners & Orthodontic Simulation',
+    'Porcelain Veneers & Smile Makeover',
+    'Permanent Dental Implants (Titanium)',
+    'Pediatric Dental Care (Kids Dentistry)',
+    'Gum Therapy & Laser Periodontics',
+    'Emergency Toothache & Trauma Relief'
   ];
 
   const PEDIATRIC_SERVICES = [
-    'Newborn Intensive Care & Jaundice',
-    'Vaccination & Immunization (IAP)',
-    'Growth & Developmental Milestone Check',
-    'Childhood Fever & Illness Assessment',
-    'Infant Feeding & Lactation Guidance',
-    'Pediatric Allergy & Asthma Care',
-    'Behavioral & Learning Milestones',
-    'Adolescent Health Consultation'
+    'Newborn Intensive Assessment & Jaundice',
+    'Complete IAP Immunization & Cold-Chain',
+    'Developmental Milestones & Growth Check',
+    'Acute Childhood Illnesses & Fever Care',
+    'Infant Nutrition & Lactation Consultation',
+    'Pediatric Allergy, Asthma & Respiratory',
+    'Behavioral & Learning Milestones Guide',
+    'Adolescent Health & Wellness Review'
   ];
 
-  // Current active clinic state
   let currentClinic = 'dental';
+  let inPageStep = 1;
+  let modalStep = 1;
 
   // -------------------------------------------------------------
-  // 1. IN-PAGE MORPHING BOOKING STATE MACHINE (#booking-wrapper)
+  // 1. PROGRESSIVE STEPPER: IN-PAGE BOOKING ENGINE (#booking-wrapper)
+  // -------------------------------------------------------------
+  window.goToBookingStep = function (step) {
+    // Validate current step before advancing
+    if (step > inPageStep) {
+      if (inPageStep === 1) {
+        const nameInput = document.getElementById('patient-name');
+        if (!nameInput || !nameInput.value.trim()) {
+          if (nameInput) {
+            nameInput.focus();
+            nameInput.classList.add('border-rose-500', 'ring-2', 'ring-rose-200');
+            setTimeout(() => nameInput.classList.remove('border-rose-500', 'ring-2', 'ring-rose-200'), 1500);
+          }
+          return;
+        }
+      }
+      if (inPageStep === 2) {
+        const dateInput = document.getElementById('preferred-date');
+        if (!dateInput || !dateInput.value) {
+          if (dateInput) dateInput.focus();
+          return;
+        }
+      }
+    }
+
+    inPageStep = step;
+
+    // Panes
+    const step1Pane = document.getElementById('booking-step-1');
+    const step2Pane = document.getElementById('booking-step-2');
+    const step3Pane = document.getElementById('booking-step-3');
+
+    if (step1Pane) {
+      step1Pane.classList.toggle('hidden-step', step !== 1);
+      step1Pane.classList.toggle('active-step', step === 1);
+    }
+    if (step2Pane) {
+      step2Pane.classList.toggle('hidden-step', step !== 2);
+      step2Pane.classList.toggle('active-step', step === 2);
+    }
+    if (step3Pane) {
+      step3Pane.classList.toggle('hidden-step', step !== 3);
+      step3Pane.classList.toggle('active-step', step === 3);
+    }
+
+    // Step Indicator Pills
+    for (let i = 1; i <= 3; i++) {
+      const pill = document.getElementById(`booking-step-indicator-${i}`);
+      const text = document.getElementById(`booking-step-text-${i}`);
+      if (pill) {
+        if (i < step) {
+          pill.className = 'w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold bg-emerald-600 text-white';
+          pill.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5"></i>';
+        } else if (i === step) {
+          pill.className = currentClinic === 'dental' 
+            ? 'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold bg-dental-600 text-white shadow-sm'
+            : 'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold bg-pediatric-600 text-white shadow-sm';
+          pill.textContent = i;
+        } else {
+          pill.className = 'w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium bg-slate-100 text-slate-400';
+          pill.textContent = i;
+        }
+      }
+      if (text) {
+        text.className = (i === step) 
+          ? 'text-xs font-heading font-semibold text-slate-900 hidden sm:inline'
+          : 'text-xs font-heading text-slate-400 hidden sm:inline';
+      }
+    }
+
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  };
+
+  // Select Time Slot Pill
+  window.selectTimeSlot = function (timeSlot, isModal = false) {
+    const inputId = isModal ? 'modal-preferred-time' : 'preferred-time';
+    const hiddenInput = document.getElementById(inputId);
+    if (hiddenInput) hiddenInput.value = timeSlot;
+
+    const prefix = isModal ? 'modal-slot-' : 'slot-';
+    const slots = ['morning', 'afternoon', 'evening'];
+    slots.forEach(s => {
+      const btn = document.getElementById(prefix + s);
+      if (btn) {
+        const matches = btn.getAttribute('data-value') === timeSlot;
+        if (matches) {
+          btn.className = (currentClinic === 'dental')
+            ? 'flex-1 py-3 px-3 rounded-2xl text-xs font-heading font-bold text-center border-2 border-dental-600 bg-dental-50 text-dental-700 shadow-sm transition'
+            : 'flex-1 py-3 px-3 rounded-2xl text-xs font-heading font-bold text-center border-2 border-pediatric-600 bg-pediatric-50 text-pediatric-700 shadow-sm transition';
+        } else {
+          btn.className = 'flex-1 py-3 px-3 rounded-2xl text-xs font-heading font-medium text-center border border-slate-200 bg-white text-slate-600 hover:border-slate-300 transition';
+        }
+      }
+    });
+  };
+
+  // -------------------------------------------------------------
+  // 2. MORPHING IN-PAGE CLINIC SWITCHER
   // -------------------------------------------------------------
   window.switchClinicBooking = function (type, preselectedService) {
     currentClinic = type;
@@ -47,49 +150,37 @@
     const doctorPanel = document.getElementById('dynamic-doctor-panel');
     const clinicTag = document.getElementById('panel-clinic-tag');
     const doctorName = document.getElementById('panel-doctor-name');
-    const doctorTitle = document.getElementById('panel-doctor-title');
+    const doctorSubline = document.getElementById('panel-doctor-subline');
     const doctorImg = document.getElementById('panel-doctor-img');
-    const badgeTopIcon = document.getElementById('badge-top-icon');
-    const badgeTopText = document.getElementById('badge-top-text');
-    const badgeBottomIcon = document.getElementById('badge-bottom-icon');
-    const badgeBottomText = document.getElementById('badge-bottom-text');
-    const guaranteeText = document.getElementById('panel-guarantee-text');
-
     const btnDental = document.getElementById('btn-toggle-dental');
     const btnPediatric = document.getElementById('btn-toggle-pediatric');
-
-    const mobilePill = document.getElementById('mobile-doctor-pill');
     const mobileAvatar = document.getElementById('mobile-pill-avatar');
     const mobilePillName = document.getElementById('mobile-pill-name');
     const mobilePillDesc = document.getElementById('mobile-pill-desc');
-    const mobilePillBadge = document.getElementById('mobile-pill-badge');
-
-    const labelPatient = document.getElementById('label-patient-name');
-    const inputPatient = document.getElementById('patient-name');
     const parentNameGroup = document.getElementById('parent-name-group');
     const inputParent = document.getElementById('parent-name');
+    const labelPatient = document.getElementById('label-patient-name');
+    const inputPatient = document.getElementById('patient-name');
     const serviceSelect = document.getElementById('service-needed');
     const submitBtn = document.getElementById('btn-submit-booking');
     const submitBtnText = document.getElementById('submit-btn-text');
-    const bookingPill = document.getElementById('booking-pill');
 
     if (formClinicInput) formClinicInput.value = type;
 
     if (type === 'dental') {
-      // 1. Left Panel (Desktop): Slate Blue
       if (doctorPanel) {
-        doctorPanel.className = 'hidden lg:flex lg:col-span-5 relative p-8 sm:p-10 flex-col justify-between overflow-hidden bg-gradient-to-br from-dental-600 to-dental-800 text-white transition-all duration-700 ease-in-out';
+        doctorPanel.className = 'hidden lg:flex lg:col-span-5 relative p-10 flex-col justify-between overflow-hidden bg-gradient-to-br from-dental-700 via-dental-800 to-dental-950 text-white transition-all duration-700 ease-in-out';
       }
       if (clinicTag) clinicTag.textContent = 'Roots Dental Clinic';
       if (doctorName) doctorName.textContent = 'Dr. Sabina Firoj Shaikh';
-      if (doctorTitle) doctorTitle.textContent = 'MDS Gold Medalist • Prosthodontics • 10+ Yrs Clinical Mastery';
-      if (guaranteeText) guaranteeText.textContent = 'Painless Protocol • Guaranteed No Double-Booking';
+      if (doctorSubline) {
+        doctorSubline.textContent = 'MDS Gold Medalist • Prosthodontics & Oral Implantology • 10+ Yrs Clinical Mastery';
+      }
 
-      // Desktop Doctor Image: Smooth crossfade & scale
       if (doctorImg) {
         doctorImg.style.transition = 'opacity 0.25s ease-out, transform 0.25s ease-out';
         doctorImg.style.opacity = '0';
-        doctorImg.style.transform = 'scale(0.97)';
+        doctorImg.style.transform = 'scale(0.98)';
         setTimeout(() => {
           doctorImg.src = '/static/images/dentist_sabina.png';
           doctorImg.alt = 'Dr. Sabina Firoj Shaikh';
@@ -98,41 +189,24 @@
         }, 120);
       }
 
-      // Badges
-      if (badgeTopIcon) badgeTopIcon.textContent = '🦷';
-      if (badgeTopText) badgeTopText.textContent = 'Painless Care';
-      if (badgeBottomIcon) badgeBottomIcon.textContent = '🏅';
-      if (badgeBottomText) badgeBottomText.textContent = 'MDS Gold Medalist';
-
-      // Mobile Compact Doctor Pill (Above toggle)
-      if (mobilePill) {
-        mobilePill.className = 'lg:hidden flex items-center gap-3 p-3 rounded-2xl bg-dental-50 border border-dental-200/80 mb-4 transition-all';
-      }
       if (mobileAvatar) mobileAvatar.src = '/static/images/dentist_sabina.png';
       if (mobilePillName) mobilePillName.textContent = 'Dr. Sabina Firoj Shaikh';
       if (mobilePillDesc) mobilePillDesc.textContent = 'MDS Gold Medalist • Prosthodontist';
-      if (mobilePillBadge) {
-        mobilePillBadge.className = 'px-2.5 py-1 rounded-full bg-white text-dental-700 text-[10px] font-heading font-bold shadow-xs border border-dental-200 flex-shrink-0';
-        mobilePillBadge.textContent = '5.0 ⭐';
-      }
 
-      // Toggle Buttons Active State
       if (btnDental) {
-        btnDental.className = 'flex-1 py-3 px-4 rounded-xl font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-300 bg-white text-dental-700 shadow-md';
+        btnDental.className = 'flex-1 py-3 px-4 rounded-xl font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 bg-white text-dental-700 shadow-sm';
       }
       if (btnPediatric) {
-        btnPediatric.className = 'flex-1 py-3 px-4 rounded-xl font-heading font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-300 text-slate-500 hover:text-slate-800';
+        btnPediatric.className = 'flex-1 py-3 px-4 rounded-xl font-heading font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 text-slate-500 hover:text-slate-800';
       }
 
-      // Form Adjustments
-      if (labelPatient) labelPatient.innerHTML = 'Patient Full Name <span class="text-rose-500">*</span>';
+      if (labelPatient) labelPatient.textContent = 'Patient Full Name';
       if (inputPatient) inputPatient.placeholder = 'e.g. Rahul Kulkarni';
       if (parentNameGroup) {
         parentNameGroup.classList.add('hidden');
         if (inputParent) inputParent.removeAttribute('required');
       }
 
-      // Populate Dental Services
       if (serviceSelect) {
         serviceSelect.innerHTML = '';
         DENTAL_SERVICES.forEach(s => {
@@ -146,32 +220,25 @@
         });
       }
 
-      // Submit Button Style
       if (submitBtn) {
-        submitBtn.className = 'w-full py-4 px-6 rounded-2xl font-heading font-bold text-sm text-white bg-dental-600 hover:bg-dental-700 shadow-xl shadow-dental-700/25 active:scale-98 transition-all duration-300 flex items-center justify-center gap-2';
+        submitBtn.className = 'w-full py-4 px-6 rounded-2xl font-heading font-bold text-sm text-white bg-dental-600 hover:bg-dental-700 shadow-lg shadow-dental-700/20 active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer';
       }
-      if (submitBtnText) submitBtnText.textContent = 'Request Dental Appointment';
-
-      if (bookingPill) {
-        bookingPill.className = 'px-4 py-1.5 rounded-full bg-dental-100 text-dental-700 text-xs font-heading font-bold uppercase tracking-wider transition-colors duration-500';
-        bookingPill.textContent = '🦷 Roots Dental Request Engine';
-      }
+      if (submitBtnText) submitBtnText.textContent = 'Confirm & Request Dental Consultation';
 
     } else {
-      // 2. Left Panel (Desktop): Sage Green
       if (doctorPanel) {
-        doctorPanel.className = 'hidden lg:flex lg:col-span-5 relative p-8 sm:p-10 flex-col justify-between overflow-hidden bg-gradient-to-br from-pediatric-600 to-pediatric-800 text-white transition-all duration-700 ease-in-out';
+        doctorPanel.className = 'hidden lg:flex lg:col-span-5 relative p-10 flex-col justify-between overflow-hidden bg-gradient-to-br from-pediatric-700 via-pediatric-800 to-pediatric-950 text-white transition-all duration-700 ease-in-out';
       }
       if (clinicTag) clinicTag.textContent = 'Buds Child Clinic';
       if (doctorName) doctorName.textContent = 'Dr. Jalil S. Mujawar';
-      if (doctorTitle) doctorTitle.textContent = 'Senior Consultant Pediatrician • MBBS, DCH • 15+ Yrs Clinical Mastery';
-      if (guaranteeText) guaranteeText.textContent = 'Trusted by 75,400+ Mothers in Wanowrie';
+      if (doctorSubline) {
+        doctorSubline.textContent = 'Senior Consultant Pediatrician & Neonatologist • MBBS, DCH • 15+ Yrs Clinical Mastery';
+      }
 
-      // Desktop Doctor Image: Smooth crossfade & scale
       if (doctorImg) {
         doctorImg.style.transition = 'opacity 0.25s ease-out, transform 0.25s ease-out';
         doctorImg.style.opacity = '0';
-        doctorImg.style.transform = 'scale(0.97)';
+        doctorImg.style.transform = 'scale(0.98)';
         setTimeout(() => {
           doctorImg.src = '/static/images/pediatrician_jalil.png';
           doctorImg.alt = 'Dr. Jalil S. Mujawar';
@@ -180,41 +247,24 @@
         }, 120);
       }
 
-      // Badges
-      if (badgeTopIcon) badgeTopIcon.textContent = '🍼';
-      if (badgeTopText) badgeTopText.textContent = 'Newborn Specialist';
-      if (badgeBottomIcon) badgeBottomIcon.textContent = '🛡️';
-      if (badgeBottomText) badgeBottomText.textContent = '75k+ Parents Trust';
-
-      // Mobile Compact Doctor Pill (Above toggle)
-      if (mobilePill) {
-        mobilePill.className = 'lg:hidden flex items-center gap-3 p-3 rounded-2xl bg-pediatric-50 border border-pediatric-200/80 mb-4 transition-all';
-      }
       if (mobileAvatar) mobileAvatar.src = '/static/images/pediatrician_jalil.png';
       if (mobilePillName) mobilePillName.textContent = 'Dr. Jalil S. Mujawar';
-      if (mobilePillDesc) mobilePillDesc.textContent = 'Senior Consultant Pediatrician • MBBS, DCH';
-      if (mobilePillBadge) {
-        mobilePillBadge.className = 'px-2.5 py-1 rounded-full bg-white text-pediatric-700 text-[10px] font-heading font-bold shadow-xs border border-pediatric-200 flex-shrink-0';
-        mobilePillBadge.textContent = '75k+ 🛡️';
-      }
+      if (mobilePillDesc) mobilePillDesc.textContent = 'Senior Pediatrician • MBBS, DCH';
 
-      // Toggle Buttons Active State
       if (btnDental) {
-        btnDental.className = 'flex-1 py-3 px-4 rounded-xl font-heading font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-300 text-slate-500 hover:text-slate-800';
+        btnDental.className = 'flex-1 py-3 px-4 rounded-xl font-heading font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 text-slate-500 hover:text-slate-800';
       }
       if (btnPediatric) {
-        btnPediatric.className = 'flex-1 py-3 px-4 rounded-xl font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-300 bg-white text-pediatric-700 shadow-md';
+        btnPediatric.className = 'flex-1 py-3 px-4 rounded-xl font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 bg-white text-pediatric-700 shadow-sm';
       }
 
-      // Form Adjustments
-      if (labelPatient) labelPatient.innerHTML = "Child's Full Name <span class=\"text-rose-500\">*</span>";
+      if (labelPatient) labelPatient.textContent = "Child's Full Name";
       if (inputPatient) inputPatient.placeholder = 'e.g. Aarav Mehta (4 yrs)';
       if (parentNameGroup) {
         parentNameGroup.classList.remove('hidden');
         if (inputParent) inputParent.setAttribute('required', 'required');
       }
 
-      // Populate Pediatric Services
       if (serviceSelect) {
         serviceSelect.innerHTML = '';
         PEDIATRIC_SERVICES.forEach(s => {
@@ -228,44 +278,198 @@
         });
       }
 
-      // Submit Button Style
       if (submitBtn) {
-        submitBtn.className = 'w-full py-4 px-6 rounded-2xl font-heading font-bold text-sm text-white bg-pediatric-600 hover:bg-pediatric-700 shadow-xl shadow-pediatric-700/25 active:scale-98 transition-all duration-300 flex items-center justify-center gap-2';
+        submitBtn.className = 'w-full py-4 px-6 rounded-2xl font-heading font-bold text-sm text-white bg-pediatric-600 hover:bg-pediatric-700 shadow-lg shadow-pediatric-700/20 active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer';
       }
-      if (submitBtnText) submitBtnText.textContent = 'Request Child Care Appointment';
-
-      if (bookingPill) {
-        bookingPill.className = 'px-4 py-1.5 rounded-full bg-pediatric-100 text-pediatric-800 text-xs font-heading font-bold uppercase tracking-wider transition-colors duration-500';
-        bookingPill.textContent = '👶 Buds Pediatric Request Engine';
-      }
+      if (submitBtnText) submitBtnText.textContent = 'Confirm & Request Child Care Appointment';
     }
+
+    window.goToBookingStep(inPageStep);
   };
 
 
   // -------------------------------------------------------------
-  // 2. APPLE iOS 17/18 ZERO-SCROLL BOOKING MODAL SHEET
+  // 3. PROGRESSIVE STEPPER: MOBILE MODAL BOOKING SHEET
   // -------------------------------------------------------------
+  window.goToModalStep = function (step) {
+    if (step > modalStep) {
+      if (modalStep === 1) {
+        const nameInput = document.getElementById('modal-patient-name');
+        if (!nameInput || !nameInput.value.trim()) {
+          if (nameInput) {
+            nameInput.focus();
+            nameInput.classList.add('border-rose-500', 'ring-2', 'ring-rose-200');
+            setTimeout(() => nameInput.classList.remove('border-rose-500', 'ring-2', 'ring-rose-200'), 1500);
+          }
+          return;
+        }
+      }
+      if (modalStep === 2) {
+        const dateInput = document.getElementById('modal-preferred-date');
+        if (!dateInput || !dateInput.value) {
+          if (dateInput) dateInput.focus();
+          return;
+        }
+      }
+    }
+
+    modalStep = step;
+
+    const step1Pane = document.getElementById('modal-step-1');
+    const step2Pane = document.getElementById('modal-step-2');
+    const step3Pane = document.getElementById('modal-step-3');
+
+    if (step1Pane) {
+      step1Pane.classList.toggle('hidden-step', step !== 1);
+      step1Pane.classList.toggle('active-step', step === 1);
+    }
+    if (step2Pane) {
+      step2Pane.classList.toggle('hidden-step', step !== 2);
+      step2Pane.classList.toggle('active-step', step === 2);
+    }
+    if (step3Pane) {
+      step3Pane.classList.toggle('hidden-step', step !== 3);
+      step3Pane.classList.toggle('active-step', step === 3);
+    }
+
+    // Modal Step Indicator
+    for (let i = 1; i <= 3; i++) {
+      const pill = document.getElementById(`modal-step-indicator-${i}`);
+      const text = document.getElementById(`modal-step-text-${i}`);
+      if (pill) {
+        if (i < step) {
+          pill.className = 'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-semibold bg-emerald-600 text-white';
+          pill.innerHTML = '<i data-lucide="check" class="w-3 h-3"></i>';
+        } else if (i === step) {
+          pill.className = currentClinic === 'dental'
+            ? 'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-dental-600 text-white shadow-xs'
+            : 'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-pediatric-600 text-white shadow-xs';
+          pill.textContent = i;
+        } else {
+          pill.className = 'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-medium bg-slate-100 text-slate-400';
+          pill.textContent = i;
+        }
+      }
+      if (text) {
+        text.className = (i === step)
+          ? 'text-[11px] font-heading font-semibold text-slate-800'
+          : 'text-[11px] font-heading text-slate-400';
+      }
+    }
+
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  };
+
+  window.setModalClinic = function (type) {
+    const modalClinicInput = document.getElementById('modal-clinic-type');
+    const btnDental = document.getElementById('modal-toggle-dental');
+    const btnPediatric = document.getElementById('modal-toggle-pediatric');
+    const avatar = document.getElementById('modal-doctor-avatar');
+    const name = document.getElementById('modal-doctor-name');
+    const desc = document.getElementById('modal-doctor-desc');
+    const labelPatient = document.getElementById('modal-label-patient');
+    const inputPatient = document.getElementById('modal-patient-name');
+    const parentGroup = document.getElementById('modal-parent-group');
+    const inputParent = document.getElementById('modal-parent-name');
+    const selectService = document.getElementById('modal-service-needed');
+    const submitBtn = document.getElementById('modal-submit-btn');
+    const submitText = document.getElementById('modal-submit-text');
+
+    if (modalClinicInput) modalClinicInput.value = type;
+
+    if (type === 'dental') {
+      if (btnDental) {
+        btnDental.className = 'flex-1 py-2 px-3 rounded-xl font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-all bg-white text-dental-700 shadow-sm';
+      }
+      if (btnPediatric) {
+        btnPediatric.className = 'flex-1 py-2 px-3 rounded-xl font-heading font-medium text-xs flex items-center justify-center gap-1.5 transition-all text-slate-500 hover:text-slate-800';
+      }
+
+      if (avatar) avatar.src = '/static/images/dentist_sabina.png';
+      if (name) name.textContent = 'Dr. Sabina Firoj Shaikh';
+      if (desc) desc.textContent = 'MDS Gold Medalist • Prosthodontics';
+
+      if (labelPatient) labelPatient.textContent = 'Patient Full Name';
+      if (inputPatient) inputPatient.placeholder = 'e.g. Rahul Kulkarni';
+      if (parentGroup) {
+        parentGroup.classList.add('hidden');
+        if (inputParent) inputParent.removeAttribute('required');
+      }
+
+      if (selectService) {
+        selectService.innerHTML = '';
+        DENTAL_SERVICES.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s;
+          opt.textContent = s;
+          selectService.appendChild(opt);
+        });
+      }
+
+      if (submitBtn) {
+        submitBtn.className = 'w-full py-3.5 px-5 rounded-2xl font-heading font-bold text-xs sm:text-sm text-white bg-dental-600 hover:bg-dental-700 shadow-lg shadow-dental-700/20 active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer';
+      }
+      if (submitText) submitText.textContent = 'Request Dental Consultation';
+
+    } else {
+      if (btnDental) {
+        btnDental.className = 'flex-1 py-2 px-3 rounded-xl font-heading font-medium text-xs flex items-center justify-center gap-1.5 transition-all text-slate-500 hover:text-slate-800';
+      }
+      if (btnPediatric) {
+        btnPediatric.className = 'flex-1 py-2 px-3 rounded-xl font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-all bg-white text-pediatric-700 shadow-sm';
+      }
+
+      if (avatar) avatar.src = '/static/images/pediatrician_jalil.png';
+      if (name) name.textContent = 'Dr. Jalil S. Mujawar';
+      if (desc) desc.textContent = 'Senior Consultant Pediatrician • MBBS, DCH';
+
+      if (labelPatient) labelPatient.textContent = "Child's Full Name";
+      if (inputPatient) inputPatient.placeholder = 'e.g. Aarav Mehta (4 yrs)';
+      if (parentGroup) {
+        parentGroup.classList.remove('hidden');
+        if (inputParent) inputParent.setAttribute('required', 'required');
+      }
+
+      if (selectService) {
+        selectService.innerHTML = '';
+        PEDIATRIC_SERVICES.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s;
+          opt.textContent = s;
+          selectService.appendChild(opt);
+        });
+      }
+
+      if (submitBtn) {
+        submitBtn.className = 'w-full py-3.5 px-5 rounded-2xl font-heading font-bold text-xs sm:text-sm text-white bg-pediatric-600 hover:bg-pediatric-700 shadow-lg shadow-pediatric-700/20 active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer';
+      }
+      if (submitText) submitText.textContent = 'Request Child Care Consultation';
+    }
+
+    window.goToModalStep(modalStep);
+  };
+
+  // Open & Close Modal Sheet
   window.openBookingModal = function (targetClinic) {
     try {
       const modal = document.getElementById('mobile-booking-modal');
       const sheet = document.getElementById('modal-sheet');
       if (!modal || !sheet) {
-        console.warn('Booking modal elements not found, scrolling to booking wrapper instead.');
         window.scrollToBooking(targetClinic);
         return;
       }
 
-      // Detect clinic if not passed
       let clinicToSet = targetClinic;
       if (!clinicToSet || (clinicToSet !== 'dental' && clinicToSet !== 'pediatric')) {
         clinicToSet = window.location.pathname.includes('pediatric') ? 'pediatric' : 'dental';
       }
 
-      if (typeof window.setModalClinic === 'function') {
-        window.setModalClinic(clinicToSet);
-      }
+      window.setModalClinic(clinicToSet);
+      window.goToModalStep(1);
 
-      // Set default tomorrow date if empty
+      // Pre-set tomorrow date if empty
       const modalDate = document.getElementById('modal-preferred-date');
       if (modalDate && !modalDate.value) {
         const tomorrow = new Date();
@@ -274,7 +478,6 @@
         modalDate.min = new Date().toISOString().split('T')[0];
       }
 
-      // Force display flex before animation
       modal.style.display = 'flex';
       modal.style.pointerEvents = 'auto';
 
@@ -287,7 +490,6 @@
         sheet.classList.add('translate-y-0');
       });
 
-      // Prevent body bounce behind modal on mobile
       if (window.innerWidth < 768) {
         document.body.style.overflow = 'hidden';
       }
@@ -323,112 +525,10 @@
     }
   };
 
-  window.setModalClinic = function (type) {
-    const modalClinicInput = document.getElementById('modal-clinic-type');
-    const btnDental = document.getElementById('modal-toggle-dental');
-    const btnPediatric = document.getElementById('modal-toggle-pediatric');
-    const banner = document.getElementById('modal-doctor-banner');
-    const avatar = document.getElementById('modal-doctor-avatar');
-    const name = document.getElementById('modal-doctor-name');
-    const desc = document.getElementById('modal-doctor-desc');
-    const badge = document.getElementById('modal-doctor-badge');
-    const labelPatient = document.getElementById('modal-label-patient');
-    const inputPatient = document.getElementById('modal-patient-name');
-    const parentGroup = document.getElementById('modal-parent-group');
-    const inputParent = document.getElementById('modal-parent-name');
-    const selectService = document.getElementById('modal-service-needed');
-    const submitBtn = document.getElementById('modal-submit-btn');
-    const submitText = document.getElementById('modal-submit-text');
 
-    if (modalClinicInput) modalClinicInput.value = type;
-
-    if (type === 'dental') {
-      if (btnDental) {
-        btnDental.className = 'flex-1 py-2 px-3 rounded-xl font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-all bg-white text-dental-700 shadow-sm';
-      }
-      if (btnPediatric) {
-        btnPediatric.className = 'flex-1 py-2 px-3 rounded-xl font-heading font-semibold text-xs flex items-center justify-center gap-1.5 transition-all text-slate-500 hover:text-slate-800';
-      }
-
-      if (banner) {
-        banner.className = 'flex items-center gap-3 p-3 rounded-2xl bg-dental-50/90 border border-dental-200/80 mb-3.5 transition-all';
-      }
-      if (avatar) avatar.src = '/static/images/dentist_sabina.png';
-      if (name) name.textContent = 'Dr. Sabina Firoj Shaikh';
-      if (desc) desc.textContent = 'MDS Gold Medalist • Prosthodontist';
-      if (badge) {
-        badge.className = 'px-2.5 py-1 rounded-full bg-white text-dental-700 text-[10px] font-heading font-bold shadow-xs border border-dental-200';
-        badge.textContent = '5.0 ⭐';
-      }
-
-      if (labelPatient) labelPatient.innerHTML = 'Patient Full Name <span class="text-rose-500">*</span>';
-      if (inputPatient) inputPatient.placeholder = 'e.g. Rahul Kulkarni';
-
-      if (parentGroup) {
-        parentGroup.classList.add('hidden');
-        if (inputParent) inputParent.removeAttribute('required');
-      }
-
-      if (selectService) {
-        selectService.innerHTML = '';
-        DENTAL_SERVICES.forEach(s => {
-          const opt = document.createElement('option');
-          opt.value = s;
-          opt.textContent = s;
-          selectService.appendChild(opt);
-        });
-      }
-
-      if (submitBtn) {
-        submitBtn.className = 'w-full mt-2 py-3.5 px-5 rounded-2xl font-heading font-bold text-xs sm:text-sm text-white bg-dental-600 hover:bg-dental-700 shadow-lg shadow-dental-700/25 active:scale-98 transition flex items-center justify-center gap-2';
-      }
-      if (submitText) submitText.textContent = 'Request Dental Appointment';
-
-    } else {
-      if (btnDental) {
-        btnDental.className = 'flex-1 py-2 px-3 rounded-xl font-heading font-semibold text-xs flex items-center justify-center gap-1.5 transition-all text-slate-500 hover:text-slate-800';
-      }
-      if (btnPediatric) {
-        btnPediatric.className = 'flex-1 py-2 px-3 rounded-xl font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition-all bg-white text-pediatric-700 shadow-sm';
-      }
-
-      if (banner) {
-        banner.className = 'flex items-center gap-3 p-3 rounded-2xl bg-pediatric-50/90 border border-pediatric-200/80 mb-3.5 transition-all';
-      }
-      if (avatar) avatar.src = '/static/images/pediatrician_jalil.png';
-      if (name) name.textContent = 'Dr. Jalil S. Mujawar';
-      if (desc) desc.textContent = 'Senior Consultant Pediatrician • MBBS, DCH';
-      if (badge) {
-        badge.className = 'px-2.5 py-1 rounded-full bg-white text-pediatric-700 text-[10px] font-heading font-bold shadow-xs border border-pediatric-200';
-        badge.textContent = '75k+ 🛡️';
-      }
-
-      if (labelPatient) labelPatient.innerHTML = "Child's Full Name <span class=\"text-rose-500\">*</span>";
-      if (inputPatient) inputPatient.placeholder = 'e.g. Aarav Mehta (4 yrs)';
-
-      if (parentGroup) {
-        parentGroup.classList.remove('hidden');
-        if (inputParent) inputParent.setAttribute('required', 'required');
-      }
-
-      if (selectService) {
-        selectService.innerHTML = '';
-        PEDIATRIC_SERVICES.forEach(s => {
-          const opt = document.createElement('option');
-          opt.value = s;
-          opt.textContent = s;
-          selectService.appendChild(opt);
-        });
-      }
-
-      if (submitBtn) {
-        submitBtn.className = 'w-full mt-2 py-3.5 px-5 rounded-2xl font-heading font-bold text-xs sm:text-sm text-white bg-pediatric-600 hover:bg-pediatric-700 shadow-lg shadow-pediatric-700/25 active:scale-98 transition flex items-center justify-center gap-2';
-      }
-      if (submitText) submitText.textContent = 'Request Child Care Appointment';
-    }
-  };
-
-  // Submission handler for Modal Form
+  // -------------------------------------------------------------
+  // 4. MODAL BOOKING SUBMISSION (/api/book/)
+  // -------------------------------------------------------------
   window.handleModalBookingSubmit = function (e) {
     e.preventDefault();
 
@@ -439,23 +539,24 @@
     const toastWa = document.getElementById('modal-toast-wa');
     const toastWaLink = document.getElementById('modal-toast-wa-link');
 
+    const phoneVal = (document.getElementById('modal-phone-number')?.value || '').replace(/\D/g, '');
     const payload = {
       clinic_type: document.getElementById('modal-clinic-type').value,
       patient_name: document.getElementById('modal-patient-name').value.trim(),
       parent_name: (document.getElementById('modal-parent-name') ? document.getElementById('modal-parent-name').value.trim() : ''),
-      phone_number: document.getElementById('modal-phone-number').value.trim(),
+      phone_number: phoneVal,
       service_needed: document.getElementById('modal-service-needed').value,
       preferred_date: document.getElementById('modal-preferred-date').value,
       preferred_time: document.getElementById('modal-preferred-time').value,
       notes: ''
     };
 
-    if (!payload.patient_name || !payload.phone_number || !payload.preferred_date) {
-      alert('Please fill out all required fields.');
+    if (!payload.patient_name || payload.phone_number.length < 10 || !payload.preferred_date) {
+      alert('Please provide your full name and a valid 10-digit WhatsApp number.');
       return;
     }
 
-    const originalText = submitText ? submitText.textContent : 'Request Appointment';
+    const originalText = submitText ? submitText.textContent : 'Request Consultation';
     if (submitBtn) submitBtn.disabled = true;
     if (submitText) submitText.textContent = 'Reserving Slot...';
 
@@ -473,7 +574,7 @@
         if (toast) {
           toast.classList.remove('hidden');
           if (toastMsg) {
-            toastMsg.textContent = `Hello ${data.patient_name}, your request is locked in! Our front desk is confirming your exact slot on WhatsApp.`;
+            toastMsg.textContent = `Hello ${data.patient_name}, your consultation request is locked in! Our front desk is confirming your exact slot on WhatsApp.`;
           }
           if (toastWa && data.whatsapp_url) {
             toastWa.classList.remove('hidden');
@@ -481,7 +582,6 @@
           }
         }
 
-        // Reset inputs
         const form = document.getElementById('modal-appointment-form');
         if (form) form.reset();
         document.getElementById('modal-clinic-type').value = payload.clinic_type;
@@ -500,89 +600,6 @@
 
 
   // -------------------------------------------------------------
-  // 3. CONTEXTUAL ROUTING (Mobile: Modal Sheet | Desktop: Smooth Scroll)
-  // -------------------------------------------------------------
-  window.scrollToBooking = function (targetClinic, serviceName) {
-    // If user is on a mobile device, open the zero-scroll iOS sheet directly!
-    if (window.innerWidth < 768) {
-      window.openBookingModal(targetClinic);
-      return;
-    }
-
-    const bookingWrapper = document.getElementById('booking-wrapper');
-
-    if (bookingWrapper) {
-      if (targetClinic) {
-        window.switchClinicBooking(targetClinic, serviceName);
-      }
-
-      const siteHeader = document.getElementById('site-header');
-      const headerHeight = siteHeader ? siteHeader.offsetHeight : 80;
-      const rect = bookingWrapper.getBoundingClientRect();
-      const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
-      const destinationY = rect.top + currentScrollY - headerHeight - 16;
-
-      window.scrollTo({
-        top: Math.max(0, destinationY),
-        behavior: 'smooth'
-      });
-    } else {
-      // User is on /about, /gallery, or /contact: redirect to home or pediatric page with hash
-      const destUrl = (targetClinic === 'pediatric') ? '/pediatric/#booking-wrapper' : '/dental/#booking-wrapper';
-      window.location.href = destUrl;
-    }
-  };
-
-
-  // -------------------------------------------------------------
-  // 4. HEADER & NAVIGATION BUTTON INTERCEPTORS
-  // -------------------------------------------------------------
-  function setupBookingButtonInterceptors() {
-    const headerBtn = document.getElementById('header-book-btn');
-    const mobileBottomBtn = document.getElementById('mobile-bottom-book-btn');
-    const mobileDrawerBtn = document.getElementById('mobile-drawer-book-btn');
-
-    // Header Book Appointment Click
-    if (headerBtn) {
-      headerBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        const path = window.location.pathname;
-        const clinic = path.includes('pediatric') ? 'pediatric' : 'dental';
-
-        if (window.innerWidth < 768) {
-          window.openBookingModal(clinic);
-        } else {
-          window.scrollToBooking(clinic);
-        }
-      });
-    }
-
-    // Mobile Fixed Bottom Bar "Book Now" Click
-    if (mobileBottomBtn) {
-      mobileBottomBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        const path = window.location.pathname;
-        const clinic = path.includes('pediatric') ? 'pediatric' : 'dental';
-        window.openBookingModal(clinic);
-      });
-    }
-
-    // Mobile Drawer "Book Appointment" Click
-    if (mobileDrawerBtn) {
-      mobileDrawerBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        closeMobileDrawer();
-        const path = window.location.pathname;
-        const clinic = path.includes('pediatric') ? 'pediatric' : 'dental';
-        setTimeout(() => {
-          window.openBookingModal(clinic);
-        }, 150);
-      });
-    }
-  }
-
-
-  // -------------------------------------------------------------
   // 5. IN-PAGE FORM SUBMISSION (/api/book/)
   // -------------------------------------------------------------
   window.handleBookingSubmit = function (e) {
@@ -596,37 +613,36 @@
     const toastWaAction = document.getElementById('toast-whatsapp-action');
     const toastWaLink = document.getElementById('toast-whatsapp-link');
 
+    const phoneVal = (document.getElementById('phone-number')?.value || '').replace(/\D/g, '');
     const payload = {
       clinic_type: document.getElementById('form-clinic-type').value,
       patient_name: document.getElementById('patient-name').value.trim(),
       parent_name: (document.getElementById('parent-name') ? document.getElementById('parent-name').value.trim() : ''),
-      phone_number: document.getElementById('phone-number').value.trim(),
+      phone_number: phoneVal,
       service_needed: document.getElementById('service-needed').value,
       preferred_date: document.getElementById('preferred-date').value,
       preferred_time: document.getElementById('preferred-time').value,
-      notes: document.getElementById('notes').value.trim()
+      notes: (document.getElementById('notes') ? document.getElementById('notes').value.trim() : '')
     };
 
-    if (!payload.patient_name || !payload.phone_number || !payload.preferred_date) {
-      alert('Please fill out all required fields marked with *');
+    if (!payload.patient_name || payload.phone_number.length < 10 || !payload.preferred_date) {
+      alert('Please fill out all required fields with a valid 10-digit WhatsApp phone number.');
       return;
     }
 
-    const originalText = submitBtnText.textContent;
-    submitBtn.disabled = true;
-    submitBtnText.textContent = 'Reserving Your Slot...';
+    const originalText = submitBtnText ? submitBtnText.textContent : 'Request Appointment';
+    if (submitBtn) submitBtn.disabled = true;
+    if (submitBtnText) submitBtnText.textContent = 'Reserving Your Slot...';
 
     fetch('/api/book/', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     })
     .then(res => res.json())
     .then(data => {
-      submitBtn.disabled = false;
-      submitBtnText.textContent = originalText;
+      if (submitBtn) submitBtn.disabled = false;
+      if (submitBtnText) submitBtnText.textContent = originalText;
 
       if (data.status === 'success') {
         if (toast) {
@@ -643,6 +659,7 @@
         form.reset();
         document.getElementById('form-clinic-type').value = payload.clinic_type;
         window.switchClinicBooking(payload.clinic_type);
+        window.goToBookingStep(1);
 
         toast.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       } else {
@@ -650,16 +667,92 @@
       }
     })
     .catch(err => {
-      submitBtn.disabled = false;
-      submitBtnText.textContent = originalText;
+      if (submitBtn) submitBtn.disabled = false;
+      if (submitBtnText) submitBtnText.textContent = originalText;
       console.error('Booking request error:', err);
-      alert('Network issue. Please reach us directly on WhatsApp at +91 98765 43210.');
+      alert('Network issue. Reach us directly on WhatsApp at +91 98765 43210.');
     });
   };
 
 
   // -------------------------------------------------------------
-  // 6. MOBILE DRAWER NAVIGATION
+  // 6. CONTEXTUAL ROUTING (Mobile: Modal Sheet | Desktop: Smooth Scroll)
+  // -------------------------------------------------------------
+  window.scrollToBooking = function (targetClinic, serviceName) {
+    if (window.innerWidth < 768) {
+      window.openBookingModal(targetClinic);
+      return;
+    }
+
+    const bookingWrapper = document.getElementById('booking-wrapper');
+    if (bookingWrapper) {
+      if (targetClinic) {
+        window.switchClinicBooking(targetClinic, serviceName);
+      }
+
+      const siteHeader = document.getElementById('site-header');
+      const headerHeight = siteHeader ? siteHeader.offsetHeight : 80;
+      const rect = bookingWrapper.getBoundingClientRect();
+      const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+      const destinationY = rect.top + currentScrollY - headerHeight - 16;
+
+      window.scrollTo({
+        top: Math.max(0, destinationY),
+        behavior: 'smooth'
+      });
+    } else {
+      const destUrl = (targetClinic === 'pediatric') ? '/pediatric/#booking-wrapper' : '/dental/#booking-wrapper';
+      window.location.href = destUrl;
+    }
+  };
+
+
+  // -------------------------------------------------------------
+  // 7. HEADER & NAVIGATION BUTTON INTERCEPTORS
+  // -------------------------------------------------------------
+  function setupBookingButtonInterceptors() {
+    const headerBtn = document.getElementById('header-book-btn');
+    const mobileBottomBtn = document.getElementById('mobile-bottom-book-btn');
+    const mobileDrawerBtn = document.getElementById('mobile-drawer-book-btn');
+
+    if (headerBtn) {
+      headerBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const path = window.location.pathname;
+        const clinic = path.includes('pediatric') ? 'pediatric' : 'dental';
+        if (window.innerWidth < 768) {
+          window.openBookingModal(clinic);
+        } else {
+          window.scrollToBooking(clinic);
+        }
+      });
+    }
+
+    if (mobileBottomBtn) {
+      mobileBottomBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const path = window.location.pathname;
+        const clinic = path.includes('pediatric') ? 'pediatric' : 'dental';
+        window.openBookingModal(clinic);
+      });
+    }
+
+    if (mobileDrawerBtn) {
+      mobileDrawerBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        closeMobileDrawer();
+        const path = window.location.pathname;
+        const clinic = path.includes('pediatric') ? 'pediatric' : 'dental';
+        setTimeout(() => {
+          window.openBookingModal(clinic);
+        }, 150);
+      });
+    }
+  }
+
+
+  // -------------------------------------------------------------
+  // 8. MOBILE DRAWER NAVIGATION
   // -------------------------------------------------------------
   const drawer = document.getElementById('mobile-drawer');
   const drawerSheet = document.getElementById('mobile-drawer-sheet');
@@ -669,8 +762,7 @@
 
   function openMobileDrawer() {
     if (!drawer || !drawerSheet) return;
-    drawer.classList.remove('pointer-events-none');
-    drawer.classList.remove('opacity-0');
+    drawer.classList.remove('pointer-events-none', 'opacity-0');
     drawer.classList.add('opacity-100');
     drawerSheet.classList.remove('translate-x-full');
     drawerSheet.classList.add('translate-x-0');
@@ -694,10 +786,6 @@
   window.openMobileDrawer = openMobileDrawer;
   window.closeMobileDrawer = closeMobileDrawer;
 
-
-  // -------------------------------------------------------------
-  // 7. KEYBOARD ESCAPE TO CLOSE MODAL
-  // -------------------------------------------------------------
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
       window.closeBookingModal();
@@ -707,28 +795,28 @@
 
 
   // -------------------------------------------------------------
-  // 8. STICKY HEADER SCROLL BLUR ENHANCEMENT
+  // 9. STICKY HEADER SCROLL BLUR ENHANCEMENT
   // -------------------------------------------------------------
   const siteHeader = document.getElementById('site-header');
   window.addEventListener('scroll', function () {
     if (!siteHeader) return;
     if (window.scrollY > 20) {
-      siteHeader.classList.add('bg-white/90', 'shadow-md', 'border-slate-100');
+      siteHeader.classList.add('bg-white/95', 'shadow-sm', 'border-slate-100');
       siteHeader.classList.remove('bg-white/70', 'border-transparent');
     } else {
-      siteHeader.classList.remove('bg-white/90', 'shadow-md', 'border-slate-100');
+      siteHeader.classList.remove('bg-white/95', 'shadow-sm', 'border-slate-100');
       siteHeader.classList.add('bg-white/70', 'border-transparent');
     }
   }, { passive: true });
 
 
   // -------------------------------------------------------------
-  // 9. INITIALIZE ON DOM CONTENT LOADED
+  // 10. INITIALIZATION
   // -------------------------------------------------------------
   document.addEventListener('DOMContentLoaded', function () {
     setupBookingButtonInterceptors();
 
-    // Set today's date as min for date input
+    // Default dates
     const dateInput = document.getElementById('preferred-date');
     if (dateInput) {
       const today = new Date().toISOString().split('T')[0];
@@ -747,7 +835,11 @@
       modalDate.value = tomorrow.toISOString().split('T')[0];
     }
 
-    // Detect initial clinic from page route or hidden input
+    // Default time slots
+    window.selectTimeSlot('Morning (10:00 AM - 1:00 PM)', false);
+    window.selectTimeSlot('Morning (10:00 AM - 1:00 PM)', true);
+
+    // Initial clinic
     const formClinicInput = document.getElementById('form-clinic-type');
     let initType = 'dental';
     if (window.location.pathname.includes('pediatric')) {
@@ -758,13 +850,17 @@
 
     if (document.getElementById('booking-wrapper')) {
       window.switchClinicBooking(initType);
+      window.goToBookingStep(1);
     }
 
-    // Handle hash on load (e.g. /#booking-wrapper)
     if (window.location.hash === '#booking-wrapper') {
       setTimeout(() => {
         window.scrollToBooking(initType);
       }, 350);
+    }
+
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
     }
   });
 
