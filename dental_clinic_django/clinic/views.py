@@ -21,6 +21,11 @@ from .models import (
     ChildGrowthRecord, VaccinationRecord, NewbornRecord, DevelopmentalMilestone,
     ClinicalPrescription, AuditLog
 )
+from .supabase_client import (
+    supabase_sync_appointment,
+    supabase_sync_queue,
+    supabase_sync_invoice
+)
 
 
 # ==========================================
@@ -563,6 +568,7 @@ def api_queue_add(request):
         reason_for_visit=reason
     )
 
+    supabase_sync_queue(entry)
     log_audit(request, 'CREATE', 'QueueEntry', entry.id, f"Issued Token #{next_token} for {patient.full_name} ({clinic_type})")
     return JsonResponse({'status': 'success', 'token_number': next_token, 'patient_name': patient.full_name})
 
@@ -693,6 +699,7 @@ def api_invoice_create(request):
         notes=notes
     )
 
+    supabase_sync_invoice(invoice)
     log_audit(request, 'BILLING', 'Invoice', invoice.id, f"Created {invoice.invoice_no} for {patient.full_name}: Rs {paid_amount}/{total_amount} ({payment_method})")
 
     return JsonResponse({
@@ -1125,6 +1132,8 @@ def api_book(request):
         notes=notes,
         status='pending'
     )
+
+    supabase_sync_appointment(appointment_req)
 
     WorkflowLog.objects.create(
         event_type="New Web Appointment Request",

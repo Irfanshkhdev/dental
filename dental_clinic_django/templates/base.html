@@ -67,6 +67,18 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
+  <!-- Supabase JS Client & Realtime -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    window.SUPABASE_URL = "https://mfzbsfgshicgtjitslho.supabase.co";
+    window.SUPABASE_ANON_KEY = "sb_publishable_8mJVkpQcqIkw3hProDURPw_4oGf_D-K";
+    try {
+      window.supabaseClient = window.supabase ? window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY) : null;
+    } catch (e) {
+      console.warn("Supabase init note:", e);
+    }
+  </script>
+
   <!-- Custom Medical Sanctuary CSS -->
   <link rel="stylesheet" href="{% static 'css/style.css' %}?v=3.2">
 

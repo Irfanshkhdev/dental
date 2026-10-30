@@ -3,3 +3,5 @@ requests==2.32.3
 python-dotenv==1.0.1
 gunicorn==23.0.0
 whitenoise==6.7.0
+supabase>=2.33.0
+postgrest>=2.33.0

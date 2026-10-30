@@ -22,3 +22,9 @@ desktop.ini
 .idea/
 *.sublime-project
 *.sublime-workspace
+
+# Environment variables & secrets (protected from git commits)
+.env
+.env.local
+.env.*.local
+*.env
