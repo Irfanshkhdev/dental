@@ -45,6 +45,12 @@
   // 1. PROGRESSIVE STEPPER: IN-PAGE BOOKING ENGINE (#booking-wrapper)
   // -------------------------------------------------------------
   window.goToBookingStep = function (step) {
+    // Clear any previous error badges
+    const existingErr = document.getElementById('patient-name-error');
+    if (existingErr) existingErr.remove();
+    const existingDateErr = document.getElementById('preferred-date-error');
+    if (existingDateErr) existingDateErr.remove();
+
     // Validate current step before advancing
     if (step > inPageStep) {
       if (inPageStep === 1) {
@@ -52,8 +58,29 @@
         if (!nameInput || !nameInput.value.trim()) {
           if (nameInput) {
             nameInput.focus();
-            nameInput.classList.add('border-rose-500', 'ring-2', 'ring-rose-200');
-            setTimeout(() => nameInput.classList.remove('border-rose-500', 'ring-2', 'ring-rose-200'), 1500);
+            nameInput.classList.remove('animate-shake');
+            void nameInput.offsetWidth;
+            nameInput.classList.add('animate-shake', 'border-rose-500', 'ring-2', 'ring-rose-200');
+
+            const errDiv = document.createElement('div');
+            errDiv.id = 'patient-name-error';
+            errDiv.className = 'flex items-center gap-1.5 text-xs font-semibold text-rose-600 mt-2 bg-rose-50 border border-rose-200 px-3.5 py-2 rounded-xl animate-shake';
+            errDiv.innerHTML = '<svg class="w-4 h-4 text-rose-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><span>Please enter the patient\'s full name to continue</span>';
+            const parent = nameInput.closest('.relative') ? nameInput.closest('.relative').parentElement : nameInput.parentElement;
+            parent.appendChild(errDiv);
+
+            nameInput.addEventListener('input', function onInputClear() {
+              if (nameInput.value.trim()) {
+                const err = document.getElementById('patient-name-error');
+                if (err) err.remove();
+                nameInput.classList.remove('border-rose-500', 'ring-2', 'ring-rose-200');
+                nameInput.removeEventListener('input', onInputClear);
+              }
+            });
+
+            setTimeout(() => {
+              nameInput.classList.remove('border-rose-500', 'ring-2', 'ring-rose-200', 'animate-shake');
+            }, 3000);
           }
           return;
         }
@@ -61,7 +88,23 @@
       if (inPageStep === 2) {
         const dateInput = document.getElementById('preferred-date');
         if (!dateInput || !dateInput.value) {
-          if (dateInput) dateInput.focus();
+          if (dateInput) {
+            dateInput.focus();
+            dateInput.classList.remove('animate-shake');
+            void dateInput.offsetWidth;
+            dateInput.classList.add('animate-shake', 'border-rose-500', 'ring-2', 'ring-rose-200');
+
+            const errDiv = document.createElement('div');
+            errDiv.id = 'preferred-date-error';
+            errDiv.className = 'flex items-center gap-1.5 text-xs font-semibold text-rose-600 mt-2 bg-rose-50 border border-rose-200 px-3.5 py-2 rounded-xl animate-shake';
+            errDiv.innerHTML = '<svg class="w-4 h-4 text-rose-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><span>Please choose your preferred appointment date</span>';
+            const parent = dateInput.closest('.relative') ? dateInput.closest('.relative').parentElement : dateInput.parentElement;
+            parent.appendChild(errDiv);
+
+            setTimeout(() => {
+              dateInput.classList.remove('border-rose-500', 'ring-2', 'ring-rose-200', 'animate-shake');
+            }, 3000);
+          }
           return;
         }
       }
@@ -77,14 +120,17 @@
     if (step1Pane) {
       step1Pane.classList.toggle('hidden-step', step !== 1);
       step1Pane.classList.toggle('active-step', step === 1);
+      step1Pane.style.display = (step === 1 ? 'block' : 'none');
     }
     if (step2Pane) {
       step2Pane.classList.toggle('hidden-step', step !== 2);
       step2Pane.classList.toggle('active-step', step === 2);
+      step2Pane.style.display = (step === 2 ? 'block' : 'none');
     }
     if (step3Pane) {
       step3Pane.classList.toggle('hidden-step', step !== 3);
       step3Pane.classList.toggle('active-step', step === 3);
+      step3Pane.style.display = (step === 3 ? 'block' : 'none');
     }
 
     // Step Indicator Pills
@@ -93,22 +139,22 @@
       const text = document.getElementById(`booking-step-text-${i}`);
       if (pill) {
         if (i < step) {
-          pill.className = 'w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold bg-emerald-600 text-white';
-          pill.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5"></i>';
+          pill.className = 'w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold bg-emerald-600 text-white cursor-pointer';
+          pill.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>';
         } else if (i === step) {
           pill.className = currentClinic === 'dental' 
-            ? 'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold bg-dental-600 text-white shadow-sm'
-            : 'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold bg-pediatric-600 text-white shadow-sm';
+            ? 'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold bg-dental-600 text-white shadow-sm cursor-pointer'
+            : 'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold bg-pediatric-600 text-white shadow-sm cursor-pointer';
           pill.textContent = i;
         } else {
-          pill.className = 'w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium bg-slate-100 text-slate-400';
+          pill.className = 'w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium bg-slate-100 text-slate-400 cursor-pointer';
           pill.textContent = i;
         }
       }
       if (text) {
         text.className = (i === step) 
-          ? 'text-xs font-heading font-semibold text-slate-900 hidden sm:inline'
-          : 'text-xs font-heading text-slate-400 hidden sm:inline';
+          ? 'text-xs font-heading font-semibold text-slate-900 hidden sm:inline cursor-pointer'
+          : 'text-xs font-heading text-slate-400 hidden sm:inline cursor-pointer';
       }
     }
 
@@ -337,17 +383,43 @@
 
 
   // -------------------------------------------------------------
-  // 3. PROGRESSIVE STEPPER: MOBILE MODAL BOOKING SHEET
+  // 3. PROGRESSIVE STEPPER: MOBILE & DESKTOP MODAL BOOKING SHEET
   // -------------------------------------------------------------
   window.goToModalStep = function (step) {
+    const existingErr = document.getElementById('modal-patient-name-error');
+    if (existingErr) existingErr.remove();
+    const existingDateErr = document.getElementById('modal-preferred-date-error');
+    if (existingDateErr) existingDateErr.remove();
+
     if (step > modalStep) {
       if (modalStep === 1) {
         const nameInput = document.getElementById('modal-patient-name');
         if (!nameInput || !nameInput.value.trim()) {
           if (nameInput) {
             nameInput.focus();
-            nameInput.classList.add('border-rose-500', 'ring-2', 'ring-rose-200');
-            setTimeout(() => nameInput.classList.remove('border-rose-500', 'ring-2', 'ring-rose-200'), 1500);
+            nameInput.classList.remove('animate-shake');
+            void nameInput.offsetWidth;
+            nameInput.classList.add('animate-shake', 'border-rose-500', 'ring-2', 'ring-rose-200');
+
+            const errDiv = document.createElement('div');
+            errDiv.id = 'modal-patient-name-error';
+            errDiv.className = 'flex items-center gap-1.5 text-xs font-semibold text-rose-600 mt-1.5 bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-xl animate-shake';
+            errDiv.innerHTML = '<svg class="w-3.5 h-3.5 text-rose-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><span>Please enter the patient\'s name to continue</span>';
+            const parent = nameInput.parentElement;
+            parent.appendChild(errDiv);
+
+            nameInput.addEventListener('input', function onInputClear() {
+              if (nameInput.value.trim()) {
+                const err = document.getElementById('modal-patient-name-error');
+                if (err) err.remove();
+                nameInput.classList.remove('border-rose-500', 'ring-2', 'ring-rose-200');
+                nameInput.removeEventListener('input', onInputClear);
+              }
+            });
+
+            setTimeout(() => {
+              nameInput.classList.remove('border-rose-500', 'ring-2', 'ring-rose-200', 'animate-shake');
+            }, 3000);
           }
           return;
         }
@@ -355,7 +427,11 @@
       if (modalStep === 2) {
         const dateInput = document.getElementById('modal-preferred-date');
         if (!dateInput || !dateInput.value) {
-          if (dateInput) dateInput.focus();
+          if (dateInput) {
+            dateInput.focus();
+            dateInput.classList.add('animate-shake', 'border-rose-500');
+            setTimeout(() => dateInput.classList.remove('animate-shake', 'border-rose-500'), 2000);
+          }
           return;
         }
       }
@@ -370,14 +446,17 @@
     if (step1Pane) {
       step1Pane.classList.toggle('hidden-step', step !== 1);
       step1Pane.classList.toggle('active-step', step === 1);
+      step1Pane.style.display = (step === 1 ? 'block' : 'none');
     }
     if (step2Pane) {
       step2Pane.classList.toggle('hidden-step', step !== 2);
       step2Pane.classList.toggle('active-step', step === 2);
+      step2Pane.style.display = (step === 2 ? 'block' : 'none');
     }
     if (step3Pane) {
       step3Pane.classList.toggle('hidden-step', step !== 3);
       step3Pane.classList.toggle('active-step', step === 3);
+      step3Pane.style.display = (step === 3 ? 'block' : 'none');
     }
 
     // Modal Step Indicator
@@ -386,22 +465,22 @@
       const text = document.getElementById(`modal-step-text-${i}`);
       if (pill) {
         if (i < step) {
-          pill.className = 'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-semibold bg-emerald-600 text-white';
-          pill.innerHTML = '<i data-lucide="check" class="w-3 h-3"></i>';
+          pill.className = 'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-semibold bg-emerald-600 text-white cursor-pointer';
+          pill.innerHTML = '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>';
         } else if (i === step) {
           pill.className = currentClinic === 'dental'
-            ? 'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-dental-600 text-white shadow-xs'
-            : 'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-pediatric-600 text-white shadow-xs';
+            ? 'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-dental-600 text-white shadow-xs cursor-pointer'
+            : 'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-pediatric-600 text-white shadow-xs cursor-pointer';
           pill.textContent = i;
         } else {
-          pill.className = 'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-medium bg-slate-100 text-slate-400';
+          pill.className = 'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-medium bg-slate-100 text-slate-400 cursor-pointer';
           pill.textContent = i;
         }
       }
       if (text) {
         text.className = (i === step)
-          ? 'text-[11px] font-heading font-semibold text-slate-800'
-          : 'text-[11px] font-heading text-slate-400';
+          ? 'text-[11px] font-heading font-semibold text-slate-800 cursor-pointer'
+          : 'text-[11px] font-heading text-slate-400 cursor-pointer';
       }
     }
 
@@ -535,13 +614,13 @@
     window.goToModalStep(modalStep);
   };
 
-  // Open & Close Modal Sheet
-  window.openBookingModal = function (targetClinic) {
+  // Open & Close Modal Sheet (Desktop & Mobile Universal Lightbox)
+  window.openBookingModal = function (targetClinic, serviceName) {
     try {
       const modal = document.getElementById('mobile-booking-modal');
       const sheet = document.getElementById('modal-sheet');
       if (!modal || !sheet) {
-        window.scrollToBooking(targetClinic);
+        console.warn('Booking modal elements not found in DOM.');
         return;
       }
 
@@ -551,6 +630,20 @@
       }
 
       window.setModalClinic(clinicToSet);
+
+      if (serviceName) {
+        const selectService = document.getElementById('modal-service-needed');
+        if (selectService) {
+          for (let i = 0; i < selectService.options.length; i++) {
+            const opt = selectService.options[i];
+            if (opt.value.toLowerCase().includes(serviceName.toLowerCase()) || serviceName.toLowerCase().includes(opt.value.toLowerCase())) {
+              opt.selected = true;
+              break;
+            }
+          }
+        }
+      }
+
       window.goToModalStep(1);
 
       // Pre-set tomorrow date if empty
@@ -562,21 +655,24 @@
         modalDate.min = new Date().toISOString().split('T')[0];
       }
 
+      // Show modal immediately
       modal.style.display = 'flex';
       modal.style.pointerEvents = 'auto';
+      modal.classList.remove('pointer-events-none', 'opacity-0');
+      modal.classList.add('opacity-100');
 
-      requestAnimationFrame(function () {
-        modal.classList.remove('pointer-events-none', 'opacity-0');
-        modal.classList.add('opacity-100');
+      // Animate sheet smoothly
+      sheet.style.transform = (window.innerWidth >= 640) ? 'scale(1)' : 'translateY(0)';
+      sheet.classList.remove('translate-y-full', 'sm:scale-95');
+      sheet.classList.add('translate-y-0', 'sm:scale-100');
 
-        sheet.style.transform = 'translateY(0)';
-        sheet.classList.remove('translate-y-full');
-        sheet.classList.add('translate-y-0');
-      });
+      document.body.style.overflow = 'hidden';
 
-      if (window.innerWidth < 768) {
-        document.body.style.overflow = 'hidden';
-      }
+      // Focus patient name input
+      setTimeout(() => {
+        const nameInput = document.getElementById('modal-patient-name');
+        if (nameInput) nameInput.focus();
+      }, 100);
 
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
         window.lucide.createIcons();
@@ -592,9 +688,9 @@
       const sheet = document.getElementById('modal-sheet');
       if (!modal || !sheet) return;
 
-      sheet.style.transform = '';
-      sheet.classList.remove('translate-y-0');
-      sheet.classList.add('translate-y-full');
+      sheet.style.transform = (window.innerWidth >= 640) ? 'scale(0.95)' : 'translateY(100%)';
+      sheet.classList.remove('translate-y-0', 'sm:scale-100');
+      sheet.classList.add('translate-y-full', 'sm:scale-95');
 
       modal.classList.remove('opacity-100');
       modal.classList.add('opacity-0', 'pointer-events-none');
@@ -603,7 +699,7 @@
         modal.style.display = 'none';
         modal.style.pointerEvents = 'none';
         document.body.style.overflow = '';
-      }, 220);
+      }, 250);
     } catch (err) {
       console.error('Error in closeBookingModal:', err);
     }
@@ -760,14 +856,9 @@
 
 
   // -------------------------------------------------------------
-  // 6. CONTEXTUAL ROUTING (Mobile: Modal Sheet | Desktop: Smooth Scroll)
+  // 6. CONTEXTUAL ROUTING & IN-PAGE SCROLLING
   // -------------------------------------------------------------
   window.scrollToBooking = function (targetClinic, serviceName) {
-    if (window.innerWidth < 768) {
-      window.openBookingModal(targetClinic);
-      return;
-    }
-
     const bookingWrapper = document.getElementById('booking-wrapper');
     if (bookingWrapper) {
       if (targetClinic) {
@@ -784,9 +875,21 @@
         top: Math.max(0, destinationY),
         behavior: 'smooth'
       });
+
+      // Highlight patient name input so user immediately sees where to start
+      setTimeout(() => {
+        const patientInput = document.getElementById('patient-name');
+        if (patientInput) {
+          patientInput.focus();
+          patientInput.classList.remove('animate-highlight-pulse');
+          void patientInput.offsetWidth;
+          patientInput.classList.add('animate-highlight-pulse');
+          setTimeout(() => patientInput.classList.remove('animate-highlight-pulse'), 2500);
+        }
+      }, 350);
     } else {
-      const destUrl = (targetClinic === 'pediatric') ? '/pediatric/#booking-wrapper' : '/dental/#booking-wrapper';
-      window.location.href = destUrl;
+      // If on About, Contact, Gallery, etc., open the booking modal directly!
+      window.openBookingModal(targetClinic, serviceName);
     }
   };
 
@@ -798,16 +901,7 @@
     if (e && e.preventDefault) e.preventDefault();
     const path = window.location.pathname;
     const clinic = path.includes('pediatric') ? 'pediatric' : 'dental';
-    if (window.innerWidth < 768) {
-      window.openBookingModal(clinic);
-    } else {
-      const bookingWrapper = document.getElementById('booking-wrapper');
-      if (bookingWrapper) {
-        window.scrollToBooking(clinic);
-      } else {
-        window.openBookingModal(clinic);
-      }
-    }
+    window.openBookingModal(clinic);
   };
 
   function setupBookingButtonInterceptors() {
@@ -847,8 +941,11 @@
     const drawer = document.getElementById('mobile-drawer');
     const drawerSheet = document.getElementById('mobile-drawer-sheet');
     if (!drawer || !drawerSheet) return;
+    drawer.style.display = 'block';
+    drawer.style.pointerEvents = 'auto';
     drawer.classList.remove('pointer-events-none', 'opacity-0');
     drawer.classList.add('opacity-100');
+    drawerSheet.style.transform = 'translateX(0)';
     drawerSheet.classList.remove('translate-x-full');
     drawerSheet.classList.add('translate-x-0');
     document.body.style.overflow = 'hidden';
@@ -858,11 +955,14 @@
     const drawer = document.getElementById('mobile-drawer');
     const drawerSheet = document.getElementById('mobile-drawer-sheet');
     if (!drawer || !drawerSheet) return;
+    drawerSheet.style.transform = 'translateX(100%)';
     drawerSheet.classList.remove('translate-x-0');
     drawerSheet.classList.add('translate-x-full');
     drawer.classList.remove('opacity-100');
     drawer.classList.add('opacity-0');
     setTimeout(() => {
+      drawer.style.display = 'none';
+      drawer.style.pointerEvents = 'none';
       drawer.classList.add('pointer-events-none');
       document.body.style.overflow = '';
     }, 250);
@@ -893,6 +993,18 @@
       e.preventDefault();
       window.closeMobileDrawer();
       setTimeout(() => window.openBookingModal(), 150);
+      return;
+    }
+    const bottomBookTrigger = e.target.closest('#mobile-bottom-book-btn');
+    if (bottomBookTrigger) {
+      e.preventDefault();
+      window.openBookingModal();
+      return;
+    }
+    const modalBackdrop = e.target.closest('#modal-backdrop');
+    if (modalBackdrop) {
+      e.preventDefault();
+      window.closeBookingModal();
       return;
     }
   });

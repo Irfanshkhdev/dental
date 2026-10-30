@@ -271,12 +271,12 @@
         <i data-lucide="external-link" class="w-3.5 h-3.5 text-slate-400"></i>
       </a>
 
-      <a href="#booking-wrapper" 
-         onclick="window.scrollToBooking(window.currentClinic || 'dental')" 
-         class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-heading font-bold shadow-md hover:shadow-lg transition">
+      <button type="button" 
+         onclick="window.openBookingModal(window.currentClinic || 'dental')" 
+         class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-heading font-bold shadow-md hover:shadow-lg transition cursor-pointer">
         <span>Book Your In-Person Consultation</span>
         <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-300"></i>
-      </a>
+      </button>
     </div>
 
   </div>

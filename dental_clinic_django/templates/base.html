@@ -80,7 +80,7 @@
   </script>
 
   <!-- Custom Medical Sanctuary CSS -->
-  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=3.2">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=3.3">
 
   {% block extra_head %}{% endblock %}
 </head>
@@ -407,17 +407,17 @@
       <!-- Progressive Stepper Progress Bar -->
       <div class="py-3 border-b border-slate-100 mb-3">
         <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 cursor-pointer select-none" onclick="window.goToModalStep(1)" title="Step 1: Patient Details">
             <span id="modal-step-indicator-1" class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-dental-600 text-white shadow-xs">1</span>
             <span id="modal-step-text-1" class="text-[11px] font-heading font-semibold text-slate-800">Patient Details</span>
           </div>
           <div class="h-0.5 flex-1 mx-2 bg-slate-100"></div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 cursor-pointer select-none" onclick="window.goToModalStep(2)" title="Step 2: Schedule">
             <span id="modal-step-indicator-2" class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-medium bg-slate-100 text-slate-400">2</span>
             <span id="modal-step-text-2" class="text-[11px] font-heading text-slate-400">Schedule</span>
           </div>
           <div class="h-0.5 flex-1 mx-2 bg-slate-100"></div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 cursor-pointer select-none" onclick="window.goToModalStep(3)" title="Step 3: WhatsApp">
             <span id="modal-step-indicator-3" class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-medium bg-slate-100 text-slate-400">3</span>
             <span id="modal-step-text-3" class="text-[11px] font-heading text-slate-400">WhatsApp</span>
           </div>
@@ -583,7 +583,7 @@
   </div>
 
   <!-- Global Application Scripts -->
-  <script src="{% static 'js/main.js' %}?v=3.5"></script>
+  <script src="{% static 'js/main.js' %}?v=3.6"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       lucide.createIcons();

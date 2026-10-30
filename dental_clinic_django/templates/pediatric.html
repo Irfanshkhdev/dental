@@ -115,7 +115,7 @@
         <!-- CTA Buttons -->
         <div class="flex items-center gap-4 pt-2">
           <button type="button" 
-                  onclick="window.scrollToBooking('pediatric')" 
+                  onclick="window.openBookingModal('pediatric')" 
                   class="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-heading font-bold text-sm text-white bg-slate-900 hover:bg-slate-800 shadow-md active:scale-95 transition duration-200 cursor-pointer">
             <i data-lucide="calendar" class="w-4 h-4"></i>
             <span>Reserve Child Consultation</span>
@@ -252,7 +252,7 @@
         </div>
         <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
           <span class="text-xs font-medium text-slate-400">0 – 12 Months</span>
-          <button type="button" onclick="window.scrollToBooking('pediatric', 'Newborn Care')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
+          <button type="button" onclick="window.openBookingModal('pediatric', 'Newborn Care')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <span>Book Visit</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
@@ -273,7 +273,7 @@
         </div>
         <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
           <span class="text-xs font-medium text-slate-400">Strict Cold-Chain</span>
-          <button type="button" onclick="window.scrollToBooking('pediatric', 'Vaccination Program')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
+          <button type="button" onclick="window.openBookingModal('pediatric', 'Vaccination Program')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <span>Book Visit</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
@@ -294,7 +294,7 @@
         </div>
         <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
           <span class="text-xs font-medium text-slate-400">WHO Standards</span>
-          <button type="button" onclick="window.scrollToBooking('pediatric', 'Growth & Development')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
+          <button type="button" onclick="window.openBookingModal('pediatric', 'Growth & Development')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <span>Book Visit</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
@@ -315,7 +315,7 @@
         </div>
         <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
           <span class="text-xs font-medium text-slate-400">Same-Day Relief</span>
-          <button type="button" onclick="window.scrollToBooking('pediatric', 'Childhood Illnesses')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
+          <button type="button" onclick="window.openBookingModal('pediatric', 'Childhood Illnesses')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <span>Book Visit</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
@@ -336,7 +336,7 @@
         </div>
         <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
           <span class="text-xs font-medium text-slate-400">Holistic Diet</span>
-          <button type="button" onclick="window.scrollToBooking('pediatric', 'Infant Feeding & Nutrition')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
+          <button type="button" onclick="window.openBookingModal('pediatric', 'Infant Feeding & Nutrition')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <span>Book Visit</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
@@ -357,7 +357,7 @@
         </div>
         <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
           <span class="text-xs font-medium text-slate-400">Long-Term Relief</span>
-          <button type="button" onclick="window.scrollToBooking('pediatric', 'Pediatric Allergy & Asthma')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
+          <button type="button" onclick="window.openBookingModal('pediatric', 'Pediatric Allergy & Asthma')" class="text-xs font-heading font-semibold text-pediatric-700 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
             <span>Book Visit</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
@@ -719,17 +719,17 @@
             <!-- Progressive Stepper Header -->
             <div class="py-2.5 border-b border-slate-100 mb-6">
               <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 cursor-pointer select-none" onclick="window.goToBookingStep(1)" title="Step 1: Child & Service">
                   <span id="booking-step-indicator-1" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold bg-pediatric-600 text-white shadow-xs">1</span>
                   <span id="booking-step-text-1" class="text-xs font-heading font-semibold text-slate-800">Child &amp; Service</span>
                 </div>
                 <div class="h-0.5 flex-1 mx-3 bg-slate-100"></div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 cursor-pointer select-none" onclick="window.goToBookingStep(2)" title="Step 2: Schedule">
                   <span id="booking-step-indicator-2" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium bg-slate-100 text-slate-400">2</span>
                   <span id="booking-step-text-2" class="text-xs font-heading text-slate-400 hidden sm:inline">Schedule</span>
                 </div>
                 <div class="h-0.5 flex-1 mx-3 bg-slate-100"></div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 cursor-pointer select-none" onclick="window.goToBookingStep(3)" title="Step 3: Contact">
                   <span id="booking-step-indicator-3" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium bg-slate-100 text-slate-400">3</span>
                   <span id="booking-step-text-3" class="text-xs font-heading text-slate-400 hidden sm:inline">Contact</span>
                 </div>
