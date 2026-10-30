@@ -520,17 +520,142 @@ def seed():
         summary='Created Invoice INV-2026-081 (Rs. 4,500) for Rahul Kulkarni. Recorded advance payment Rs. 2,500 via UPI.',
         ip_address='127.0.0.1'
     )
-    AuditLog.objects.create(
-        user=frontdesk_user,
-        user_email=frontdesk_user.email,
-        action_type='STATUS_CHANGE',
-        target_model='QueueEntry',
-        target_id=str(q1.token_number),
-        summary='Moved Token #101 (Rahul Kulkarni) from Waiting to In Consultation with Dr. Sabina.',
-        ip_address='127.0.0.1'
+
+    # 10. Today's Appointments & Incoming Booking Requests
+    AppointmentRequest.objects.all().delete()
+    # Today's Upcoming
+    apt1 = AppointmentRequest.objects.create(
+        clinic_type='dental',
+        patient_name='Rahul Kulkarni',
+        parent_name='',
+        phone_number='9822012345',
+        service_needed='Root Canal Molar Obturation (#16)',
+        preferred_date='Today',
+        preferred_time='11:30 AM',
+        notes='Patient arrived on time. Follow-up for canal obturation.',
+        status='accepted'
+    )
+    apt2 = AppointmentRequest.objects.create(
+        clinic_type='pediatric',
+        patient_name='Aarav Mehta (4 yrs)',
+        parent_name='Sneha Mehta',
+        phone_number='9890123456',
+        service_needed='Pediatric Cough & Growth Checkup',
+        preferred_date='Today',
+        preferred_time='05:30 PM',
+        notes='Mild viral cough, requested Dr. Jalil evening slot.',
+        status='accepted'
+    )
+    # Today's Completed
+    apt3 = AppointmentRequest.objects.create(
+        clinic_type='dental',
+        patient_name='Priyanka Kulkarni',
+        parent_name='',
+        phone_number='9822012345',
+        service_needed='Ultrasonic Teeth Scaling & Polishing',
+        preferred_date='Today',
+        preferred_time='10:00 AM',
+        notes='Session completed smoothly. Advised soft brushing.',
+        status='completed'
+    )
+    # New Incoming Requests (Inbox)
+    apt4 = AppointmentRequest.objects.create(
+        clinic_type='dental',
+        patient_name='Dr. Nilesh Matkari',
+        parent_name='',
+        phone_number='9922114455',
+        service_needed='Zirconia Crown Consultation',
+        preferred_date='Tomorrow',
+        preferred_time='12:00 PM',
+        notes='Referred by Dr. Sabina. Needs crown assessment for upper premolar.',
+        status='pending'
+    )
+    apt5 = AppointmentRequest.objects.create(
+        clinic_type='pediatric',
+        patient_name='Baby Anvi Sharma (6 mos)',
+        parent_name='Vikram Sharma',
+        phone_number='9823456780',
+        service_needed='Weaning Diet & 6-Month Flu Vaccine',
+        preferred_date='Tomorrow',
+        preferred_time='06:15 PM',
+        notes='First time consultation with Dr. Jalil.',
+        status='pending'
     )
 
-    print("✅ Seed script finished successfully with all test accounts, patients, queue, invoices, odontograms, vaccines and audit trail!")
+    # 11. Scheduled Reminders
+    from clinic.models import ScheduledReminder, WhatsAppThread, WhatsAppChatMessage
+    ScheduledReminder.objects.all().delete()
+    ScheduledReminder.objects.create(
+        patient=pat_rahul,
+        preset_type='Crown / Cap Fitting',
+        custom_reason='Monolithic Zirconia Crown Fitting (#16)',
+        target_date=datetime.date.today() + datetime.timedelta(days=3),
+        target_time='11:30 AM',
+        status='queued'
+    )
+    ScheduledReminder.objects.create(
+        patient=pat_kabir,
+        preset_type='Vaccine Booster',
+        custom_reason='10-Week Pentavalent & Rotavirus Booster',
+        target_date=datetime.date.today() + datetime.timedelta(days=12),
+        target_time='05:30 PM',
+        status='queued'
+    )
+    ScheduledReminder.objects.create(
+        patient=pat_priyanka,
+        preset_type='6-Month Dental Cleaning',
+        custom_reason='6-Month Routine Hygiene Checkup & Scaling',
+        target_date=datetime.date.today() + datetime.timedelta(days=180),
+        target_time='10:30 AM',
+        status='queued'
+    )
+
+    # 12. WhatsApp Interactive Threads & History
+    WhatsAppThread.objects.all().delete()
+    th1 = WhatsAppThread.objects.create(
+        patient=pat_rahul,
+        last_message='Thank you Dr. Sabina, pain is much better. See you at 11:30 AM.',
+        unread_count=0
+    )
+    WhatsAppChatMessage.objects.create(
+        thread=th1,
+        sender='clinic',
+        text='Hello Rahul, your dental appointment with Dr. Sabina is confirmed for Today at 11:30 AM. Wanowrie Clinic.'
+    )
+    WhatsAppChatMessage.objects.create(
+        thread=th1,
+        sender='patient',
+        text='Thank you Dr. Sabina, pain is much better. See you at 11:30 AM.'
+    )
+
+    th2 = WhatsAppThread.objects.create(
+        patient=pat_aarav,
+        last_message='Understood, bringing Aarav around 5:30 PM.',
+        unread_count=1
+    )
+    WhatsAppChatMessage.objects.create(
+        thread=th2,
+        sender='clinic',
+        text='Hello Sneha, Dr. Jalil is available at 5:30 PM today for Aarav\'s checkup. Please bring his vaccination card.'
+    )
+    WhatsAppChatMessage.objects.create(
+        thread=th2,
+        sender='patient',
+        text='Understood, bringing Aarav around 5:30 PM.'
+    )
+
+    th3 = WhatsAppThread.objects.create(
+        patient=pat_kabir,
+        last_message='Receipt INV-2026-082 for Rs. 2,600 sent via WhatsApp.',
+        unread_count=0
+    )
+    WhatsAppChatMessage.objects.create(
+        thread=th3,
+        sender='clinic',
+        text='Dear Amit Deshmukh, thank you for visiting Buds Child Clinic. Payment Receipt INV-2026-082 for Rs. 2,600 has been verified.'
+    )
+
+    print("✅ Seed script finished successfully with all test accounts, today desk, patients, invoices, reminders and WhatsApp threads!")
 
 if __name__ == '__main__':
     seed()

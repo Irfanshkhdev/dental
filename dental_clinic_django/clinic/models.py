@@ -552,6 +552,7 @@ class AppointmentRequest(models.Model):
         ('pending', 'Pending Confirmation'),
         ('accepted', 'Accepted & Confirmed'),
         ('reschedule', 'Reschedule Proposed'),
+        ('completed', 'Completed (Done)'),
         ('cancelled', 'Cancelled'),
     ]
 
@@ -700,3 +701,70 @@ class WorkflowLog(models.Model):
 
     def __str__(self):
         return f"{self.workflow_step} -> {self.recipient}"
+
+
+# ==========================================
+# 10. SMART REMINDER & WHATSAPP HUB MODELS
+# ==========================================
+
+class ScheduledReminder(models.Model):
+    STATUS_CHOICES = [
+        ('queued', 'Queued / Scheduled'),
+        ('sent', 'Sent via WhatsApp'),
+        ('cancelled', 'Cancelled'),
+    ]
+
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='scheduled_reminders')
+    preset_type = models.CharField(max_length=100, default='Custom Follow-up')
+    custom_reason = models.CharField(max_length=255)
+    target_date = models.DateField()
+    target_time = models.CharField(max_length=30, default='11:00 AM')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='queued')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['target_date', 'target_time']
+
+    def __str__(self):
+        return f"{self.preset_type} for {self.patient.full_name} ({self.target_date})"
+
+    def whatsapp_url(self):
+        phone = self.patient.clean_phone()
+        msg = (
+            f"Dear {self.patient.full_name}, this is a gentle reminder from Roots Dental & Buds Child Clinic (Wanowrie, Pune) "
+            f"regarding your scheduled appointment for '{self.custom_reason}' on {self.target_date} at {self.target_time}. "
+            f"Please reply to confirm. Tel: +91 99212 31399."
+        )
+        return f"https://wa.me/{phone}?text={urllib.parse.quote(msg)}"
+
+
+class WhatsAppThread(models.Model):
+    patient = models.OneToOneField(Patient, on_delete=models.CASCADE, related_name='whatsapp_thread')
+    last_message = models.TextField(blank=True, default='')
+    last_message_at = models.DateTimeField(auto_now=True)
+    unread_count = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['-last_message_at']
+
+    def __str__(self):
+        return f"Chat with {self.patient.full_name} ({self.patient.phone})"
+
+
+class WhatsAppChatMessage(models.Model):
+    DIRECTION_CHOICES = [
+        ('clinic', 'Clinic Staff (Outbound)'),
+        ('patient', 'Patient (Inbound)'),
+    ]
+
+    thread = models.ForeignKey(WhatsAppThread, on_delete=models.CASCADE, related_name='messages')
+    sender = models.CharField(max_length=15, choices=DIRECTION_CHOICES, default='clinic')
+    text = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['timestamp']
+
+    def __str__(self):
+        return f"[{self.sender}] {self.text[:30]}"
+

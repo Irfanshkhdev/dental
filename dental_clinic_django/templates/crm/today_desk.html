@@ -1,0 +1,570 @@
+{% extends 'crm/base_crm.html' %}
+
+{% block page_title %}Today's Desk{% endblock %}
+
+{% block header_actions %}
+<div class="flex items-center gap-2">
+  <!-- Wing Filter Pill Group -->
+  <div class="inline-flex p-1 bg-slate-100 rounded-xl text-xs font-medium border border-slate-200/80">
+    <a href="?wing=all" class="px-2.5 py-1 rounded-lg transition-all {% if wing_filter == 'all' or not wing_filter %}bg-white text-slate-900 shadow-sm font-semibold{% else %}text-slate-600 hover:text-slate-900{% endif %}">
+      All Practices
+    </a>
+    <a href="?wing=dental" class="px-2.5 py-1 rounded-lg transition-all {% if wing_filter == 'dental' %}bg-white text-slate-900 shadow-sm font-semibold{% else %}text-slate-600 hover:text-slate-900{% endif %}">
+      Roots Dental (Dr. Sabina)
+    </a>
+    <a href="?wing=pediatric" class="px-2.5 py-1 rounded-lg transition-all {% if wing_filter == 'pediatric' %}bg-white text-slate-900 shadow-sm font-semibold{% else %}text-slate-600 hover:text-slate-900{% endif %}">
+      Buds Child (Dr. Jalil)
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-6">
+
+  <!-- ============================================================== -->
+  <!-- 1. NEW BOOKING REQUESTS INBOX                                  -->
+  <!-- ============================================================== -->
+  <section class="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2.5">
+        <h2 class="text-sm font-semibold text-slate-900 tracking-tight">New Booking Requests</h2>
+        <span id="pending-count-badge" class="px-2 py-0.5 rounded-full text-[11px] font-semibold {% if pending_count > 0 %}bg-slate-900 text-white{% else %}bg-slate-100 text-slate-500{% endif %}">
+          {{ pending_count }} pending
+        </span>
+      </div>
+      <span class="text-xs text-slate-400">Incoming online reservations</span>
+    </div>
+
+    {% if pending_requests %}
+      <div id="pending-requests-container" class="space-y-3">
+        {% for req in pending_requests %}
+          <div id="request-card-{{ req.id }}" class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition-all gap-4">
+            
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center font-bold text-xs text-slate-700 shadow-sm flex-shrink-0">
+                {% if req.clinic_type == 'dental' %}D{% else %}P{% endif %}
+              </div>
+              <div class="space-y-0.5">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-xs font-semibold text-slate-900">{{ req.patient_name }}</span>
+                  {% if req.parent_name %}
+                    <span class="text-[11px] text-slate-500">(Parent: {{ req.parent_name }})</span>
+                  {% endif %}
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-medium {% if req.clinic_type == 'dental' %}bg-slate-200/80 text-slate-800{% else %}bg-slate-200/80 text-slate-800{% endif %}">
+                    {{ req.clinic_display_name }} &bull; {{ req.doctor_name }}
+                  </span>
+                </div>
+                <div class="text-xs text-slate-600 flex items-center gap-2 flex-wrap">
+                  <span class="font-medium text-slate-700">{{ req.service_needed }}</span>
+                  <span>&bull;</span>
+                  <span>Requested: <strong>{{ req.preferred_date }}</strong> ({{ req.preferred_time }})</span>
+                  <span>&bull;</span>
+                  <a href="tel:{{ req.phone_number }}" class="text-slate-500 hover:text-slate-900 underline">{{ req.phone_number }}</a>
+                </div>
+                {% if req.notes %}
+                  <div class="text-[11px] text-slate-400 italic">"{{ req.notes }}"</div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- 1-Click Action Buttons -->
+            <div class="flex items-center gap-2 self-end sm:self-center flex-shrink-0">
+              <!-- Accept & Confirm -->
+              <button onclick="handleAppointmentAction({{ req.id }}, 'accept')" type="button"
+                      class="px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-all flex items-center gap-1.5 shadow-sm">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Accept &amp; WhatsApp
+              </button>
+
+              <!-- Reschedule -->
+              <button onclick="openRescheduleModal({{ req.id }}, '{{ req.patient_name|escapejs }}', '{{ req.preferred_date|escapejs }}', '{{ req.preferred_time|escapejs }}')" type="button"
+                      class="px-3 py-1.5 rounded-xl text-xs font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-all flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Reschedule
+              </button>
+
+              <!-- Quick Decline -->
+              <button onclick="handleAppointmentAction({{ req.id }}, 'cancel')" type="button"
+                      class="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg transition-colors" title="Decline Request">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </div>
+
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="p-8 text-center rounded-xl border border-dashed border-slate-200">
+        <svg class="w-8 h-8 text-slate-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <div class="text-xs font-medium text-slate-600">All booking requests reviewed</div>
+        <p class="text-[11px] text-slate-400 mt-0.5">New online requests will appear here automatically.</p>
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- 2. TODAY'S SCHEDULE (ACTION HUB)                               -->
+  <!-- ============================================================== -->
+  <section class="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-3">
+      <div>
+        <h2 class="text-sm font-semibold text-slate-900 tracking-tight">Today's Schedule</h2>
+        <p class="text-xs text-slate-400 mt-0.5">Confirmed appointments scheduled for today</p>
+      </div>
+
+      <!-- Schedule Filter Pills -->
+      <div class="inline-flex p-1 bg-slate-100 rounded-xl text-xs font-medium">
+        <button onclick="filterSchedule('all')" id="sched-tab-all" class="sched-pill px-3 py-1 rounded-lg bg-white text-slate-900 shadow-sm font-semibold transition-all">
+          All ({{ upcoming_count|add:completed_count }})
+        </button>
+        <button onclick="filterSchedule('upcoming')" id="sched-tab-upcoming" class="sched-pill px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-all">
+          Upcoming ({{ upcoming_count }})
+        </button>
+        <button onclick="filterSchedule('completed')" id="sched-tab-completed" class="sched-pill px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-all">
+          Completed ({{ completed_count }})
+        </button>
+      </div>
+    </div>
+
+    <!-- Mark Done Prompt Bar (Revealed dynamically on Mark Done) -->
+    <div id="billing-prompt-bar" class="my-4 p-4 rounded-xl bg-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-3 hidden animate-in fade-in slide-in-from-top-2">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm flex-shrink-0">
+          &check;
+        </div>
+        <div>
+          <div class="text-xs font-semibold" id="billing-prompt-title">Visit completed!</div>
+          <div class="text-[11px] text-slate-300">Generate patient receipt &amp; update ledger now?</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="billing-prompt-btn" type="button" onclick="openQuickBillModalFromDone()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white text-slate-900 hover:bg-slate-100 transition-all">
+          Generate Bill Now &rarr;
+        </button>
+        <button type="button" onclick="document.getElementById('billing-prompt-bar').classList.add('hidden')" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
+          Later
+        </button>
+      </div>
+    </div>
+
+    <!-- Schedule List -->
+    <div class="mt-4 divide-y divide-slate-100" id="schedule-list">
+      
+      <!-- Upcoming Appointments -->
+      {% for appt in upcoming_appointments %}
+        <div class="schedule-item schedule-upcoming py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 group">
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold text-slate-900">{{ appt.patient_name }}</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">
+                  {{ appt.clinic_display_name }} &bull; {{ appt.doctor_name }}
+                </span>
+              </div>
+              <div class="text-xs text-slate-500 mt-0.5 flex items-center gap-2">
+                <span class="font-medium text-slate-700">{{ appt.preferred_time|default:"11:00 AM" }}</span>
+                <span>&bull;</span>
+                <span>{{ appt.service_needed }}</span>
+                <span>&bull;</span>
+                <a href="https://wa.me/{{ appt.clean_phone }}" target="_blank" class="text-slate-400 hover:text-emerald-600 underline">
+                  WhatsApp ({{ appt.phone_number }})
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mark Done & Quick Action -->
+          <div class="flex items-center gap-2 self-end sm:self-center">
+            <span class="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
+              Upcoming
+            </span>
+            <button onclick="markAppointmentDone({{ appt.id }}, '{{ appt.patient_name|escapejs }}', '{{ appt.clinic_type|escapejs }}', '{{ appt.service_needed|escapejs }}')" type="button"
+                    class="px-3 py-1.5 rounded-xl text-xs font-medium text-slate-800 bg-white border border-slate-200 hover:border-slate-900 hover:text-slate-900 transition-all flex items-center gap-1.5 shadow-sm">
+              <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              Mark Done
+            </button>
+          </div>
+        </div>
+      {% endfor %}
+
+      <!-- Completed Appointments -->
+      {% for appt in completed_appointments %}
+        <div class="schedule-item schedule-completed py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 opacity-75">
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold text-slate-900 line-through text-slate-500">{{ appt.patient_name }}</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 font-medium border border-emerald-200/50">
+                  Completed &check;
+                </span>
+                <span class="text-[10px] text-slate-400">
+                  {{ appt.clinic_display_name }} &bull; {{ appt.doctor_name }}
+                </span>
+              </div>
+              <div class="text-xs text-slate-400 mt-0.5">
+                {{ appt.preferred_time }} &bull; {{ appt.service_needed }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Bill Button for Completed -->
+          <div class="flex items-center gap-2 self-end sm:self-center">
+            <button onclick="openQuickBillModalWithData('{{ appt.patient_name|escapejs }}', '{{ appt.clinic_type|escapejs }}', '{{ appt.service_needed|escapejs }}')" type="button"
+                    class="px-2.5 py-1 rounded-lg text-xs font-medium text-slate-700 bg-slate-50 border border-slate-200 hover:bg-white hover:text-slate-900 transition-all">
+              Receipt / Bill &rarr;
+            </button>
+          </div>
+        </div>
+      {% endfor %}
+
+      {% if not upcoming_appointments and not completed_appointments %}
+        <div class="py-8 text-center text-xs text-slate-400">
+          No appointments recorded for today yet.
+        </div>
+      {% endif %}
+
+    </div>
+  </section>
+
+</div>
+
+<!-- ============================================================== -->
+<!-- MODAL: RESCHEDULE APPOINTMENT                                  -->
+<!-- ============================================================== -->
+<div id="reschedule-modal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center hidden">
+  <div class="w-full max-w-md bg-white rounded-2xl p-6 shadow-2xl border border-slate-200 text-left">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+      <h3 class="text-sm font-semibold text-slate-900">Reschedule Consultation</h3>
+      <button onclick="closeRescheduleModal()" class="text-slate-400 hover:text-slate-700">&times;</button>
+    </div>
+
+    <form id="reschedule-form" onsubmit="submitReschedule(event)" class="mt-4 space-y-3">
+      <input type="hidden" id="reschedule-req-id">
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">Patient</label>
+        <div id="reschedule-patient-name" class="text-xs font-semibold text-slate-900"></div>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">Proposed Date</label>
+        <input type="date" id="reschedule-date" required
+               class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900">
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">Proposed Time Slot</label>
+        <select id="reschedule-slot" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900">
+          <option value="Morning (11:00 AM - 1:00 PM)">Morning (11:00 AM - 1:00 PM)</option>
+          <option value="Afternoon (1:00 PM - 3:00 PM)">Afternoon (1:00 PM - 3:00 PM)</option>
+          <option value="Evening (5:30 PM - 8:30 PM)">Evening (5:30 PM - 8:30 PM)</option>
+        </select>
+      </div>
+
+      <div class="pt-3 flex items-center justify-end gap-2 border-t border-slate-100">
+        <button type="button" onclick="closeRescheduleModal()" class="px-3 py-1.5 rounded-xl text-xs font-medium text-slate-600 hover:text-slate-900">
+          Cancel
+        </button>
+        <button type="submit" class="px-4 py-1.5 rounded-xl text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-all shadow-sm">
+          Save &amp; Propose via WhatsApp
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================================== -->
+<!-- MODAL: QUICK BILL GENERATOR (1-CLICK FROM TODAY'S DESK)        -->
+<!-- ============================================================== -->
+<div id="quick-bill-modal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center hidden">
+  <div class="w-full max-w-lg bg-white rounded-2xl p-6 shadow-2xl border border-slate-200 text-left">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+      <div>
+        <h3 class="text-sm font-semibold text-slate-900">Generate Patient Bill</h3>
+        <p class="text-[11px] text-slate-400">Save to financial ledger &amp; dispatch instant receipt</p>
+      </div>
+      <button onclick="closeQuickBillModal()" class="text-slate-400 hover:text-slate-700">&times;</button>
+    </div>
+
+    <form id="quick-bill-form" onsubmit="submitQuickBill(event)" class="mt-4 space-y-3">
+      <!-- Patient -->
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">Patient Name</label>
+        <input type="text" id="bill-patient-name" required placeholder="Patient full name"
+               class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900">
+      </div>
+
+      <!-- Practice & Doctor -->
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Practice Wing</label>
+          <select id="bill-clinic-type" onchange="handleBillWingChange()" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900">
+            <option value="dental">Roots Dental Clinic</option>
+            <option value="pediatric">Buds Child Clinic</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Consulting Doctor</label>
+          <input type="text" id="bill-doctor-name" value="Dr. Sabina Firoj Shaikh" readonly
+                 class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50 text-slate-700">
+        </div>
+      </div>
+
+      <!-- Treatment Description -->
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">Treatment / Service</label>
+        <input type="text" id="bill-treatment" required value="Clinical Consultation"
+               class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900">
+      </div>
+
+      <!-- Amount & Mode -->
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Total Amount (₹)</label>
+          <input type="number" id="bill-amount" required step="100" min="0" value="800"
+                 class="w-full px-3 py-2 text-xs font-semibold rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Payment Method</label>
+          <select id="bill-mode" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900">
+            <option value="upi">UPI (GPay / PhonePe)</option>
+            <option value="cash">Cash</option>
+            <option value="card">Credit / Debit Card</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Dual Action Buttons -->
+      <div class="pt-4 flex items-center justify-end gap-2 border-t border-slate-100">
+        <button type="button" onclick="closeQuickBillModal()" class="px-3 py-1.5 rounded-xl text-xs font-medium text-slate-600 hover:text-slate-900">
+          Cancel
+        </button>
+        <button type="button" onclick="triggerQuickBillSave(false)" class="px-3 py-1.5 rounded-xl text-xs font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 shadow-sm">
+          Save Only
+        </button>
+        <button type="button" onclick="triggerQuickBillSave(true)" class="px-4 py-1.5 rounded-xl text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-all flex items-center gap-1.5 shadow-sm">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+          Save &amp; WhatsApp Receipt
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  let lastDonePatientData = null;
+
+  // Filter Schedule by Tab
+  function filterSchedule(tab) {
+    document.querySelectorAll('.sched-pill').forEach(btn => {
+      btn.className = 'sched-pill px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-all';
+    });
+    const activeBtn = document.getElementById(`sched-tab-${tab}`);
+    if (activeBtn) {
+      activeBtn.className = 'sched-pill px-3 py-1 rounded-lg bg-white text-slate-900 shadow-sm font-semibold transition-all';
+    }
+
+    const items = document.querySelectorAll('.schedule-item');
+    items.forEach(el => {
+      if (tab === 'all') {
+        el.style.display = 'flex';
+      } else if (tab === 'upcoming') {
+        el.style.display = el.classList.contains('schedule-upcoming') ? 'flex' : 'none';
+      } else if (tab === 'completed') {
+        el.style.display = el.classList.contains('schedule-completed') ? 'flex' : 'none';
+      }
+    });
+  }
+
+  // Appointment Actions: Accept or Cancel
+  async function handleAppointmentAction(id, action) {
+    try {
+      const res = await fetch(`/crm/api/appointment/${id}/status/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: action })
+      });
+      const data = await res.json();
+      if (data.success) {
+        const card = document.getElementById(`request-card-${id}`);
+        if (card) card.remove();
+
+        // Update badge
+        const badge = document.getElementById('pending-count-badge');
+        if (badge) {
+          const count = document.querySelectorAll('#pending-requests-container > div').length;
+          badge.textContent = `${count} pending`;
+          if (count === 0) badge.className = 'px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-500';
+        }
+
+        if (action === 'accept') {
+          showToast(`Accepted appointment for ${data.patient_name}`);
+          if (data.whatsapp_url) {
+            window.open(data.whatsapp_url, '_blank');
+          }
+          setTimeout(() => location.reload(), 1000);
+        } else if (action === 'cancel') {
+          showToast(`Request cancelled`);
+        }
+      } else {
+        showToast(data.error || 'Action failed', 'error');
+      }
+    } catch (e) {
+      showToast('Network error, please retry', 'error');
+    }
+  }
+
+  // Reschedule Modal
+  function openRescheduleModal(id, name, date, slot) {
+    document.getElementById('reschedule-req-id').value = id;
+    document.getElementById('reschedule-patient-name').textContent = name;
+    document.getElementById('reschedule-modal').classList.remove('hidden');
+  }
+
+  function closeRescheduleModal() {
+    document.getElementById('reschedule-modal').classList.add('hidden');
+  }
+
+  async function submitReschedule(e) {
+    e.preventDefault();
+    const id = document.getElementById('reschedule-req-id').value;
+    const date = document.getElementById('reschedule-date').value;
+    const time = document.getElementById('reschedule-slot').value;
+
+    try {
+      const res = await fetch(`/crm/api/appointment/${id}/status/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'reschedule',
+          new_date: date,
+          new_time: time
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        closeRescheduleModal();
+        showToast('Reschedule proposal recorded');
+        if (data.whatsapp_url) {
+          window.open(data.whatsapp_url, '_blank');
+        }
+        setTimeout(() => location.reload(), 1000);
+      } else {
+        showToast(data.error || 'Reschedule failed', 'error');
+      }
+    } catch (err) {
+      showToast('Network error', 'error');
+    }
+  }
+
+  // Mark Done Action
+  async function markAppointmentDone(id, name, wing, service) {
+    try {
+      const res = await fetch(`/crm/api/appointment/${id}/status/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'mark_done' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(`Consultation completed for ${name}`);
+        
+        // Reveal Quick Action Prompt to generate bill
+        lastDonePatientData = {
+          name: name,
+          wing: wing,
+          service: service,
+          doctor: data.doctor_name
+        };
+        const promptBar = document.getElementById('billing-prompt-bar');
+        const promptTitle = document.getElementById('billing-prompt-title');
+        if (promptTitle) promptTitle.textContent = `Consultation completed for ${name}!`;
+        if (promptBar) promptBar.classList.remove('hidden');
+      } else {
+        showToast(data.error || 'Error marking appointment done', 'error');
+      }
+    } catch (err) {
+      showToast('Network error', 'error');
+    }
+  }
+
+  function openQuickBillModalFromDone() {
+    if (lastDonePatientData) {
+      openQuickBillModalWithData(
+        lastDonePatientData.name,
+        lastDonePatientData.wing,
+        lastDonePatientData.service,
+        lastDonePatientData.doctor
+      );
+    }
+  }
+
+  // Quick Bill Modal
+  function openQuickBillModalWithData(name, wing, service, doctor) {
+    document.getElementById('bill-patient-name').value = name || '';
+    const wingSelect = document.getElementById('bill-clinic-type');
+    if (wingSelect) wingSelect.value = wing || 'dental';
+    handleBillWingChange();
+    if (doctor) document.getElementById('bill-doctor-name').value = doctor;
+    if (service) document.getElementById('bill-treatment').value = service;
+    document.getElementById('quick-bill-modal').classList.remove('hidden');
+  }
+
+  function closeQuickBillModal() {
+    document.getElementById('quick-bill-modal').classList.add('hidden');
+  }
+
+  function handleBillWingChange() {
+    const wing = document.getElementById('bill-clinic-type').value;
+    const doc = document.getElementById('bill-doctor-name');
+    if (doc) {
+      doc.value = wing === 'dental' ? 'Dr. Sabina Firoj Shaikh' : 'Dr. Jalil S. Mujawar';
+    }
+  }
+
+  async function triggerQuickBillSave(sendWhatsApp) {
+    const name = document.getElementById('bill-patient-name').value.trim();
+    if (!name) {
+      showToast('Please enter patient name', 'error');
+      return;
+    }
+    const wing = document.getElementById('bill-clinic-type').value;
+    const doctor = document.getElementById('bill-doctor-name').value;
+    const treatment = document.getElementById('bill-treatment').value;
+    const amount = document.getElementById('bill-amount').value;
+    const mode = document.getElementById('bill-mode').value;
+
+    try {
+      const res = await fetch('/crm/api/bill/create/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          patient_name: name,
+          clinic_type: wing,
+          doctor_name: doctor,
+          treatment: treatment,
+          total_amount: amount,
+          paid_amount: amount,
+          payment_method: mode,
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        closeQuickBillModal();
+        const promptBar = document.getElementById('billing-prompt-bar');
+        if (promptBar) promptBar.classList.add('hidden');
+        showToast(`Invoice ${data.invoice_no} generated for ${name}`);
+        if (sendWhatsApp && data.whatsapp_url) {
+          window.open(data.whatsapp_url, '_blank');
+        }
+      } else {
+        showToast(data.error || 'Failed to create bill', 'error');
+      }
+    } catch (e) {
+      showToast('Network error while creating bill', 'error');
+    }
+  }
+</script>
+{% endblock %}

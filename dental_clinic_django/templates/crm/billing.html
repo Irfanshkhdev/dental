@@ -1,0 +1,349 @@
+{% extends 'crm/base_crm.html' %}
+
+{% block page_title %}Finance &amp; Billing{% endblock %}
+
+{% block header_actions %}
+<div class="flex items-center gap-2">
+  <span class="text-xs text-slate-500 font-medium">Daily Operations Ledger</span>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-6">
+
+  <!-- ============================================================== -->
+  <!-- 1. QUICK BILL GENERATOR                                        -->
+  <!-- ============================================================== -->
+  <section class="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+      <div>
+        <h2 class="text-sm font-semibold text-slate-900 tracking-tight">Quick Bill Generator</h2>
+        <p class="text-xs text-slate-400 mt-0.5">Generate verified clinic invoice &amp; dispatch instant WhatsApp receipt</p>
+      </div>
+      <span class="text-xs font-mono text-slate-400">Roots &amp; Buds Wanowrie</span>
+    </div>
+
+    <form id="main-billing-form" method="POST" action="{% url 'crm_billing' %}" class="mt-4 space-y-4">
+      {% csrf_token %}
+      <input type="hidden" id="billing-action-input" name="action" value="save_only">
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        <!-- Select Patient -->
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1.5">
+            Select Patient <span class="text-rose-500">*</span>
+          </label>
+          <select id="bill-patient-select" name="patient_id" required onchange="handlePatientSelectChange(this)"
+                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+            <option value="">-- Choose registered patient --</option>
+            {% for p in patients %}
+              <option value="{{ p.id }}" data-wing="{{ p.clinic_type }}" data-phone="{{ p.phone }}">
+                {{ p.full_name }} ({{ p.phone }}) - {{ p.clinic_type|title }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Practice Wing -->
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1.5">
+            Clinic Practice <span class="text-rose-500">*</span>
+          </label>
+          <select id="bill-wing-select" name="clinic_type" required onchange="updateDoctorName()"
+                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+            <option value="dental">Roots Dental Clinic (Dr. Sabina Firoj Shaikh)</option>
+            <option value="pediatric">Buds Child Clinic (Dr. Jalil S. Mujawar)</option>
+          </select>
+          <input type="hidden" id="bill-doctor-input" name="doctor_name" value="Dr. Sabina Firoj Shaikh">
+        </div>
+
+        <!-- Payment Mode -->
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1.5">
+            Payment Mode <span class="text-rose-500">*</span>
+          </label>
+          <select name="payment_method" required
+                  class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+            <option value="upi">UPI (Google Pay / PhonePe / Paytm)</option>
+            <option value="cash">Cash Settlement</option>
+            <option value="card">Credit / Debit Card</option>
+          </select>
+        </div>
+
+      </div>
+
+      <!-- Treatment / Service with Quick Chips -->
+      <div>
+        <div class="flex items-center justify-between mb-1.5">
+          <label class="block text-xs font-medium text-slate-700">
+            Treatment / Consultation Service <span class="text-rose-500">*</span>
+          </label>
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <span class="text-[10px] text-slate-400">Quick fill:</span>
+            <button type="button" onclick="setTreatment('Single-Visit Root Canal Treatment', 3500)" class="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700">RCT (₹3500)</button>
+            <button type="button" onclick="setTreatment('Pediatric Specialist Consultation', 800)" class="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700">Pedia Consult (₹800)</button>
+            <button type="button" onclick="setTreatment('Zirconia Monolithic Crown', 7500)" class="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700">Crown (₹7500)</button>
+            <button type="button" onclick="setTreatment('Ultrasonic Scaling &amp; Polishing', 1200)" class="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700">Scaling (₹1200)</button>
+            <button type="button" onclick="setTreatment('Child Vaccination Booster Dose', 2000)" class="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700">Vaccine (₹2000)</button>
+          </div>
+        </div>
+        <input type="text" id="bill-treatment-input" name="treatment" required placeholder="e.g. Single-Visit Root Canal Treatment"
+               class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900">
+      </div>
+
+      <!-- Financial Calculations -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1">Total Billed Amount (₹)</label>
+          <input type="number" id="bill-total-input" name="total_amount" required step="50" min="0" value="800" oninput="calculateBalance()"
+                 class="w-full px-3 py-2 text-xs font-semibold rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900">
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1">Paid Now (₹)</label>
+          <input type="number" id="bill-paid-input" name="paid_amount" required step="50" min="0" value="800" oninput="calculateBalance()"
+                 class="w-full px-3 py-2 text-xs font-semibold rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900">
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-700 mb-1">Balance Remaining (₹)</label>
+          <input type="text" id="bill-balance-display" readonly value="₹0"
+                 class="w-full px-3 py-2 text-xs font-mono font-bold rounded-xl border border-slate-200 bg-slate-50 text-slate-700">
+        </div>
+      </div>
+
+      <!-- Dual Action Buttons -->
+      <div class="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
+        <!-- Save Only -->
+        <button type="submit" onclick="document.getElementById('billing-action-input').value='save_only'"
+                class="px-4 py-2 rounded-xl text-xs font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
+          Save Only
+        </button>
+
+        <!-- Save & Send via WhatsApp -->
+        <button type="submit" onclick="document.getElementById('billing-action-input').value='save_and_whatsapp'"
+                class="px-5 py-2 rounded-xl text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-all flex items-center gap-2 shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+          Save &amp; Send via WhatsApp
+        </button>
+      </div>
+
+    </form>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- 2. TRANSACTION LEDGER & METRICS                                -->
+  <!-- ============================================================== -->
+  <section class="space-y-4">
+    
+    <!-- Summary Metrics Strip -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm">
+        <div class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Today's Collection</div>
+        <div class="text-lg font-bold text-slate-900 font-mono mt-1">₹{{ today_collection|floatformat:0 }}</div>
+      </div>
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm">
+        <div class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">UPI / Online Total</div>
+        <div class="text-lg font-bold text-slate-900 font-mono mt-1">₹{{ upi_total|floatformat:0 }}</div>
+      </div>
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm">
+        <div class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Cash Total</div>
+        <div class="text-lg font-bold text-slate-900 font-mono mt-1">₹{{ cash_total|floatformat:0 }}</div>
+      </div>
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm">
+        <div class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Pending Patient Dues</div>
+        <div class="text-lg font-bold text-rose-600 font-mono mt-1">₹{{ dues_total|floatformat:0 }}</div>
+      </div>
+    </div>
+
+    <!-- Ledger Table Container -->
+    <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden">
+      
+      <!-- Filter Bar -->
+      <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h3 class="text-sm font-semibold text-slate-900">Transaction Ledger</h3>
+          <p class="text-xs text-slate-400">Complete audit log of clinical receipts and settlements</p>
+        </div>
+
+        <!-- Filter Pills -->
+        <div class="inline-flex p-1 bg-slate-100 rounded-xl text-xs font-medium flex-wrap">
+          <button onclick="filterLedger('all')" id="lfilter-all" class="lfilter-pill px-3 py-1 rounded-lg bg-white text-slate-900 shadow-sm font-semibold transition-all">All</button>
+          <button onclick="filterLedger('today')" id="lfilter-today" class="lfilter-pill px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-all">Today</button>
+          <button onclick="filterLedger('dues')" id="lfilter-dues" class="lfilter-pill px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-all">Pending Dues</button>
+          <button onclick="filterLedger('dental')" id="lfilter-dental" class="lfilter-pill px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-all">Dr. Sabina</button>
+          <button onclick="filterLedger('pediatric')" id="lfilter-pediatric" class="lfilter-pill px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-all">Dr. Jalil</button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50/80 border-b border-slate-100 text-slate-500 font-medium select-none">
+            <tr>
+              <th class="py-3 px-5">Invoice #</th>
+              <th class="py-3 px-4">Date</th>
+              <th class="py-3 px-4">Patient Name</th>
+              <th class="py-3 px-4">Practice &amp; Doctor</th>
+              <th class="py-3 px-4">Payment Mode</th>
+              <th class="py-3 px-4 text-right">Amount Paid</th>
+              <th class="py-3 px-4 text-right">Balance Due</th>
+              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-5 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="ledger-table-body" class="divide-y divide-slate-100 text-slate-700">
+            {% for inv in invoices %}
+              <tr class="ledger-row hover:bg-slate-50/70 transition-colors"
+                  data-wing="{{ inv.clinic_type }}"
+                  data-dues="{% if inv.balance_due > 0 %}1{% else %}0{% endif %}"
+                  data-date="{{ inv.created_at|date:'Y-m-d' }}">
+                <td class="py-3.5 px-5 font-mono font-semibold text-slate-900">
+                  {{ inv.invoice_no }}
+                </td>
+                <td class="py-3.5 px-4 text-slate-500">
+                  {{ inv.created_at|date:"d M, H:i" }}
+                </td>
+                <td class="py-3.5 px-4 font-semibold text-slate-900">
+                  {{ inv.patient.full_name }}
+                  <div class="text-[10px] text-slate-400 font-normal font-mono">{{ inv.patient.phone }}</div>
+                </td>
+                <td class="py-3.5 px-4">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-700">
+                    {{ inv.get_clinic_type_display }} &bull; {{ inv.doctor_name }}
+                  </span>
+                </td>
+                <td class="py-3.5 px-4 font-medium text-slate-600">
+                  {{ inv.get_payment_method_display }}
+                </td>
+                <td class="py-3.5 px-4 text-right font-mono font-bold text-slate-900">
+                  ₹{{ inv.paid_amount|floatformat:0 }}
+                </td>
+                <td class="py-3.5 px-4 text-right font-mono">
+                  {% if inv.balance_due > 0 %}
+                    <span class="text-rose-600 font-semibold">₹{{ inv.balance_due|floatformat:0 }}</span>
+                  {% else %}
+                    <span class="text-slate-400">₹0</span>
+                  {% endif %}
+                </td>
+                <td class="py-3.5 px-4">
+                  {% if inv.payment_status == 'paid' %}
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/50">Paid</span>
+                  {% elif inv.payment_status == 'partial' %}
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-200/50">Partial</span>
+                  {% else %}
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-rose-50 text-rose-700 border border-rose-200/50">Due</span>
+                  {% endif %}
+                </td>
+                <td class="py-3.5 px-5 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <a href="{{ inv.whatsapp_receipt_url }}" target="_blank"
+                       class="p-1.5 text-slate-500 hover:text-emerald-600 hover:bg-slate-100 rounded-lg transition-colors" title="Send WhatsApp Receipt">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                    </a>
+                    <a href="{% url 'crm_invoice_print' inv.id %}" target="_blank"
+                       class="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors" title="Print Receipt">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="9" class="py-8 text-center text-slate-400">
+                  No invoices recorded in the ledger yet.
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  function updateDoctorName() {
+    const wing = document.getElementById('bill-wing-select').value;
+    const docInput = document.getElementById('bill-doctor-input');
+    if (docInput) {
+      docInput.value = wing === 'dental' ? 'Dr. Sabina Firoj Shaikh' : 'Dr. Jalil S. Mujawar';
+    }
+  }
+
+  function handlePatientSelectChange(select) {
+    const selectedOption = select.options[select.selectedIndex];
+    if (selectedOption) {
+      const wing = selectedOption.getAttribute('data-wing');
+      if (wing) {
+        document.getElementById('bill-wing-select').value = wing;
+        updateDoctorName();
+      }
+    }
+  }
+
+  function setTreatment(name, amount) {
+    document.getElementById('bill-treatment-input').value = name;
+    document.getElementById('bill-total-input').value = amount;
+    document.getElementById('bill-paid-input').value = amount;
+    calculateBalance();
+  }
+
+  function calculateBalance() {
+    const total = parseFloat(document.getElementById('bill-total-input').value) || 0;
+    const paid = parseFloat(document.getElementById('bill-paid-input').value) || 0;
+    const bal = Math.max(0, total - paid);
+    document.getElementById('bill-balance-display').value = `₹${bal.toLocaleString('en-IN')}`;
+  }
+
+  function filterLedger(filter) {
+    document.querySelectorAll('.lfilter-pill').forEach(btn => {
+      btn.className = 'lfilter-pill px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-all';
+    });
+    const active = document.getElementById(`lfilter-${filter}`);
+    if (active) {
+      active.className = 'lfilter-pill px-3 py-1 rounded-lg bg-white text-slate-900 shadow-sm font-semibold transition-all';
+    }
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    const rows = document.querySelectorAll('.ledger-row');
+
+    rows.forEach(r => {
+      const wing = r.getAttribute('data-wing');
+      const hasDues = r.getAttribute('data-dues') === '1';
+      const date = r.getAttribute('data-date');
+
+      if (filter === 'all') {
+        r.style.display = '';
+      } else if (filter === 'today') {
+        r.style.display = date === todayStr ? '' : 'none';
+      } else if (filter === 'dues') {
+        r.style.display = hasDues ? '' : 'none';
+      } else if (filter === 'dental') {
+        r.style.display = wing === 'dental' ? '' : 'none';
+      } else if (filter === 'pediatric') {
+        r.style.display = wing === 'pediatric' ? '' : 'none';
+      }
+    });
+  }
+
+  // Pre-select patient if patient_id in URL query
+  document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pid = urlParams.get('patient_id');
+    if (pid) {
+      const select = document.getElementById('bill-patient-select');
+      if (select) {
+        select.value = pid;
+        handlePatientSelectChange(select);
+      }
+    }
+  });
+</script>
+{% endblock %}

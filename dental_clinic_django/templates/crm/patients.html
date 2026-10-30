@@ -1,0 +1,410 @@
+{% extends 'crm/base_crm.html' %}
+
+{% block page_title %}Patients Directory{% endblock %}
+
+{% block header_actions %}
+<div class="flex items-center gap-2">
+  <span class="text-xs text-slate-500 font-medium">Total: <strong>{{ total_patients }}</strong> registered</span>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-6">
+
+  <!-- ============================================================== -->
+  <!-- 1. SEARCH BAR & PRACTICE METRICS                               -->
+  <!-- ============================================================== -->
+  <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm">
+    <!-- Instant Client-Side Search (<5ms) -->
+    <div class="relative flex-1">
+      <input type="text" id="patient-search-input" oninput="handleInstantSearch(this.value)" autofocus
+             placeholder="Search by patient name, phone number, clinic wing, family..."
+             class="w-full pl-10 pr-4 py-2.5 rounded-xl text-xs font-medium text-slate-900 bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all">
+      <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+      <span id="search-counter" class="absolute right-3.5 top-3 text-[11px] text-slate-400 font-medium"></span>
+    </div>
+
+    <!-- Practice Filters -->
+    <div class="inline-flex p-1 bg-slate-100 rounded-xl text-xs font-medium self-start sm:self-center">
+      <button onclick="filterByPractice('all')" id="filter-all" class="practice-pill px-3 py-1 rounded-lg bg-white text-slate-900 shadow-sm font-semibold transition-all">
+        All ({{ total_patients }})
+      </button>
+      <button onclick="filterByPractice('dental')" id="filter-dental" class="practice-pill px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-all">
+        Dental ({{ dental_count }})
+      </button>
+      <button onclick="filterByPractice('pediatric')" id="filter-pediatric" class="practice-pill px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-all">
+        Pediatric ({{ pediatric_count }})
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- 2. MASTER PATIENTS TABLE                                       -->
+  <!-- ============================================================== -->
+  <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs">
+        <thead class="bg-slate-50/80 border-b border-slate-100 text-slate-500 font-medium select-none">
+          <tr>
+            <th class="py-3.5 px-5">Patient Name</th>
+            <th class="py-3.5 px-4">Contact</th>
+            <th class="py-3.5 px-4">Clinic Wing &amp; Doctor</th>
+            <th class="py-3.5 px-4">Last Visit</th>
+            <th class="py-3.5 px-4 text-right">Total Spent</th>
+            <th class="py-3.5 px-4 text-right">Dues</th>
+            <th class="py-3.5 px-5 text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody id="patients-table-body" class="divide-y divide-slate-100 text-slate-700">
+          <!-- Rendered dynamically by high-speed JavaScript (<5ms) -->
+        </tbody>
+      </table>
+    </div>
+
+    <div id="no-patients-found" class="p-8 text-center text-xs text-slate-400 hidden">
+      No matching patients found.
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================================== -->
+<!-- 3. SLIDE-OVER DRAWER (RIGHT-HAND OVERLAY)                      -->
+<!-- ============================================================== -->
+<div id="patient-drawer-backdrop" onclick="closeDrawer()" class="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-xs transition-opacity duration-200 opacity-0 pointer-events-none"></div>
+
+<div id="patient-slide-drawer" class="fixed top-0 right-0 bottom-0 w-full max-w-xl bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-250 ease-out flex flex-col border-l border-slate-200">
+  
+  <!-- Drawer Header -->
+  <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex items-start justify-between flex-shrink-0">
+    <div class="flex items-start gap-3">
+      <div id="drawer-avatar" class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold text-base shadow-sm">
+        --
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h3 id="drawer-patient-name" class="text-base font-semibold text-slate-900">Patient Name</h3>
+          <span id="drawer-wing-badge" class="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-200 text-slate-800">
+            Practice
+          </span>
+        </div>
+        <div class="text-xs text-slate-500 mt-0.5 flex items-center gap-2">
+          <span id="drawer-demographics">-- yrs &bull; Male</span>
+          <span>&bull;</span>
+          <span id="drawer-family" class="text-slate-600">Family: --</span>
+        </div>
+        <div class="text-xs text-slate-400 mt-1 flex items-center gap-3">
+          <span id="drawer-phone">--</span>
+          <a id="drawer-whatsapp-btn" href="#" target="_blank" class="text-emerald-600 hover:text-emerald-700 font-medium inline-flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            Chat WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <button onclick="closeDrawer()" type="button" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg transition-colors">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <!-- Drawer 3-Tab Bar -->
+  <div class="px-5 border-b border-slate-100 flex items-center gap-6 text-xs font-medium flex-shrink-0 bg-white">
+    <button onclick="switchDrawerTab('visits')" id="drawer-tab-btn-visits" class="py-3 border-b-2 border-slate-900 text-slate-900 font-semibold transition-all">
+      Past Visits (<span id="drawer-count-visits">0</span>)
+    </button>
+    <button onclick="switchDrawerTab('notes')" id="drawer-tab-btn-notes" class="py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-all">
+      Clinical &amp; Doctor Notes
+    </button>
+    <button onclick="switchDrawerTab('billing')" id="drawer-tab-btn-billing" class="py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-all">
+      Billing History (<span id="drawer-count-bills">0</span>)
+    </button>
+  </div>
+
+  <!-- Drawer Tab Content Bodies -->
+  <div class="flex-1 overflow-y-auto p-5">
+    
+    <!-- Tab A: Past Visits -->
+    <div id="drawer-content-visits" class="space-y-3">
+      <div id="drawer-visits-list" class="space-y-2"></div>
+      <div id="drawer-visits-empty" class="p-6 text-center text-xs text-slate-400 hidden">
+        No recorded past appointments for this patient yet.
+      </div>
+    </div>
+
+    <!-- Tab B: Clinical Notes -->
+    <div id="drawer-content-notes" class="space-y-4 hidden">
+      <div id="drawer-notes-list" class="space-y-3"></div>
+      <div id="drawer-notes-empty" class="p-6 text-center text-xs text-slate-400 hidden">
+        No special clinical notes recorded. Routine wellness checks recorded.
+      </div>
+    </div>
+
+    <!-- Tab C: Billing History -->
+    <div id="drawer-content-billing" class="space-y-3 hidden">
+      <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80 flex items-center justify-between text-xs">
+        <div>
+          <span class="text-slate-500">Total Billed:</span>
+          <strong id="drawer-total-billed" class="text-slate-900 ml-1">₹0</strong>
+        </div>
+        <div>
+          <span class="text-slate-500">Balance Due:</span>
+          <strong id="drawer-balance-due" class="text-slate-900 ml-1">₹0</strong>
+        </div>
+      </div>
+
+      <div id="drawer-invoices-list" class="space-y-2"></div>
+      <div id="drawer-invoices-empty" class="p-6 text-center text-xs text-slate-400 hidden">
+        No past invoices generated for this patient yet.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Drawer Footer: Quick Bill Action -->
+  <div class="p-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between flex-shrink-0">
+    <div class="text-[11px] text-slate-400">
+      Emergency Contact: <span id="drawer-emergency" class="font-medium text-slate-600">--</span>
+    </div>
+    <a id="drawer-create-bill-btn" href="#" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-all shadow-sm">
+      + New Bill for Patient
+    </a>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // High-Speed Embedded Data (<5ms Client Search)
+  const allPatients = {{ patients_json|safe }};
+  let currentPracticeFilter = 'all';
+  let currentSearchQuery = '';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderPatientsTable();
+  });
+
+  function renderPatientsTable() {
+    const tbody = document.getElementById('patients-table-body');
+    const noResults = document.getElementById('no-patients-found');
+    const counter = document.getElementById('search-counter');
+    if (!tbody) return;
+
+    const q = currentSearchQuery.toLowerCase().trim();
+    const filtered = allPatients.filter(p => {
+      const matchPractice = currentPracticeFilter === 'all' || p.clinic_type === currentPracticeFilter;
+      if (!matchPractice) return false;
+      if (!q) return true;
+
+      return (
+        p.full_name.toLowerCase().includes(q) ||
+        p.phone.includes(q) ||
+        p.family_name.toLowerCase().includes(q) ||
+        p.clinic_display.toLowerCase().includes(q) ||
+        p.doctor_assigned.toLowerCase().includes(q)
+      );
+    });
+
+    counter.textContent = q ? `${filtered.length} found` : '';
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = '';
+      if (noResults) noResults.classList.remove('hidden');
+      return;
+    }
+
+    if (noResults) noResults.classList.add('hidden');
+
+    tbody.innerHTML = filtered.map(p => {
+      const initials = p.full_name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      const duesBadge = p.balance_due > 0
+        ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200">₹${p.balance_due.toLocaleString('en-IN')}</span>`
+        : `<span class="text-slate-400 font-mono">₹0</span>`;
+
+      return `
+        <tr onclick="openDrawer(${p.id})" class="hover:bg-slate-50/80 cursor-pointer transition-colors group">
+          <td class="py-3.5 px-5">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-xl bg-slate-100 group-hover:bg-slate-900 group-hover:text-white transition-colors flex items-center justify-center font-bold text-xs text-slate-700 flex-shrink-0">
+                ${initials}
+              </div>
+              <div>
+                <div class="font-semibold text-slate-900">${p.full_name}</div>
+                <div class="text-[11px] text-slate-400 font-medium">${p.age ? p.age + ' yrs' : 'Adult'} &bull; ${p.family_name}</div>
+              </div>
+            </div>
+          </td>
+          <td class="py-3.5 px-4 font-mono text-slate-600">
+            ${p.phone}
+          </td>
+          <td class="py-3.5 px-4">
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-700">
+              ${p.clinic_type === 'dental' ? 'Roots Dental' : 'Buds Child'} &bull; ${p.doctor_assigned.split(' ')[1] || p.doctor_assigned}
+            </span>
+          </td>
+          <td class="py-3.5 px-4 text-slate-500">
+            ${p.last_visit}
+          </td>
+          <td class="py-3.5 px-4 text-right font-mono font-medium text-slate-900">
+            ₹${p.total_billed.toLocaleString('en-IN')}
+          </td>
+          <td class="py-3.5 px-4 text-right">
+            ${duesBadge}
+          </td>
+          <td class="py-3.5 px-5 text-right">
+            <button type="button" class="px-2.5 py-1 rounded-lg text-[11px] font-medium text-slate-600 bg-white border border-slate-200 group-hover:border-slate-900 group-hover:text-slate-900 transition-all">
+              View File &rarr;
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function handleInstantSearch(val) {
+    currentSearchQuery = val;
+    renderPatientsTable();
+  }
+
+  function filterByPractice(wing) {
+    currentPracticeFilter = wing;
+    document.querySelectorAll('.practice-pill').forEach(btn => {
+      btn.className = 'practice-pill px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-all';
+    });
+    const active = document.getElementById(`filter-${wing}`);
+    if (active) {
+      active.className = 'practice-pill px-3 py-1 rounded-lg bg-white text-slate-900 shadow-sm font-semibold transition-all';
+    }
+    renderPatientsTable();
+  }
+
+  // Slide-Over Drawer Engine
+  function openDrawer(patientId) {
+    const p = allPatients.find(x => x.id === patientId);
+    if (!p) return;
+
+    const initials = p.full_name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    document.getElementById('drawer-avatar').textContent = initials;
+    document.getElementById('drawer-patient-name').textContent = p.full_name;
+    document.getElementById('drawer-wing-badge').textContent = p.clinic_display;
+    document.getElementById('drawer-demographics').textContent = `${p.age ? p.age + ' yrs' : 'Adult'} • ${p.gender || 'Not specified'}`;
+    document.getElementById('drawer-family').textContent = `Family: ${p.family_name}`;
+    document.getElementById('drawer-phone').textContent = p.phone;
+    document.getElementById('drawer-emergency').textContent = p.emergency_contact;
+    document.getElementById('drawer-whatsapp-btn').href = `https://wa.me/${p.clean_phone}`;
+    document.getElementById('drawer-create-bill-btn').href = `/crm/billing/?patient_id=${p.id}`;
+
+    // Fill Visits Tab
+    document.getElementById('drawer-count-visits').textContent = p.visits.length;
+    const visitsList = document.getElementById('drawer-visits-list');
+    const visitsEmpty = document.getElementById('drawer-visits-empty');
+    if (p.visits.length === 0) {
+      visitsList.innerHTML = '';
+      visitsEmpty.classList.remove('hidden');
+    } else {
+      visitsEmpty.classList.add('hidden');
+      visitsList.innerHTML = p.visits.map(v => `
+        <div class="p-3 rounded-xl border border-slate-200/80 bg-slate-50/50 flex items-center justify-between">
+          <div>
+            <div class="font-medium text-slate-900 text-xs">${v.service}</div>
+            <div class="text-[11px] text-slate-400 mt-0.5">${v.date} &bull; ${v.time} &bull; ${v.doctor}</div>
+          </div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-white text-slate-700 border border-slate-200">${v.status}</span>
+        </div>
+      `).join('');
+    }
+
+    // Fill Notes Tab
+    const notesList = document.getElementById('drawer-notes-list');
+    const notesEmpty = document.getElementById('drawer-notes-empty');
+    if (p.clinical_notes.length === 0) {
+      notesList.innerHTML = '';
+      notesEmpty.classList.remove('hidden');
+    } else {
+      notesEmpty.classList.add('hidden');
+      notesList.innerHTML = p.clinical_notes.map(n => `
+        <div class="p-3.5 rounded-xl border border-slate-200/80 bg-white">
+          <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">${n.category}</div>
+          <div class="text-xs text-slate-700 leading-relaxed">${n.text}</div>
+        </div>
+      `).join('');
+    }
+
+    // Fill Billing Tab
+    document.getElementById('drawer-count-bills').textContent = p.invoices.length;
+    document.getElementById('drawer-total-billed').textContent = `₹${p.total_billed.toLocaleString('en-IN')}`;
+    document.getElementById('drawer-balance-due').textContent = `₹${p.balance_due.toLocaleString('en-IN')}`;
+
+    const invList = document.getElementById('drawer-invoices-list');
+    const invEmpty = document.getElementById('drawer-invoices-empty');
+    if (p.invoices.length === 0) {
+      invList.innerHTML = '';
+      invEmpty.classList.remove('hidden');
+    } else {
+      invEmpty.classList.add('hidden');
+      invList.innerHTML = p.invoices.map(inv => `
+        <div class="p-3 rounded-xl border border-slate-200/80 bg-white flex items-center justify-between">
+          <div>
+            <div class="font-mono font-semibold text-slate-900 text-xs">${inv.invoice_no}</div>
+            <div class="text-[11px] text-slate-400 mt-0.5">${inv.date} &bull; ${inv.doctor} &bull; ${inv.method}</div>
+          </div>
+          <div class="text-right flex items-center gap-3">
+            <div>
+              <div class="font-mono font-bold text-slate-900 text-xs">₹${inv.total.toLocaleString('en-IN')}</div>
+              <div class="text-[10px] text-slate-500">${inv.status}</div>
+            </div>
+            <a href="${inv.print_url}" target="_blank" class="p-1.5 text-slate-400 hover:text-slate-800" title="Print Invoice">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Default to visits tab
+    switchDrawerTab('visits');
+
+    // Show Drawer & Backdrop
+    const backdrop = document.getElementById('patient-drawer-backdrop');
+    const drawer = document.getElementById('patient-slide-drawer');
+    backdrop.classList.remove('pointer-events-none');
+    backdrop.classList.remove('opacity-0');
+    backdrop.classList.add('opacity-100');
+    drawer.classList.remove('translate-x-full');
+    drawer.classList.add('translate-x-0');
+  }
+
+  function closeDrawer() {
+    const backdrop = document.getElementById('patient-drawer-backdrop');
+    const drawer = document.getElementById('patient-slide-drawer');
+    backdrop.classList.remove('opacity-100');
+    backdrop.classList.add('opacity-0');
+    backdrop.classList.add('pointer-events-none');
+    drawer.classList.remove('translate-x-0');
+    drawer.classList.add('translate-x-full');
+  }
+
+  function switchDrawerTab(tab) {
+    const tabs = ['visits', 'notes', 'billing'];
+    tabs.forEach(t => {
+      const btn = document.getElementById(`drawer-tab-btn-${t}`);
+      const content = document.getElementById(`drawer-content-${t}`);
+      if (t === tab) {
+        btn.className = 'py-3 border-b-2 border-slate-900 text-slate-900 font-semibold transition-all';
+        content.classList.remove('hidden');
+      } else {
+        btn.className = 'py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-all';
+        content.classList.add('hidden');
+      }
+    });
+  }
+
+  // Esc key to close drawer
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeDrawer();
+  });
+</script>
+{% endblock %}
