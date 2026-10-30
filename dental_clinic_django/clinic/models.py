@@ -50,10 +50,10 @@ class AppointmentRequest(models.Model):
             return f"91{digits}"
         elif digits.startswith('91') and len(digits) == 12:
             return digits
-        return digits or '919876543210'
+        return digits or '919921231399'
 
     def doctor_name(self):
-        return "Dr. Sabina Firoj Shaikh (MDS Gold Medalist)" if self.clinic_type == 'dental' else "Dr. Jalil S. Mujawar (Senior Pediatrician)"
+        return "Dr. Sabina Firoj Shaikh (B.D.S, M.D.S Gold Medalist)" if self.clinic_type == 'dental' else "Dr. Jalil S. Mujawar (Senior Consultant Pediatrician & Neonatologist)"
 
     def clinic_display_name(self):
         return "Roots Dental Clinic" if self.clinic_type == 'dental' else "Buds Child Clinic"

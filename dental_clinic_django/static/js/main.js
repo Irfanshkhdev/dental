@@ -141,22 +141,21 @@
   };
 
   // -------------------------------------------------------------
-  // 2. MORPHING IN-PAGE CLINIC SWITCHER
+  // 2. MORPHING IN-PAGE CLINIC SWITCHER WITH SMOOTH CROSSFADE
   // -------------------------------------------------------------
   window.switchClinicBooking = function (type, preselectedService) {
     currentClinic = type;
 
     const formClinicInput = document.getElementById('form-clinic-type');
-    const doctorPanel = document.getElementById('dynamic-doctor-panel');
-    const clinicTag = document.getElementById('panel-clinic-tag');
-    const doctorName = document.getElementById('panel-doctor-name');
-    const doctorSubline = document.getElementById('panel-doctor-subline');
-    const doctorImg = document.getElementById('panel-doctor-img');
+    const dentalLayer = document.getElementById('panel-layer-dental');
+    const pediatricLayer = document.getElementById('panel-layer-pediatric');
+    const togglePill = document.getElementById('clinic-toggle-pill');
     const btnDental = document.getElementById('btn-toggle-dental');
     const btnPediatric = document.getElementById('btn-toggle-pediatric');
     const mobileAvatar = document.getElementById('mobile-pill-avatar');
     const mobilePillName = document.getElementById('mobile-pill-name');
     const mobilePillDesc = document.getElementById('mobile-pill-desc');
+    const mobilePill = document.getElementById('mobile-doctor-pill');
     const parentNameGroup = document.getElementById('parent-name-group');
     const inputParent = document.getElementById('parent-name');
     const labelPatient = document.getElementById('label-patient-name');
@@ -167,37 +166,58 @@
 
     if (formClinicInput) formClinicInput.value = type;
 
+    // 1. Crossfade Left Doctor Presentation Layers with Smooth Spring Effect
+    if (dentalLayer && pediatricLayer) {
+      if (type === 'dental') {
+        dentalLayer.classList.remove('is-inactive');
+        dentalLayer.classList.add('is-active');
+        pediatricLayer.classList.remove('is-active');
+        pediatricLayer.classList.add('is-inactive');
+      } else {
+        pediatricLayer.classList.remove('is-inactive');
+        pediatricLayer.classList.add('is-active');
+        dentalLayer.classList.remove('is-active');
+        dentalLayer.classList.add('is-inactive');
+      }
+    }
+
+    // 2. Smooth Toggle Switch Pill Slide
+    if (togglePill) {
+      if (type === 'dental') {
+        togglePill.classList.remove('pill-pediatric');
+        togglePill.classList.add('pill-dental');
+      } else {
+        togglePill.classList.remove('pill-dental');
+        togglePill.classList.add('pill-pediatric');
+      }
+    }
+
+    // 3. Smooth Mobile Pill Banner Fade
+    if (mobilePill) {
+      mobilePill.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+      mobilePill.style.opacity = '0.5';
+      mobilePill.style.transform = 'scale(0.98)';
+      setTimeout(() => {
+        if (type === 'dental') {
+          if (mobileAvatar) mobileAvatar.src = '/static/images/dentist_sabina.png';
+          if (mobilePillName) mobilePillName.textContent = 'Dr. Sabina Firoj Shaikh';
+          if (mobilePillDesc) mobilePillDesc.textContent = 'B.D.S, M.D.S (Gold Medalist) • Conservative Dentistry & Endodontics';
+        } else {
+          if (mobileAvatar) mobileAvatar.src = '/static/images/pediatrician_jalil.png';
+          if (mobilePillName) mobilePillName.textContent = 'Dr. Jalil S. Mujawar';
+          if (mobilePillDesc) mobilePillDesc.textContent = 'MBBS, DNB(Pediatrics), MNAMS • Pediatrician & Neonatologist';
+        }
+        mobilePill.style.opacity = '1';
+        mobilePill.style.transform = 'scale(1)';
+      }, 120);
+    }
+
     if (type === 'dental') {
-      if (doctorPanel) {
-        doctorPanel.className = 'hidden lg:flex lg:col-span-5 relative p-10 flex-col justify-between overflow-hidden bg-gradient-to-br from-dental-700 via-dental-800 to-dental-950 text-white transition-all duration-700 ease-in-out';
-      }
-      if (clinicTag) clinicTag.textContent = 'Roots Dental Clinic';
-      if (doctorName) doctorName.textContent = 'Dr. Sabina Firoj Shaikh';
-      if (doctorSubline) {
-        doctorSubline.textContent = 'MDS Gold Medalist • Prosthodontics & Oral Implantology • 10+ Yrs Clinical Mastery';
-      }
-
-      if (doctorImg) {
-        doctorImg.style.transition = 'opacity 0.25s ease-out, transform 0.25s ease-out';
-        doctorImg.style.opacity = '0';
-        doctorImg.style.transform = 'scale(0.98)';
-        setTimeout(() => {
-          doctorImg.src = '/static/images/dentist_sabina.png';
-          doctorImg.alt = 'Dr. Sabina Firoj Shaikh';
-          doctorImg.style.opacity = '1';
-          doctorImg.style.transform = 'scale(1)';
-        }, 120);
-      }
-
-      if (mobileAvatar) mobileAvatar.src = '/static/images/dentist_sabina.png';
-      if (mobilePillName) mobilePillName.textContent = 'Dr. Sabina Firoj Shaikh';
-      if (mobilePillDesc) mobilePillDesc.textContent = 'MDS Gold Medalist • Prosthodontist';
-
       if (btnDental) {
-        btnDental.className = 'flex-1 py-3 px-4 rounded-xl font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 bg-white text-dental-700 shadow-sm';
+        btnDental.className = 'relative z-10 flex-1 py-2.5 px-4 rounded-xl font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-300 text-dental-800 cursor-pointer';
       }
       if (btnPediatric) {
-        btnPediatric.className = 'flex-1 py-3 px-4 rounded-xl font-heading font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 text-slate-500 hover:text-slate-800';
+        btnPediatric.className = 'relative z-10 flex-1 py-2.5 px-4 rounded-xl font-heading font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-300 text-slate-500 hover:text-slate-900 cursor-pointer';
       }
 
       if (labelPatient) labelPatient.textContent = 'Patient Full Name';
@@ -220,42 +240,42 @@
         });
       }
 
+      // Slot buttons for Roots Dental Clinic Hours
+      const slotMorning = document.getElementById('slot-morning');
+      const slotEvening = document.getElementById('slot-evening');
+      const slotAfternoon = document.getElementById('slot-afternoon');
+      const smTitle = document.getElementById('slot-morning-title');
+      const smTime = document.getElementById('slot-morning-time');
+      const seTitle = document.getElementById('slot-evening-title');
+      const seTime = document.getElementById('slot-evening-time');
+      const spTitle = document.getElementById('slot-special-title');
+      const spTime = document.getElementById('slot-special-time');
+
+      if (slotMorning) slotMorning.setAttribute('data-value', 'Morning (11:00 AM - 2:00 PM)');
+      if (smTitle) smTitle.textContent = 'Morning';
+      if (smTime) smTime.textContent = '11:00 AM – 2:00 PM';
+
+      if (slotEvening) slotEvening.setAttribute('data-value', 'Evening (6:00 PM - 8:30 PM)');
+      if (seTitle) seTitle.textContent = 'Evening';
+      if (seTime) seTime.textContent = '6:00 PM – 8:30 PM';
+
+      if (slotAfternoon) slotAfternoon.setAttribute('data-value', 'Sunday (By Appointment)');
+      if (spTitle) spTitle.textContent = 'Sunday';
+      if (spTime) spTime.textContent = 'By Appointment';
+
+      window.selectTimeSlot('Morning (11:00 AM - 2:00 PM)', false);
+
       if (submitBtn) {
         submitBtn.className = 'w-full py-4 px-6 rounded-2xl font-heading font-bold text-sm text-white bg-dental-600 hover:bg-dental-700 shadow-lg shadow-dental-700/20 active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer';
       }
       if (submitBtnText) submitBtnText.textContent = 'Confirm & Request Dental Consultation';
 
     } else {
-      if (doctorPanel) {
-        doctorPanel.className = 'hidden lg:flex lg:col-span-5 relative p-10 flex-col justify-between overflow-hidden bg-gradient-to-br from-pediatric-700 via-pediatric-800 to-pediatric-950 text-white transition-all duration-700 ease-in-out';
-      }
-      if (clinicTag) clinicTag.textContent = 'Buds Child Clinic';
-      if (doctorName) doctorName.textContent = 'Dr. Jalil S. Mujawar';
-      if (doctorSubline) {
-        doctorSubline.textContent = 'Senior Consultant Pediatrician & Neonatologist • MBBS, DCH • 15+ Yrs Clinical Mastery';
-      }
-
-      if (doctorImg) {
-        doctorImg.style.transition = 'opacity 0.25s ease-out, transform 0.25s ease-out';
-        doctorImg.style.opacity = '0';
-        doctorImg.style.transform = 'scale(0.98)';
-        setTimeout(() => {
-          doctorImg.src = '/static/images/pediatrician_jalil.png';
-          doctorImg.alt = 'Dr. Jalil S. Mujawar';
-          doctorImg.style.opacity = '1';
-          doctorImg.style.transform = 'scale(1)';
-        }, 120);
-      }
-
-      if (mobileAvatar) mobileAvatar.src = '/static/images/pediatrician_jalil.png';
-      if (mobilePillName) mobilePillName.textContent = 'Dr. Jalil S. Mujawar';
-      if (mobilePillDesc) mobilePillDesc.textContent = 'Senior Pediatrician • MBBS, DCH';
-
       if (btnDental) {
-        btnDental.className = 'flex-1 py-3 px-4 rounded-xl font-heading font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 text-slate-500 hover:text-slate-800';
+        btnDental.className = 'relative z-10 flex-1 py-2.5 px-4 rounded-xl font-heading font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-300 text-slate-500 hover:text-slate-900 cursor-pointer';
       }
       if (btnPediatric) {
-        btnPediatric.className = 'flex-1 py-3 px-4 rounded-xl font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 bg-white text-pediatric-700 shadow-sm';
+        btnPediatric.className = 'relative z-10 flex-1 py-2.5 px-4 rounded-xl font-heading font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-300 text-pediatric-800 cursor-pointer';
       }
 
       if (labelPatient) labelPatient.textContent = "Child's Full Name";
@@ -278,11 +298,42 @@
         });
       }
 
+      // Slot buttons for Buds Child Clinic Hours
+      const slotMorning = document.getElementById('slot-morning');
+      const slotEvening = document.getElementById('slot-evening');
+      const slotAfternoon = document.getElementById('slot-afternoon');
+      const smTitle = document.getElementById('slot-morning-title');
+      const smTime = document.getElementById('slot-morning-time');
+      const seTitle = document.getElementById('slot-evening-title');
+      const seTime = document.getElementById('slot-evening-time');
+      const spTitle = document.getElementById('slot-special-title');
+      const spTime = document.getElementById('slot-special-time');
+
+      if (slotMorning) slotMorning.setAttribute('data-value', 'Sat Morning (10:00 AM - 1:00 PM)');
+      if (smTitle) smTitle.textContent = 'Sat Morning';
+      if (smTime) smTime.textContent = '10:00 AM – 1:00 PM';
+
+      if (slotEvening) slotEvening.setAttribute('data-value', 'Evening (5:30 PM - 8:30 PM)');
+      if (seTitle) seTitle.textContent = 'Mon–Sat Evening';
+      if (seTime) seTime.textContent = '5:30 PM – 8:30 PM';
+
+      if (slotAfternoon) slotAfternoon.setAttribute('data-value', 'Sunday (By Appointment)');
+      if (spTitle) spTitle.textContent = 'Sunday';
+      if (spTime) spTime.textContent = 'By Appointment';
+
+      window.selectTimeSlot('Evening (5:30 PM - 8:30 PM)', false);
+
       if (submitBtn) {
         submitBtn.className = 'w-full py-4 px-6 rounded-2xl font-heading font-bold text-sm text-white bg-pediatric-600 hover:bg-pediatric-700 shadow-lg shadow-pediatric-700/20 active:scale-98 transition flex items-center justify-center gap-2 cursor-pointer';
       }
       if (submitBtnText) submitBtnText.textContent = 'Confirm & Request Child Care Appointment';
     }
+
+    window.goToBookingStep(inPageStep);
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  };
 
     window.goToBookingStep(inPageStep);
   };
@@ -389,7 +440,25 @@
 
       if (avatar) avatar.src = '/static/images/dentist_sabina.png';
       if (name) name.textContent = 'Dr. Sabina Firoj Shaikh';
-      if (desc) desc.textContent = 'MDS Gold Medalist • Prosthodontics';
+      if (desc) desc.textContent = 'B.D.S, M.D.S (Gold Medalist) • Conservative Dentistry & Endodontics';
+
+      // Update Modal Slots for Dental
+      const mSlotMorning = document.getElementById('modal-slot-morning');
+      const mSlotEvening = document.getElementById('modal-slot-evening');
+      const mSlotAfternoon = document.getElementById('modal-slot-afternoon');
+      if (mSlotMorning) {
+        mSlotMorning.setAttribute('data-value', 'Morning (11:00 AM - 2:00 PM)');
+        mSlotMorning.innerHTML = 'Morning<br><span class="text-[9px] font-normal text-slate-500">11am–2pm</span>';
+      }
+      if (mSlotEvening) {
+        mSlotEvening.setAttribute('data-value', 'Evening (6:00 PM - 8:30 PM)');
+        mSlotEvening.innerHTML = 'Evening<br><span class="text-[9px] font-normal text-slate-500">6pm–8:30pm</span>';
+      }
+      if (mSlotAfternoon) {
+        mSlotAfternoon.setAttribute('data-value', 'Sunday (By Appointment)');
+        mSlotAfternoon.innerHTML = 'Sunday<br><span class="text-[9px] font-normal text-slate-500">By Appt</span>';
+      }
+      window.selectTimeSlot('Morning (11:00 AM - 2:00 PM)', true);
 
       if (labelPatient) labelPatient.textContent = 'Patient Full Name';
       if (inputPatient) inputPatient.placeholder = 'e.g. Rahul Kulkarni';
@@ -423,7 +492,25 @@
 
       if (avatar) avatar.src = '/static/images/pediatrician_jalil.png';
       if (name) name.textContent = 'Dr. Jalil S. Mujawar';
-      if (desc) desc.textContent = 'Senior Consultant Pediatrician • MBBS, DCH';
+      if (desc) desc.textContent = 'MBBS, DNB(Pediatrics), MNAMS • Pediatrician & Neonatologist';
+
+      // Update Modal Slots for Pediatric
+      const mSlotMorning = document.getElementById('modal-slot-morning');
+      const mSlotEvening = document.getElementById('modal-slot-evening');
+      const mSlotAfternoon = document.getElementById('modal-slot-afternoon');
+      if (mSlotMorning) {
+        mSlotMorning.setAttribute('data-value', 'Sat Morning (10:00 AM - 1:00 PM)');
+        mSlotMorning.innerHTML = 'Sat Morning<br><span class="text-[9px] font-normal text-slate-500">10am–1pm</span>';
+      }
+      if (mSlotEvening) {
+        mSlotEvening.setAttribute('data-value', 'Evening (5:30 PM - 8:30 PM)');
+        mSlotEvening.innerHTML = 'Evening<br><span class="text-[9px] font-normal text-slate-500">5:30–8:30pm</span>';
+      }
+      if (mSlotAfternoon) {
+        mSlotAfternoon.setAttribute('data-value', 'Sunday (By Appointment)');
+        mSlotAfternoon.innerHTML = 'Sunday<br><span class="text-[9px] font-normal text-slate-500">By Appt</span>';
+      }
+      window.selectTimeSlot('Evening (5:30 PM - 8:30 PM)', true);
 
       if (labelPatient) labelPatient.textContent = "Child's Full Name";
       if (inputPatient) inputPatient.placeholder = 'e.g. Aarav Mehta (4 yrs)';
@@ -594,7 +681,7 @@
       if (submitBtn) submitBtn.disabled = false;
       if (submitText) submitText.textContent = originalText;
       console.error('Modal Booking API error:', err);
-      alert('Network issue. Reach us directly on WhatsApp at +91 98765 43210.');
+      alert('Network issue. Reach us directly on WhatsApp at +91 99212 31399.');
     });
   };
 
@@ -670,7 +757,7 @@
       if (submitBtn) submitBtn.disabled = false;
       if (submitBtnText) submitBtnText.textContent = originalText;
       console.error('Booking request error:', err);
-      alert('Network issue. Reach us directly on WhatsApp at +91 98765 43210.');
+      alert('Network issue. Reach us directly on WhatsApp at +91 99212 31399.');
     });
   };
 
@@ -835,10 +922,6 @@
       modalDate.value = tomorrow.toISOString().split('T')[0];
     }
 
-    // Default time slots
-    window.selectTimeSlot('Morning (10:00 AM - 1:00 PM)', false);
-    window.selectTimeSlot('Morning (10:00 AM - 1:00 PM)', true);
-
     // Initial clinic
     const formClinicInput = document.getElementById('form-clinic-type');
     let initType = 'dental';
@@ -847,6 +930,11 @@
     } else if (formClinicInput && formClinicInput.value) {
       initType = formClinicInput.value;
     }
+
+    // Default time slots aligned to clinic consultation hours
+    const defaultSlot = initType === 'dental' ? 'Morning (11:00 AM - 2:00 PM)' : 'Evening (5:30 PM - 8:30 PM)';
+    window.selectTimeSlot(defaultSlot, false);
+    window.selectTimeSlot(defaultSlot, true);
 
     if (document.getElementById('booking-wrapper')) {
       window.switchClinicBooking(initType);

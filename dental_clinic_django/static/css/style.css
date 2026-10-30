@@ -185,3 +185,111 @@ input:focus, select:focus, textarea:focus {
 .safe-pb {
   padding-bottom: env(safe-area-inset-bottom, 16px);
 }
+
+/* ==========================================================================
+   Smooth Clinic Switcher Transition Effects (Dental <-> Child Care)
+   ========================================================================== */
+.clinic-panel-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.clinic-panel-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.5rem;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform, filter;
+}
+
+.clinic-panel-layer.is-active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0px);
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.clinic-panel-layer.is-inactive {
+  opacity: 0;
+  transform: translateY(18px) scale(0.96);
+  filter: blur(4px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.clinic-doctor-portrait {
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease;
+  will-change: transform, opacity;
+}
+
+.clinic-panel-layer.is-active .clinic-doctor-portrait {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.clinic-panel-layer.is-inactive .clinic-doctor-portrait {
+  transform: translateY(24px) scale(0.92);
+  opacity: 0;
+}
+
+.clinic-doctor-info {
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.08s, 
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.08s;
+}
+
+.clinic-panel-layer.is-active .clinic-doctor-info {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.clinic-panel-layer.is-inactive .clinic-doctor-info {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* Toggle Switcher Smooth Sliding Indicator */
+.clinic-toggle-wrapper {
+  position: relative;
+  background: #F1F5F9;
+  border-radius: 1rem;
+  padding: 0.375rem;
+  display: flex;
+}
+
+.clinic-toggle-pill {
+  position: absolute;
+  top: 0.375rem;
+  bottom: 0.375rem;
+  width: calc(50% - 0.375rem);
+  background: #FFFFFF;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(15, 23, 42, 0.05);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.clinic-toggle-pill.pill-dental {
+  transform: translateX(0);
+}
+
+.clinic-toggle-pill.pill-pediatric {
+  transform: translateX(100%);
+}
+
+/* Google Reviews Card Styling */
+.google-review-card {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.google-review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 36px -10px rgba(15, 23, 42, 0.09);
+  border-color: rgba(30, 70, 121, 0.25);
+}
+
