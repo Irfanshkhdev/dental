@@ -123,10 +123,10 @@ def contact(request):
 # ==========================================
 
 def crm_login(request):
-    next_url = request.GET.get('next', '/crm/today/')
+    next_url = request.GET.get('next', '/crm/dashboard/')
 
     if request.user.is_authenticated:
-        return redirect('crm_today')
+        return redirect('crm_dashboard')
 
     if request.method == 'POST':
         identifier = request.POST.get('identifier', '').strip()
@@ -143,7 +143,7 @@ def crm_login(request):
             login(request, user_obj)
             log_audit(request, 'LOGIN', 'User', user_obj.id, f"Super-Admin signed in: {user_obj.email}")
             messages.success(request, "Welcome back, Clinic Director Irfan Shaikh!")
-            return redirect(next_url if next_url != '/crm/login/' else 'crm_today')
+            return redirect(next_url if next_url != '/crm/login/' else 'crm_dashboard')
 
         # Support login via email or username
         user_obj = User.objects.filter(email__iexact=identifier).first() or User.objects.filter(username__iexact=identifier).first()
@@ -152,7 +152,7 @@ def crm_login(request):
             login(request, user_obj)
             log_audit(request, 'LOGIN', 'User', user_obj.id, f"Staff signed in: {user_obj.email}")
             messages.success(request, f"Welcome back, {user_obj.clinic_staff_profile.full_name if hasattr(user_obj, 'clinic_staff_profile') else user_obj.username}!")
-            return redirect(next_url if next_url != '/crm/login/' else 'crm_today')
+            return redirect(next_url if next_url != '/crm/login/' else 'crm_dashboard')
         else:
             messages.error(request, "Invalid email or password. Please verify credentials.")
 
@@ -193,11 +193,11 @@ def crm_quick_switch(request, target_role):
 
 def crm_hub(request):
     """
-    Central dispatcher: directs authenticated staff directly to Today's Desk.
+    Central dispatcher: directs authenticated staff directly to the Executive Dashboard.
     """
     if not request.user.is_authenticated:
         return redirect('crm_login')
-    return redirect('crm_today')
+    return redirect('crm_dashboard')
 
 
 # ==========================================
@@ -1177,6 +1177,75 @@ def api_update_request_status(request, pk):
 # STREAMLINED CLINIC SAAS CRM (MONOCHROMATIC LUXURY 4-TAB ARCHITECTURE)
 # ==============================================================================
 
+def crm_dashboard(request):
+    """
+    Executive Overview Dashboard & Command Deck
+    Displays:
+    - Real-time Clinic KPI Metrics (Footfall, Collections, Pending Web Requests, Receivables)
+    - Quick Action Command Center (Quick Bill, Walk-in, Schedule Recall, Lock Desk)
+    - Practice Performance Split (Roots Dental vs Buds Child Clinic)
+    - Priority Action Items (Pending Booking Requests & Today's Schedule)
+    - Live Financial Settlement Feed
+    """
+    if not request.user.is_authenticated:
+        return redirect(f"/crm/login/?next={request.path}")
+
+    today = datetime.date.today()
+
+    # 1. Appointment Counts
+    pending_qs = AppointmentRequest.objects.filter(status='pending').order_by('-created_at')
+    upcoming_qs = AppointmentRequest.objects.filter(status='accepted').order_by('preferred_date', 'preferred_time')
+    completed_qs = AppointmentRequest.objects.filter(status='completed').order_by('-id')
+
+    dental_today_count = upcoming_qs.filter(clinic_type='dental').count() + completed_qs.filter(clinic_type='dental').count()
+    pediatric_today_count = upcoming_qs.filter(clinic_type='pediatric').count() + completed_qs.filter(clinic_type='pediatric').count()
+    total_today_count = upcoming_qs.count() + completed_qs.count()
+
+    # 2. Invoices & Revenue
+    all_invoices = Invoice.objects.select_related('patient').all().order_by('-created_at')
+    today_invoices = [inv for inv in all_invoices if inv.created_at.date() == today]
+
+    today_collection = sum((inv.paid_amount for inv in today_invoices), Decimal('0.00'))
+    upi_today = sum((inv.paid_amount for inv in today_invoices if inv.payment_method == 'upi'), Decimal('0.00'))
+    cash_today = sum((inv.paid_amount for inv in today_invoices if inv.payment_method == 'cash'), Decimal('0.00'))
+    total_dues = sum((inv.balance_due for inv in all_invoices), Decimal('0.00'))
+
+    dental_today_revenue = sum((inv.paid_amount for inv in today_invoices if inv.clinic_type == 'dental'), Decimal('0.00'))
+    pediatric_today_revenue = sum((inv.paid_amount for inv in today_invoices if inv.clinic_type == 'pediatric'), Decimal('0.00'))
+
+    # 3. Patients & Recalls
+    all_patients = Patient.objects.all()
+    dental_patients_count = all_patients.filter(is_child=False).count()
+    pediatric_patients_count = all_patients.filter(is_child=True).count()
+    reminders = ScheduledReminder.objects.filter(status='queued').order_by('target_date', 'target_time')
+
+    context = {
+        'active_tab': 'dashboard',
+        # KPI Metrics
+        'total_today_count': total_today_count,
+        'dental_today_count': dental_today_count,
+        'pediatric_today_count': pediatric_today_count,
+        'completed_today_count': completed_qs.count(),
+        'pending_requests_count': pending_qs.count(),
+        'today_collection': today_collection,
+        'upi_today': upi_today,
+        'cash_today': cash_today,
+        'total_dues': total_dues,
+        'dental_today_revenue': dental_today_revenue,
+        'pediatric_today_revenue': pediatric_today_revenue,
+        'total_patients_count': all_patients.count(),
+        'dental_patients_count': dental_patients_count,
+        'pediatric_patients_count': pediatric_patients_count,
+        'queued_reminders_count': reminders.count(),
+        # Action Queues
+        'pending_requests': pending_qs[:4],
+        'upcoming_appointments': upcoming_qs[:6],
+        'recent_invoices': all_invoices[:5],
+        'patients': all_patients.order_by('full_name'),
+    }
+    return render(request, 'crm/dashboard.html', context)
+
+
 def crm_today_desk(request):
     """
     Tab 1: Today's Desk
@@ -1187,11 +1256,22 @@ def crm_today_desk(request):
     if not request.user.is_authenticated:
         return redirect(f"/crm/login/?next={request.path}")
 
+    today = datetime.date.today()
     wing_filter = request.GET.get('wing', 'all')
 
     pending_qs = AppointmentRequest.objects.filter(status='pending').order_by('-created_at')
     upcoming_qs = AppointmentRequest.objects.filter(status='accepted').order_by('preferred_date', 'preferred_time')
     completed_qs = AppointmentRequest.objects.filter(status='completed').order_by('-id')
+
+    dental_today_count = upcoming_qs.filter(clinic_type='dental').count() + completed_qs.filter(clinic_type='dental').count()
+    pediatric_today_count = upcoming_qs.filter(clinic_type='pediatric').count() + completed_qs.filter(clinic_type='pediatric').count()
+    total_today_count = upcoming_qs.count() + completed_qs.count()
+
+    # Invoices for today's collection metrics
+    all_invoices = Invoice.objects.select_related('patient').all().order_by('-created_at')
+    today_invoices = [inv for inv in all_invoices if inv.created_at.date() == today]
+    today_collection = sum((inv.paid_amount for inv in today_invoices), Decimal('0.00'))
+    total_dues = sum((inv.balance_due for inv in all_invoices), Decimal('0.00'))
 
     if wing_filter in ['dental', 'pediatric']:
         pending_qs = pending_qs.filter(clinic_type=wing_filter)
@@ -1209,6 +1289,11 @@ def crm_today_desk(request):
         'pending_count': pending_qs.count(),
         'upcoming_count': upcoming_qs.count(),
         'completed_count': completed_qs.count(),
+        'total_today_count': total_today_count,
+        'dental_today_count': dental_today_count,
+        'pediatric_today_count': pediatric_today_count,
+        'today_collection': today_collection,
+        'total_dues': total_dues,
         'patients': patients,
     }
     return render(request, 'crm/today_desk.html', context)

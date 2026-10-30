@@ -335,9 +335,6 @@
     }
   };
 
-    window.goToBookingStep(inPageStep);
-  };
-
 
   // -------------------------------------------------------------
   // 3. PROGRESSIVE STEPPER: MOBILE MODAL BOOKING SHEET
@@ -797,65 +794,69 @@
   // -------------------------------------------------------------
   // 7. HEADER & NAVIGATION BUTTON INTERCEPTORS
   // -------------------------------------------------------------
+  window.handleBookAppointmentClick = function (e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const path = window.location.pathname;
+    const clinic = path.includes('pediatric') ? 'pediatric' : 'dental';
+    if (window.innerWidth < 768) {
+      window.openBookingModal(clinic);
+    } else {
+      const bookingWrapper = document.getElementById('booking-wrapper');
+      if (bookingWrapper) {
+        window.scrollToBooking(clinic);
+      } else {
+        window.openBookingModal(clinic);
+      }
+    }
+  };
+
   function setupBookingButtonInterceptors() {
     const headerBtn = document.getElementById('header-book-btn');
     const mobileBottomBtn = document.getElementById('mobile-bottom-book-btn');
     const mobileDrawerBtn = document.getElementById('mobile-drawer-book-btn');
 
     if (headerBtn) {
-      headerBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        const path = window.location.pathname;
-        const clinic = path.includes('pediatric') ? 'pediatric' : 'dental';
-        if (window.innerWidth < 768) {
-          window.openBookingModal(clinic);
-        } else {
-          window.scrollToBooking(clinic);
-        }
-      });
+      headerBtn.onclick = window.handleBookAppointmentClick;
     }
-
     if (mobileBottomBtn) {
-      mobileBottomBtn.addEventListener('click', function (e) {
-        e.preventDefault();
+      mobileBottomBtn.onclick = function (e) {
+        if (e && e.preventDefault) e.preventDefault();
         const path = window.location.pathname;
         const clinic = path.includes('pediatric') ? 'pediatric' : 'dental';
         window.openBookingModal(clinic);
-      });
+      };
     }
-
     if (mobileDrawerBtn) {
-      mobileDrawerBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        closeMobileDrawer();
+      mobileDrawerBtn.onclick = function (e) {
+        if (e && e.preventDefault) e.preventDefault();
+        window.closeMobileDrawer();
         const path = window.location.pathname;
         const clinic = path.includes('pediatric') ? 'pediatric' : 'dental';
         setTimeout(() => {
           window.openBookingModal(clinic);
         }, 150);
-      });
+      };
     }
   }
 
 
   // -------------------------------------------------------------
-  // 8. MOBILE DRAWER NAVIGATION
+  // 8. MOBILE DRAWER NAVIGATION (BULLETPROOF ON-DEMAND LOOKUP)
   // -------------------------------------------------------------
-  const drawer = document.getElementById('mobile-drawer');
-  const drawerSheet = document.getElementById('mobile-drawer-sheet');
-  const openBtn = document.getElementById('mobile-menu-open');
-  const closeBtn = document.getElementById('mobile-menu-close');
-  const backdrop = document.getElementById('mobile-drawer-backdrop');
-
-  function openMobileDrawer() {
+  window.openMobileDrawer = function () {
+    const drawer = document.getElementById('mobile-drawer');
+    const drawerSheet = document.getElementById('mobile-drawer-sheet');
     if (!drawer || !drawerSheet) return;
     drawer.classList.remove('pointer-events-none', 'opacity-0');
     drawer.classList.add('opacity-100');
     drawerSheet.classList.remove('translate-x-full');
     drawerSheet.classList.add('translate-x-0');
-  }
+    document.body.style.overflow = 'hidden';
+  };
 
-  function closeMobileDrawer() {
+  window.closeMobileDrawer = function () {
+    const drawer = document.getElementById('mobile-drawer');
+    const drawerSheet = document.getElementById('mobile-drawer-sheet');
     if (!drawer || !drawerSheet) return;
     drawerSheet.classList.remove('translate-x-0');
     drawerSheet.classList.add('translate-x-full');
@@ -863,20 +864,43 @@
     drawer.classList.add('opacity-0');
     setTimeout(() => {
       drawer.classList.add('pointer-events-none');
-    }, 300);
-  }
+      document.body.style.overflow = '';
+    }, 250);
+  };
 
-  if (openBtn) openBtn.addEventListener('click', openMobileDrawer);
-  if (closeBtn) closeBtn.addEventListener('click', closeMobileDrawer);
-  if (backdrop) backdrop.addEventListener('click', closeMobileDrawer);
-
-  window.openMobileDrawer = openMobileDrawer;
-  window.closeMobileDrawer = closeMobileDrawer;
+  // Document-Level Delegation (Guarantees every button works immediately)
+  document.addEventListener('click', function (e) {
+    const openTrigger = e.target.closest('#mobile-menu-open');
+    if (openTrigger) {
+      e.preventDefault();
+      window.openMobileDrawer();
+      return;
+    }
+    const closeTrigger = e.target.closest('#mobile-menu-close, #mobile-drawer-backdrop');
+    if (closeTrigger) {
+      e.preventDefault();
+      window.closeMobileDrawer();
+      return;
+    }
+    const bookTrigger = e.target.closest('#header-book-btn');
+    if (bookTrigger) {
+      e.preventDefault();
+      window.handleBookAppointmentClick(e);
+      return;
+    }
+    const drawerBookTrigger = e.target.closest('#mobile-drawer-book-btn');
+    if (drawerBookTrigger) {
+      e.preventDefault();
+      window.closeMobileDrawer();
+      setTimeout(() => window.openBookingModal(), 150);
+      return;
+    }
+  });
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
       window.closeBookingModal();
-      closeMobileDrawer();
+      window.closeMobileDrawer();
     }
   });
 

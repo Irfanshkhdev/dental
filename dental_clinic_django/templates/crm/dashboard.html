@@ -1,0 +1,541 @@
+{% extends 'crm/base_crm.html' %}
+
+{% block page_title %}Executive Overview Dashboard{% endblock %}
+
+{% block header_actions %}
+<div class="flex items-center gap-2">
+  <button type="button" onclick="openQuickBillModal()" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-all flex items-center gap-1.5 shadow-sm">
+    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+    + Quick Bill
+  </button>
+  <a href="{% url 'crm_whatsapp' %}" class="px-3 py-1.5 rounded-xl text-xs font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-all flex items-center gap-1.5 shadow-sm">
+    <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+    Recall Hub
+  </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-6">
+
+  <!-- ============================================================== -->
+  <!-- 1. TOP EXECUTIVE CLINIC KPI METRICS STRIP                      -->
+  <!-- ============================================================== -->
+  <section class="grid grid-cols-2 md:grid-cols-5 gap-3.5">
+    
+    <!-- Footfall -->
+    <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Today's Footfall</span>
+        <span class="w-2 h-2 rounded-full bg-slate-900"></span>
+      </div>
+      <div class="mt-2">
+        <div class="text-2xl font-bold text-slate-900 font-mono">{{ total_today_count }}</div>
+        <div class="text-[11px] text-slate-500 mt-0.5">
+          {{ dental_today_count }} Dental &bull; {{ pediatric_today_count }} Pediatric
+        </div>
+      </div>
+    </div>
+
+    <!-- Revenue -->
+    <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Today's Collection</span>
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+      </div>
+      <div class="mt-2">
+        <div class="text-2xl font-bold text-slate-900 font-mono">₹{{ today_collection|floatformat:0 }}</div>
+        <div class="text-[11px] text-slate-500 mt-0.5">
+          ₹{{ upi_today|floatformat:0 }} UPI &bull; ₹{{ cash_today|floatformat:0 }} Cash
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending Requests -->
+    <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Web Requests</span>
+        {% if pending_requests_count > 0 %}
+          <span class="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-slate-900 text-white animate-pulse">Action</span>
+        {% endif %}
+      </div>
+      <div class="mt-2">
+        <div class="text-2xl font-bold text-slate-900 font-mono">{{ pending_requests_count }}</div>
+        <div class="text-[11px] text-slate-500 mt-0.5">
+          {% if pending_requests_count > 0 %}Requires Confirmation{% else %}All Reviewed &check;{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Outstanding Dues -->
+    <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Patient Dues</span>
+        {% if total_dues > 0 %}
+          <span class="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-rose-50 text-rose-700 border border-rose-200">Pending</span>
+        {% endif %}
+      </div>
+      <div class="mt-2">
+        <div class="text-2xl font-bold text-rose-600 font-mono">₹{{ total_dues|floatformat:0 }}</div>
+        <div class="text-[11px] text-slate-500 mt-0.5">Unsettled Balances</div>
+      </div>
+    </div>
+
+    <!-- Recalls Queued -->
+    <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col justify-between col-span-2 md:col-span-1">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">WhatsApp Recalls</span>
+        <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+      </div>
+      <div class="mt-2">
+        <div class="text-2xl font-bold text-slate-900 font-mono">{{ queued_reminders_count }}</div>
+        <div class="text-[11px] text-slate-500 mt-0.5">Scheduled Follow-ups</div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- 2. QUICK ACTION COMMAND CENTER (1-CLICK SPEED OPS)            -->
+  <!-- ============================================================== -->
+  <section class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+    <div class="flex items-center gap-2">
+      <span class="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-xs">⚡</span>
+      <div>
+        <div class="text-xs font-semibold text-slate-900">Quick Command Actions</div>
+        <div class="text-[11px] text-slate-400">1-Click high-frequency clinic desk operations</div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 flex-wrap">
+      <button onclick="openQuickBillModal()" type="button" class="px-3 py-1.5 rounded-xl text-xs font-medium text-slate-800 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-all flex items-center gap-1.5 shadow-2xs">
+        <svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
+        Generate Bill
+      </button>
+
+      <a href="{% url 'crm_today' %}" class="px-3 py-1.5 rounded-xl text-xs font-medium text-slate-800 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-all flex items-center gap-1.5 shadow-2xs">
+        <svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        Today's Schedule ({{ total_today_count }})
+      </a>
+
+      <a href="{% url 'crm_whatsapp' %}" class="px-3 py-1.5 rounded-xl text-xs font-medium text-slate-800 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-all flex items-center gap-1.5 shadow-2xs">
+        <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+        Dispatch Recalls
+      </a>
+
+      <button onclick="openLockScreen()" type="button" class="px-3 py-1.5 rounded-xl text-xs font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-all flex items-center gap-1.5 shadow-2xs" title="Lock Screen (Ctrl+L)">
+        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        Lock Desk
+      </button>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- 3. DUAL PRACTICE PERFORMANCE SPLIT                             -->
+  <!-- ============================================================== -->
+  <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    
+    <!-- Roots Dental Practice Card -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm relative overflow-hidden group">
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-sm">
+            RD
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-slate-900">Roots Dental Clinic</h3>
+            <div class="text-[11px] text-slate-500 font-medium">Dr. Sabina Firoj Shaikh &bull; MDS Gold Medalist</div>
+          </div>
+        </div>
+        <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-800">
+          Dental Practice
+        </span>
+      </div>
+
+      <div class="mt-4 grid grid-cols-3 gap-3 pt-3 border-t border-slate-100 text-xs">
+        <div>
+          <div class="text-slate-400 text-[10px]">Today's Patients</div>
+          <div class="font-bold text-slate-900 text-base font-mono mt-0.5">{{ dental_today_count }}</div>
+        </div>
+        <div>
+          <div class="text-slate-400 text-[10px]">Today's Revenue</div>
+          <div class="font-bold text-slate-900 text-base font-mono mt-0.5">₹{{ dental_today_revenue|floatformat:0 }}</div>
+        </div>
+        <div>
+          <div class="text-slate-400 text-[10px]">Active Registry</div>
+          <div class="font-bold text-slate-900 text-base font-mono mt-0.5">{{ dental_patients_count }}</div>
+        </div>
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+        <span class="text-[11px] text-slate-400">Hours: Mon-Sat 11am-2pm &bull; 6pm-8:30pm</span>
+        <a href="{% url 'crm_today' %}?wing=dental" class="font-semibold text-slate-900 hover:underline inline-flex items-center gap-1">
+          Open Dental Desk &rarr;
+        </a>
+      </div>
+    </div>
+
+    <!-- Buds Child Practice Card -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm relative overflow-hidden group">
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-sm">
+            BC
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-slate-900">Buds Child Clinic</h3>
+            <div class="text-[11px] text-slate-500 font-medium">Dr. Jalil S. Mujawar &bull; MBBS, DNB(Pediatrics), MNAMS</div>
+          </div>
+        </div>
+        <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-800">
+          Pediatric Practice
+        </span>
+      </div>
+
+      <div class="mt-4 grid grid-cols-3 gap-3 pt-3 border-t border-slate-100 text-xs">
+        <div>
+          <div class="text-slate-400 text-[10px]">Today's Patients</div>
+          <div class="font-bold text-slate-900 text-base font-mono mt-0.5">{{ pediatric_today_count }}</div>
+        </div>
+        <div>
+          <div class="text-slate-400 text-[10px]">Today's Revenue</div>
+          <div class="font-bold text-slate-900 text-base font-mono mt-0.5">₹{{ pediatric_today_revenue|floatformat:0 }}</div>
+        </div>
+        <div>
+          <div class="text-slate-400 text-[10px]">Active Registry</div>
+          <div class="font-bold text-slate-900 text-base font-mono mt-0.5">{{ pediatric_patients_count }}</div>
+        </div>
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+        <span class="text-[11px] text-slate-400">Hours: Mon-Fri 5:30pm-8:30pm &bull; Sat 10am-1pm</span>
+        <a href="{% url 'crm_today' %}?wing=pediatric" class="font-semibold text-slate-900 hover:underline inline-flex items-center gap-1">
+          Open Pediatric Desk &rarr;
+        </a>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- 4. TWO-COLUMN OPERATIONAL ARENA                                -->
+  <!-- ============================================================== -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- LEFT 2 COLUMNS: PRIORITY ACTION QUEUES -->
+    <div class="lg:col-span-2 space-y-6">
+      
+      <!-- Pending Website Booking Requests -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <h3 class="text-sm font-semibold text-slate-900">Website Booking Queue</h3>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold {% if pending_requests_count > 0 %}bg-slate-900 text-white{% else %}bg-slate-100 text-slate-500{% endif %}">
+              {{ pending_requests_count }} Pending
+            </span>
+          </div>
+          <a href="{% url 'crm_today' %}" class="text-xs text-slate-500 hover:text-slate-900 underline">View Full Queue &rarr;</a>
+        </div>
+
+        {% if pending_requests %}
+          <div class="space-y-2.5">
+            {% for req in pending_requests %}
+              <div id="dash-req-{{ req.id }}" class="p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-semibold text-xs text-slate-900">{{ req.patient_name }}</span>
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-200 text-slate-800">
+                      {{ req.clinic_display_name }}
+                    </span>
+                  </div>
+                  <div class="text-[11px] text-slate-500 mt-0.5">
+                    {{ req.service_needed }} &bull; {{ req.preferred_date }} ({{ req.preferred_time }})
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2 self-end sm:self-center">
+                  <button onclick="handleAppointmentAction({{ req.id }}, 'accept')" type="button"
+                          class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-all flex items-center gap-1 shadow-sm">
+                    &check; Accept
+                  </button>
+                  <a href="tel:{{ req.phone_number }}" class="p-1.5 text-slate-400 hover:text-slate-900 rounded">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                  </a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="p-6 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-xl">
+            All website booking requests have been reviewed and confirmed.
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Today's Upcoming Schedule -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-sm font-semibold text-slate-900">Today's Appointment Schedule</h3>
+            <p class="text-xs text-slate-400">Confirmed patient visits scheduled for today</p>
+          </div>
+          <a href="{% url 'crm_today' %}" class="text-xs text-slate-500 hover:text-slate-900 underline">Manage Schedule &rarr;</a>
+        </div>
+
+        {% if upcoming_appointments %}
+          <div class="divide-y divide-slate-100">
+            {% for appt in upcoming_appointments %}
+              <div class="py-3 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-semibold text-slate-900">{{ appt.patient_name }}</span>
+                      <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">
+                        {{ appt.clinic_display_name }}
+                      </span>
+                    </div>
+                    <div class="text-[11px] text-slate-500 mt-0.5">
+                      {{ appt.preferred_time|default:"11:00 AM" }} &bull; {{ appt.service_needed }}
+                    </div>
+                  </div>
+                </div>
+
+                <button onclick="openQuickBillModalWithData('{{ appt.patient_name|escapejs }}', '{{ appt.clinic_type|escapejs }}', '{{ appt.service_needed|escapejs }}')" type="button"
+                        class="px-2.5 py-1 rounded-lg text-xs font-medium text-slate-700 bg-white border border-slate-200 hover:border-slate-900 hover:text-slate-900 transition-all shadow-xs">
+                  Generate Bill &rarr;
+                </button>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="p-6 text-center text-xs text-slate-400">
+            No remaining upcoming appointments for today.
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- RIGHT 1 COLUMN: FINANCIAL SNAPSHOT & CLINIC TIMINGS -->
+    <div class="space-y-6">
+      
+      <!-- Recent Ledger Feed -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-semibold text-slate-900">Recent Transactions</h3>
+          <a href="{% url 'crm_billing' %}" class="text-xs text-slate-500 hover:text-slate-900 underline">All Ledger &rarr;</a>
+        </div>
+
+        <div class="space-y-3">
+          {% for inv in recent_invoices %}
+            <div class="p-3 rounded-xl border border-slate-200/80 bg-slate-50/50 flex items-center justify-between">
+              <div>
+                <div class="font-semibold text-xs text-slate-900">{{ inv.patient.full_name }}</div>
+                <div class="text-[10px] text-slate-400 font-mono mt-0.5">{{ inv.invoice_no }} &bull; {{ inv.get_payment_method_display }}</div>
+              </div>
+              <div class="text-right">
+                <div class="font-bold text-xs text-slate-900 font-mono">₹{{ inv.paid_amount|floatformat:0 }}</div>
+                <div class="text-[10px] text-emerald-600 font-medium">{{ inv.get_payment_status_display }}</div>
+              </div>
+            </div>
+          {% empty %}
+            <div class="p-4 text-center text-xs text-slate-400">No invoices generated yet.</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Quick Clinic Reference -->
+      <div class="bg-slate-900 text-white p-5 rounded-2xl shadow-sm space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-300">Wanowrie Sanctuary Desk</span>
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        </div>
+        
+        <div class="text-xs text-slate-300 space-y-2 pt-1">
+          <div>
+            <strong class="text-white">Roots Dental:</strong> Mon–Sat 11:00 AM – 2:00 PM &amp; 6:00 PM – 8:30 PM.
+          </div>
+          <div>
+            <strong class="text-white">Buds Child:</strong> Mon–Fri 5:30 PM – 8:30 PM &bull; Sat 10:00 AM – 1:00 PM &amp; 5:30 PM – 8:30 PM.
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+          <span>Helpline: +91 99212 31399</span>
+          <a href="{% url 'home' %}" target="_blank" class="text-slate-300 hover:text-white underline">Live Site</a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Quick Bill Modal -->
+<div id="quick-bill-modal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center hidden">
+  <div class="w-full max-w-lg bg-white rounded-2xl p-6 shadow-2xl border border-slate-200 text-left">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+      <div>
+        <h3 class="text-sm font-semibold text-slate-900">Generate Patient Bill</h3>
+        <p class="text-[11px] text-slate-400">Record invoice &amp; dispatch instant receipt</p>
+      </div>
+      <button onclick="closeQuickBillModal()" class="text-slate-400 hover:text-slate-700">&times;</button>
+    </div>
+
+    <form id="quick-bill-form" onsubmit="submitQuickBill(event)" class="mt-4 space-y-3">
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">Patient Name</label>
+        <input type="text" id="bill-patient-name" required placeholder="Patient full name"
+               class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900">
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Practice Wing</label>
+          <select id="bill-clinic-type" onchange="handleBillWingChange()" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900">
+            <option value="dental">Roots Dental Clinic</option>
+            <option value="pediatric">Buds Child Clinic</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Consulting Doctor</label>
+          <input type="text" id="bill-doctor-name" value="Dr. Sabina Firoj Shaikh" readonly
+                 class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50 text-slate-700">
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">Treatment / Service</label>
+        <input type="text" id="bill-treatment" required value="Clinical Consultation"
+               class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900">
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Total Amount (₹)</label>
+          <input type="number" id="bill-amount" required step="100" min="0" value="800"
+                 class="w-full px-3 py-2 text-xs font-semibold rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Payment Method</label>
+          <select id="bill-mode" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900">
+            <option value="upi">UPI (GPay / PhonePe)</option>
+            <option value="cash">Cash</option>
+            <option value="card">Card</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pt-4 flex items-center justify-end gap-2 border-t border-slate-100">
+        <button type="button" onclick="closeQuickBillModal()" class="px-3 py-1.5 rounded-xl text-xs font-medium text-slate-600 hover:text-slate-900">
+          Cancel
+        </button>
+        <button type="button" onclick="triggerQuickBillSave(false)" class="px-3 py-1.5 rounded-xl text-xs font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 shadow-sm">
+          Save Only
+        </button>
+        <button type="button" onclick="triggerQuickBillSave(true)" class="px-4 py-1.5 rounded-xl text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-all flex items-center gap-1.5 shadow-sm">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+          Save &amp; WhatsApp Receipt
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  function openQuickBillModal() {
+    document.getElementById('quick-bill-modal').classList.remove('hidden');
+  }
+
+  function openQuickBillModalWithData(name, wing, service) {
+    document.getElementById('bill-patient-name').value = name || '';
+    const wingSelect = document.getElementById('bill-clinic-type');
+    if (wingSelect) wingSelect.value = wing || 'dental';
+    handleBillWingChange();
+    if (service) document.getElementById('bill-treatment').value = service;
+    openQuickBillModal();
+  }
+
+  function closeQuickBillModal() {
+    document.getElementById('quick-bill-modal').classList.add('hidden');
+  }
+
+  function handleBillWingChange() {
+    const wing = document.getElementById('bill-clinic-type').value;
+    const doc = document.getElementById('bill-doctor-name');
+    if (doc) {
+      doc.value = wing === 'dental' ? 'Dr. Sabina Firoj Shaikh' : 'Dr. Jalil S. Mujawar';
+    }
+  }
+
+  async function triggerQuickBillSave(sendWhatsApp) {
+    const name = document.getElementById('bill-patient-name').value.trim();
+    if (!name) {
+      showToast('Please enter patient name', 'error');
+      return;
+    }
+    const wing = document.getElementById('bill-clinic-type').value;
+    const doctor = document.getElementById('bill-doctor-name').value;
+    const treatment = document.getElementById('bill-treatment').value;
+    const amount = document.getElementById('bill-amount').value;
+    const mode = document.getElementById('bill-mode').value;
+
+    try {
+      const res = await fetch('/crm/api/bill/create/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          patient_name: name,
+          clinic_type: wing,
+          doctor_name: doctor,
+          treatment: treatment,
+          total_amount: amount,
+          paid_amount: amount,
+          payment_method: mode,
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        closeQuickBillModal();
+        showToast(`Invoice ${data.invoice_no} generated for ${name}`);
+        if (sendWhatsApp && data.whatsapp_url) {
+          window.open(data.whatsapp_url, '_blank');
+        }
+        setTimeout(() => location.reload(), 1200);
+      } else {
+        showToast(data.error || 'Failed to create bill', 'error');
+      }
+    } catch (e) {
+      showToast('Network error while creating bill', 'error');
+    }
+  }
+
+  async function handleAppointmentAction(id, action) {
+    try {
+      const res = await fetch(`/crm/api/appointment/${id}/status/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: action })
+      });
+      const data = await res.json();
+      if (data.success) {
+        const card = document.getElementById(`dash-req-${id}`);
+        if (card) card.remove();
+        showToast(`Accepted booking for ${data.patient_name}`);
+        if (data.whatsapp_url) {
+          window.open(data.whatsapp_url, '_blank');
+        }
+        setTimeout(() => location.reload(), 1200);
+      } else {
+        showToast(data.error || 'Action failed', 'error');
+      }
+    } catch (e) {
+      showToast('Network error', 'error');
+    }
+  }
+</script>
+{% endblock %}

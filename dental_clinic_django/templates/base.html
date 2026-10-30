@@ -147,7 +147,7 @@
           <a href="tel:+919921231399" class="p-2.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition" title="Call Clinic (+91 99212 31399 / +91 94269 14747 / 020 46010398)">
             <i data-lucide="phone" class="w-4 h-4"></i>
           </a>
-          <button type="button" id="header-book-btn" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-heading font-bold text-white bg-slate-900 hover:bg-slate-800 shadow-sm active:scale-95 transition cursor-pointer">
+          <button type="button" id="header-book-btn" onclick="window.handleBookAppointmentClick(event)" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-heading font-bold text-white bg-slate-900 hover:bg-slate-800 shadow-sm active:scale-95 transition cursor-pointer">
             <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
             <span>Book Appointment</span>
           </button>
@@ -155,7 +155,7 @@
 
         <!-- Mobile Menu Trigger -->
         <div class="flex items-center gap-2 md:hidden">
-          <button type="button" id="mobile-menu-open" class="p-2.5 rounded-2xl bg-white text-slate-700 hover:text-slate-900 border border-slate-200/80 shadow-xs" aria-label="Open Navigation">
+          <button type="button" id="mobile-menu-open" onclick="window.openMobileDrawer()" class="p-2.5 rounded-2xl bg-white text-slate-700 hover:text-slate-900 border border-slate-200/80 shadow-xs cursor-pointer" aria-label="Open Navigation">
             <i data-lucide="menu" class="w-5 h-5"></i>
           </button>
         </div>
@@ -166,14 +166,14 @@
 
   <!-- Mobile Drawer Menu (Sleek Minimalist Navigation) -->
   <div id="mobile-drawer" class="fixed inset-0 z-50 pointer-events-none transition-opacity duration-300 opacity-0 md:hidden">
-    <div id="mobile-drawer-backdrop" class="absolute inset-0 bg-slate-950/40 backdrop-blur-sm"></div>
+    <div id="mobile-drawer-backdrop" onclick="window.closeMobileDrawer()" class="absolute inset-0 bg-slate-950/40 backdrop-blur-sm cursor-pointer"></div>
     <div id="mobile-drawer-sheet" class="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white backdrop-blur-2xl shadow-2xl p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300 ease-out border-l border-slate-100">
       <div>
         <div class="flex items-center justify-between pb-6 border-b border-slate-100">
           <div class="flex items-center gap-2">
             <span class="font-heading font-bold text-slate-900 text-lg">Roots &amp; <span class="text-pediatric-700">Buds</span></span>
           </div>
-          <button type="button" id="mobile-menu-close" class="p-2 rounded-xl text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition" aria-label="Close Navigation">
+          <button type="button" id="mobile-menu-close" onclick="window.closeMobileDrawer()" class="p-2 rounded-xl text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition cursor-pointer" aria-label="Close Navigation">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
@@ -213,7 +213,7 @@
       </div>
 
       <div class="pt-6 border-t border-slate-100 space-y-3">
-        <button type="button" id="mobile-drawer-book-btn" class="w-full py-3.5 px-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-heading font-bold text-sm shadow-md flex items-center justify-center gap-2 cursor-pointer">
+        <button type="button" id="mobile-drawer-book-btn" onclick="window.closeMobileDrawer(); setTimeout(function(){ window.openBookingModal(); }, 150);" class="w-full py-3.5 px-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-heading font-bold text-sm shadow-md flex items-center justify-center gap-2 cursor-pointer">
           <i data-lucide="calendar" class="w-4 h-4"></i>
           <span>Book Appointment</span>
         </button>
@@ -583,7 +583,7 @@
   </div>
 
   <!-- Global Application Scripts -->
-  <script src="{% static 'js/main.js' %}?v=3.2"></script>
+  <script src="{% static 'js/main.js' %}?v=3.5"></script>
   <script>
     if (window.lucide && typeof window.lucide.createIcons === 'function') {
       lucide.createIcons();

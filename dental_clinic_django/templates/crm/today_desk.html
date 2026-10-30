@@ -23,6 +23,32 @@
 <div class="max-w-7xl mx-auto space-y-6">
 
   <!-- ============================================================== -->
+  <!-- TOP DASHBOARD SUMMARY METRICS STRIP                            -->
+  <!-- ============================================================== -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+    <div class="bg-white p-3.5 rounded-2xl border border-slate-200/90 shadow-sm">
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">Today's Footfall</div>
+      <div class="text-xl font-bold text-slate-900 font-mono mt-1">{{ total_today_count }} <span class="text-xs font-normal text-slate-500">patients</span></div>
+      <div class="text-[10px] text-slate-400 mt-0.5">{{ dental_today_count }} Dental &bull; {{ pediatric_today_count }} Pediatric</div>
+    </div>
+    <div class="bg-white p-3.5 rounded-2xl border border-slate-200/90 shadow-sm">
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">Today's Collection</div>
+      <div class="text-xl font-bold text-slate-900 font-mono mt-1">₹{{ today_collection|floatformat:0 }}</div>
+      <div class="text-[10px] text-emerald-600 mt-0.5 font-medium">Daily Inflow Recorded</div>
+    </div>
+    <div class="bg-white p-3.5 rounded-2xl border border-slate-200/90 shadow-sm">
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">Pending Bookings</div>
+      <div class="text-xl font-bold text-slate-900 font-mono mt-1">{{ pending_count }} <span class="text-xs font-normal text-slate-500">requests</span></div>
+      <div class="text-[10px] text-slate-400 mt-0.5">Online Website Inbox</div>
+    </div>
+    <div class="bg-white p-3.5 rounded-2xl border border-slate-200/90 shadow-sm">
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">Total Receivables</div>
+      <div class="text-xl font-bold text-rose-600 font-mono mt-1">₹{{ total_dues|floatformat:0 }}</div>
+      <div class="text-[10px] text-slate-400 mt-0.5">Pending Patient Dues</div>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
   <!-- 1. NEW BOOKING REQUESTS INBOX                                  -->
   <!-- ============================================================== -->
   <section class="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm">

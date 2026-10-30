@@ -23,10 +23,11 @@ urlpatterns = [
     path('crm/quick-switch/<str:target_role>/', views.crm_quick_switch, name='crm_quick_switch'),
 
     # ---------------------------------------------
-    # STREAMLINED CLINIC CRM & 4-TAB ARCHITECTURE
+    # EXECUTIVE DASHBOARD & STREAMLINED CRM TABS
     # ---------------------------------------------
-    path('crm/', views.crm_hub, name='crm_hub'),
-    path('crm-dashboard/', views.crm_hub, name='crm_dashboard_legacy'),
+    path('crm/', views.crm_dashboard, name='crm_hub'),
+    path('crm/dashboard/', views.crm_dashboard, name='crm_dashboard'),
+    path('crm-dashboard/', views.crm_dashboard, name='crm_dashboard_legacy'),
     path('crm/today/', views.crm_today_desk, name='crm_today'),
     path('crm/patients/', views.crm_patients_directory, name='crm_patients'),
     path('crm/billing/', views.crm_finance_billing, name='crm_billing'),

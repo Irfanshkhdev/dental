@@ -77,7 +77,7 @@
     
     <!-- Clinic Brand Header -->
     <div class="h-16 px-5 flex items-center justify-between border-b border-slate-100">
-      <a href="{% url 'crm_today' %}" class="flex items-center gap-3 group">
+      <a href="{% url 'crm_dashboard' %}" class="flex items-center gap-3 group">
         <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-xs tracking-wider shadow-sm group-hover:bg-slate-800 transition-colors">
           R&amp;B
         </div>
@@ -97,6 +97,14 @@
       <div class="px-2 pt-2 pb-1 text-[11px] font-medium text-slate-400 uppercase tracking-wider">
         Workspace
       </div>
+
+      <!-- Tab 0: Overview Dashboard -->
+      <a href="{% url 'crm_dashboard' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all {% if active_tab == 'dashboard' %}bg-slate-900 text-white shadow-sm{% else %}text-slate-600 hover:text-slate-900 hover:bg-slate-100/70{% endif %}">
+        <svg class="w-4 h-4 {% if active_tab == 'dashboard' %}text-white{% else %}text-slate-400{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+        </svg>
+        <span>Overview Dashboard</span>
+      </a>
 
       <!-- Tab 1: Today's Desk -->
       <a href="{% url 'crm_today' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all {% if active_tab == 'today' %}bg-slate-900 text-white shadow-sm{% else %}text-slate-600 hover:text-slate-900 hover:bg-slate-100/70{% endif %}">
