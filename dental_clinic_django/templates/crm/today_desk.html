@@ -179,7 +179,7 @@
       
       <!-- Upcoming Appointments -->
       {% for appt in upcoming_appointments %}
-        <div class="schedule-item schedule-upcoming py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 group">
+        <div id="appt-row-{{ appt.id }}" class="schedule-item schedule-upcoming py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 group transition-all">
           <div class="flex items-center gap-3">
             <span class="w-2 h-2 rounded-full bg-slate-400"></span>
             <div>
@@ -564,6 +564,27 @@
         const promptTitle = document.getElementById('billing-prompt-title');
         if (promptTitle) promptTitle.textContent = `Consultation completed for ${name}!`;
         if (promptBar) promptBar.classList.remove('hidden');
+
+        // Update DOM row immediately
+        const row = document.getElementById(`appt-row-${id}`);
+        if (row) {
+          row.classList.remove('schedule-upcoming');
+          row.classList.add('schedule-completed', 'opacity-75');
+          const nameSpan = row.querySelector('.text-slate-900');
+          if (nameSpan) nameSpan.classList.add('line-through', 'text-slate-500');
+          const actionsDiv = row.querySelector('.self-end, .sm\\:self-center');
+          if (actionsDiv) {
+            actionsDiv.innerHTML = `
+              <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 font-bold border border-emerald-200">
+                Completed &check;
+              </span>
+              <button onclick="openQuickBillModalWithData('${name.replace(/'/g, "\\'")}', '${wing}', '${service}')" type="button"
+                      class="px-2.5 py-1 rounded-lg text-xs font-medium text-slate-700 bg-slate-50 border border-slate-200 hover:bg-white hover:text-slate-900 transition-all cursor-pointer">
+                Receipt / Bill &rarr;
+              </button>
+            `;
+          }
+        }
       } else {
         showToast(data.error || 'Error marking appointment done', 'error');
       }

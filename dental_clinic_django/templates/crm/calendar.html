@@ -119,7 +119,7 @@
           {% for day in week %}
             <div onclick="openDayTimetable('{{ day.date_iso }}')"
                  id="day-cell-{{ day.date_iso }}"
-                 class="calendar-day-cell p-1.5 sm:p-2.5 transition-all cursor-pointer relative flex flex-col justify-between group {% if not day.is_current_month %}bg-slate-50/40 text-slate-300{% else %}hover:bg-slate-50/80{% endif %} {% if day.is_today %}ring-2 ring-inset ring-slate-900 bg-slate-50/60{% endif %}">
+                 class="calendar-day-cell p-1.5 sm:p-2.5 transition-all cursor-pointer relative flex flex-col justify-between group {% if not day.is_current_month %}bg-slate-50/40 text-slate-300{% else %}hover:bg-slate-50/80{% endif %} {% if day.is_today %}ring-2 ring-inset ring-slate-900 bg-slate-50/60{% endif %} {% if day.has_unaccepted %}border-2 border-rose-300 bg-rose-50/20{% endif %}">
               
               <!-- Day Top Row (Number & Badges) -->
               <div class="flex items-center justify-between mb-1">
@@ -127,22 +127,47 @@
                   {{ day.day_num }}
                 </span>
 
-                {% if day.appointments_count > 0 %}
-                  <span class="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-slate-900 text-white shadow-2xs">
-                    {{ day.appointments_count }}
-                  </span>
-                {% endif %}
+                <div class="flex items-center gap-1">
+                  {% if day.pending_count > 0 %}
+                    <span class="px-1.5 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-600 text-white shadow-xs animate-pulse" title="{{ day.pending_count }} unaccepted / pending bookings">
+                      🔴 {{ day.pending_count }} Pending
+                    </span>
+                  {% elif day.appointments_count > 0 %}
+                    <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-900 text-white shadow-2xs">
+                      {{ day.appointments_count }}
+                    </span>
+                  {% endif %}
+                </div>
               </div>
 
               <!-- Day Appointments Previews (Desktop Preview Chips) -->
               <div class="space-y-1 flex-1 overflow-hidden">
                 {% for appt in day.appointments|slice:":2" %}
-                  <div class="text-[10px] p-1 rounded-md truncate font-medium flex items-center gap-1 shadow-2xs {% if appt.clinic_type == 'dental' %}bg-slate-100 text-slate-900 border border-slate-200/80{% else %}bg-emerald-50 text-emerald-900 border border-emerald-200/60{% endif %}"
-                       title="{{ appt.patient_name }} - {{ appt.time }} ({{ appt.service }})">
-                    <span class="w-1.5 h-1.5 rounded-full flex-shrink-0 {% if appt.clinic_type == 'dental' %}bg-slate-800{% else %}bg-emerald-600{% endif %}"></span>
-                    <span class="truncate">{{ appt.patient_name }}</span>
-                    <span class="text-[9px] text-slate-400 ml-auto flex-shrink-0 font-mono">{{ appt.time|slice:":5" }}</span>
-                  </div>
+                  {% if appt.status == 'pending' %}
+                    <!-- RED Preview for Not Accepted Yet -->
+                    <div class="text-[10px] p-1 rounded-md truncate font-bold flex items-center gap-1 shadow-2xs bg-rose-50 text-rose-700 border border-rose-300"
+                         title="[NOT ACCEPTED YET] {{ appt.patient_name }} - {{ appt.time }} ({{ appt.service }})">
+                      <span class="w-2 h-2 rounded-full bg-rose-600 flex-shrink-0 animate-ping"></span>
+                      <span class="truncate">{{ appt.patient_name }}</span>
+                      <span class="text-[9px] font-extrabold text-rose-600 ml-auto flex-shrink-0">Pending</span>
+                    </div>
+                  {% elif appt.status == 'completed' %}
+                    <!-- Completed preview -->
+                    <div class="text-[10px] p-1 rounded-md truncate font-medium flex items-center gap-1 shadow-2xs bg-slate-100 text-slate-500 border border-slate-200 line-through"
+                         title="[COMPLETED] {{ appt.patient_name }} - {{ appt.time }}">
+                      <span class="w-1.5 h-1.5 rounded-full bg-slate-400 flex-shrink-0"></span>
+                      <span class="truncate">{{ appt.patient_name }}</span>
+                      <span class="text-[9px] text-slate-500 ml-auto flex-shrink-0">&check;</span>
+                    </div>
+                  {% else %}
+                    <!-- Confirmed preview -->
+                    <div class="text-[10px] p-1 rounded-md truncate font-medium flex items-center gap-1 shadow-2xs {% if appt.clinic_type == 'dental' %}bg-slate-100 text-slate-900 border border-slate-200/80{% else %}bg-emerald-50 text-emerald-900 border border-emerald-200/60{% endif %}"
+                         title="{{ appt.patient_name }} - {{ appt.time }} ({{ appt.service }})">
+                      <span class="w-1.5 h-1.5 rounded-full flex-shrink-0 {% if appt.clinic_type == 'dental' %}bg-slate-800{% else %}bg-emerald-600{% endif %}"></span>
+                      <span class="truncate">{{ appt.patient_name }}</span>
+                      <span class="text-[9px] text-slate-400 ml-auto flex-shrink-0 font-mono">{{ appt.time|slice:":5" }}</span>
+                    </div>
+                  {% endif %}
                 {% endfor %}
 
                 {% if day.appointments_count > 2 %}
@@ -317,23 +342,46 @@
         const badgeColor = isDental ? 'bg-slate-100 text-slate-800' : 'bg-emerald-50 text-emerald-800 border-emerald-200/60';
         
         let statusBadge = '';
-        if (a.status === 'accepted') {
-          statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Confirmed</span>`;
-        } else if (a.status === 'pending') {
-          statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">Pending Review</span>`;
+        let cardBorder = 'border-slate-200/90 bg-white';
+        let actionBtn = '';
+
+        if (a.status === 'pending') {
+          cardBorder = 'border-2 border-rose-400 bg-rose-50/60';
+          statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-600 text-white shadow-xs">🔴 NOT ACCEPTED YET</span>`;
+          actionBtn = `
+            <button type="button" onclick="acceptAppointmentFromCalendar(${a.id}, '${dateIso}')" class="px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-all flex items-center gap-1 shadow-xs cursor-pointer">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              ✓ Accept Booking
+            </button>
+          `;
+        } else if (a.status === 'accepted') {
+          cardBorder = 'border border-emerald-200 bg-emerald-50/30';
+          statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">🟢 Confirmed &amp; Scheduled</span>`;
+          actionBtn = `
+            <button type="button" onclick="markDoneFromCalendar(${a.id}, '${dateIso}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-all flex items-center gap-1 shadow-xs cursor-pointer">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              ✓ Mark Done
+            </button>
+          `;
         } else if (a.status === 'completed') {
-          statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-700">Completed</span>`;
+          cardBorder = 'border border-slate-200 bg-slate-50 opacity-80';
+          statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-900 text-white">✅ Completed Consultation</span>`;
+          actionBtn = `
+            <a href="/crm/billing/?patient_id=${a.patient_id || ''}" class="px-3 py-1.5 rounded-xl text-xs font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-all shadow-xs">
+              View Bill &rarr;
+            </a>
+          `;
         } else {
           statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-500">${a.status_display}</span>`;
         }
 
         return `
-          <div class="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all space-y-3">
+          <div class="p-4 rounded-2xl ${cardBorder} shadow-xs hover:border-slate-300 transition-all space-y-3">
             
             <!-- Time & Status Bar -->
             <div class="flex items-center justify-between pb-2 border-b border-slate-100 text-xs">
               <div class="flex items-center gap-2">
-                <span class="w-7 h-7 rounded-lg bg-slate-900 text-white font-mono font-bold text-xs flex items-center justify-center">
+                <span class="w-7 h-7 rounded-lg ${a.status === 'pending' ? 'bg-rose-600' : 'bg-slate-900'} text-white font-mono font-bold text-xs flex items-center justify-center">
                   #${idx + 1}
                 </span>
                 <span class="font-mono font-bold text-slate-900 text-sm">
@@ -354,6 +402,7 @@
                      class="text-sm font-bold text-slate-900 hover:text-indigo-600 hover:underline flex items-center gap-1.5 group cursor-pointer"
                      title="Click to open full file in Patients Directory">
                     <span>${a.patient_name}</span>
+                    <span class="text-[10px] font-normal ${a.status === 'pending' ? 'text-rose-600 font-semibold' : 'text-slate-400'}">(0 Visits / Directory Profile)</span>
                     <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                   </a>
                   ${a.parent_name ? `<div class="text-[11px] text-slate-400">Parent / Guardian: ${a.parent_name}</div>` : ''}
@@ -371,7 +420,7 @@
                   <span class="font-semibold text-slate-700">Doctor:</span>
                   <span>${a.doctor_name}</span>
                 </div>
-                ${a.notes ? `<div class="text-[11px] text-slate-500 italic bg-slate-50 p-2 rounded-lg mt-1">"${a.notes}"</div>` : ''}
+                ${a.notes ? `<div class="text-[11px] text-slate-500 italic bg-white/80 p-2 rounded-lg mt-1 border border-slate-100">"${a.notes}"</div>` : ''}
               </div>
             </div>
 
@@ -379,21 +428,17 @@
             <div class="pt-2 flex items-center justify-between gap-2 border-t border-slate-100">
               <a href="${patientDirectoryUrl}"
                  class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors flex items-center gap-1.5 cursor-pointer">
-                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                Open Patient File
+                 <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                 Open Patient File (0 Visits)
               </a>
 
               <div class="flex items-center gap-1.5">
                 <a href="${a.whatsapp_url}" target="_blank"
                    class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 transition-colors flex items-center gap-1">
-                  <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
                   WhatsApp
                 </a>
-
-                <a href="/crm/billing/?patient_id=${a.patient_id || ''}&patient_name=${encodeURIComponent(a.patient_name)}"
-                   class="p-1.5 text-slate-400 hover:text-slate-900 rounded-lg hover:bg-slate-100" title="Generate Bill">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
-                </a>
+                ${actionBtn}
               </div>
             </div>
 
@@ -426,5 +471,59 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeDayTimetable();
   });
+
+  async function acceptAppointmentFromCalendar(id, dateIso) {
+    try {
+      const res = await fetch(`/crm/api/appointment/${id}/status/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'accept' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(`✓ Booking accepted! Listed on Today's Appointments & Calendar.`);
+        if (CALENDAR_DATA[dateIso]) {
+          const appt = CALENDAR_DATA[dateIso].appointments.find(a => a.id === id);
+          if (appt) {
+            appt.status = 'accepted';
+            appt.status_display = 'Accepted & Confirmed';
+          }
+          openDayTimetable(dateIso);
+        }
+        setTimeout(() => location.reload(), 800);
+      } else {
+        showToast(data.error || 'Failed to accept booking', 'error');
+      }
+    } catch (e) {
+      showToast('Network error, please retry', 'error');
+    }
+  }
+
+  async function markDoneFromCalendar(id, dateIso) {
+    try {
+      const res = await fetch(`/crm/api/appointment/${id}/status/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'mark_done' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(`✓ Consultation completed! Patient visits updated to ${data.completed_visits || 1}.`);
+        if (CALENDAR_DATA[dateIso]) {
+          const appt = CALENDAR_DATA[dateIso].appointments.find(a => a.id === id);
+          if (appt) {
+            appt.status = 'completed';
+            appt.status_display = 'Completed (Done)';
+          }
+          openDayTimetable(dateIso);
+        }
+        setTimeout(() => location.reload(), 800);
+      } else {
+        showToast(data.error || 'Failed to mark done', 'error');
+      }
+    } catch (e) {
+      showToast('Network error, please retry', 'error');
+    }
+  }
 </script>
 {% endblock %}

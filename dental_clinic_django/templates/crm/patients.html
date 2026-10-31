@@ -51,6 +51,7 @@
             <th class="py-3.5 px-5">Patient Name</th>
             <th class="py-3.5 px-4">Contact</th>
             <th class="py-3.5 px-4">Clinic Wing &amp; Doctor</th>
+            <th class="py-3.5 px-4">Visits</th>
             <th class="py-3.5 px-4">Last Visit</th>
             <th class="py-3.5 px-4 text-right">Total Spent</th>
             <th class="py-3.5 px-4 text-right">Dues</th>
@@ -245,7 +246,12 @@
               ${p.clinic_type === 'dental' ? 'Roots Dental' : 'Buds Child'} &bull; ${p.doctor_assigned.split(' ')[1] || p.doctor_assigned}
             </span>
           </td>
-          <td class="py-3.5 px-4 text-slate-500">
+          <td class="py-3.5 px-4">
+            ${p.completed_visits === 0 
+              ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">0 Visits (Pending)</span>`
+              : `<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">${p.completed_visits} ${p.completed_visits === 1 ? 'Visit' : 'Visits'}</span>`}
+          </td>
+          <td class="py-3.5 px-4 text-slate-500 font-mono text-[11px]">
             ${p.last_visit}
           </td>
           <td class="py-3.5 px-4 text-right font-mono font-medium text-slate-900">
@@ -290,7 +296,7 @@
     document.getElementById('drawer-avatar').textContent = initials;
     document.getElementById('drawer-patient-name').textContent = p.full_name;
     document.getElementById('drawer-wing-badge').textContent = p.clinic_display;
-    document.getElementById('drawer-demographics').textContent = `${p.age ? p.age + ' yrs' : 'Adult'} • ${p.gender || 'Not specified'}`;
+    document.getElementById('drawer-demographics').textContent = `${p.age ? p.age + ' yrs' : 'Adult'} • ${p.gender || 'Not specified'} • Total Visits: ${p.completed_visits || 0}`;
     document.getElementById('drawer-family').textContent = `Family: ${p.family_name}`;
     document.getElementById('drawer-phone').textContent = p.phone;
     document.getElementById('drawer-emergency').textContent = p.emergency_contact;
@@ -306,15 +312,27 @@
       visitsEmpty.classList.remove('hidden');
     } else {
       visitsEmpty.classList.add('hidden');
-      visitsList.innerHTML = p.visits.map(v => `
-        <div class="p-3 rounded-xl border border-slate-200/80 bg-slate-50/50 flex items-center justify-between">
-          <div>
-            <div class="font-medium text-slate-900 text-xs">${v.service}</div>
-            <div class="text-[11px] text-slate-400 mt-0.5">${v.date} &bull; ${v.time} &bull; ${v.doctor}</div>
+      visitsList.innerHTML = p.visits.map(v => {
+        let statusBadge = '';
+        if (v.status === 'pending') {
+          statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-rose-50 text-rose-700 border border-rose-200">🔴 Pending Confirmation (0 visits)</span>';
+        } else if (v.status === 'accepted') {
+          statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">🟢 Confirmed Booking (0 visits completed)</span>';
+        } else if (v.status === 'completed') {
+          statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-900 text-white">✅ Completed Consultation</span>';
+        } else {
+          statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-medium bg-white text-slate-700 border border-slate-200">${v.status_display || v.status}</span>`;
+        }
+        return `
+          <div class="p-3 rounded-xl border border-slate-200/80 bg-slate-50/50 flex items-center justify-between">
+            <div>
+              <div class="font-semibold text-slate-900 text-xs">${v.service}</div>
+              <div class="text-[11px] text-slate-400 mt-0.5">${v.date} &bull; ${v.time} &bull; ${v.doctor}</div>
+            </div>
+            <div>${statusBadge}</div>
           </div>
-          <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-white text-slate-700 border border-slate-200">${v.status}</span>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     // Fill Notes Tab

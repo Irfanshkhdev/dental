@@ -1685,6 +1685,10 @@ def get_month_calendar_data(year, month, practice_filter='all'):
         for d in week:
             d_iso = d.isoformat()
             day_appts = appointments_by_date.get(d_iso, [])
+            day_pending = sum(1 for a in day_appts if a['status'] == 'pending')
+            day_accepted = sum(1 for a in day_appts if a['status'] == 'accepted')
+            day_completed = sum(1 for a in day_appts if a['status'] == 'completed')
+
             days_data.append({
                 'day_num': d.day,
                 'date_iso': d_iso,
@@ -1692,6 +1696,10 @@ def get_month_calendar_data(year, month, practice_filter='all'):
                 'is_current_month': (d.month == month),
                 'is_today': (d == today),
                 'appointments_count': len(day_appts),
+                'pending_count': day_pending,
+                'accepted_count': day_accepted,
+                'completed_count': day_completed,
+                'has_unaccepted': (day_pending > 0),
                 'dental_count': sum(1 for a in day_appts if a['clinic_type'] == 'dental'),
                 'pediatric_count': sum(1 for a in day_appts if a['clinic_type'] == 'pediatric'),
                 'appointments': day_appts,
@@ -2170,13 +2178,36 @@ def api_appointment_action(request, pk):
     elif action == 'mark_done':
         appt.status = 'completed'
         appt.save(update_fields=['status'])
-        patient = Patient.objects.filter(phone__icontains=appt.phone_number[-10:]).first()
+        clean_digits = ''.join(c for c in appt.phone_number if c.isdigit())
+        patient = None
+        if clean_digits:
+            patient = Patient.objects.filter(phone__icontains=clean_digits[-10:]).first()
+        if not patient:
+            patient = Patient.objects.create(
+                full_name=appt.patient_name,
+                phone=appt.phone_number,
+                is_child=(appt.clinic_type == 'pediatric')
+            )
+        queue_entry = QueueEntry.objects.filter(patient=patient, status__in=['waiting', 'in_consultation']).first()
+        if queue_entry:
+            queue_entry.status = 'completed'
+            queue_entry.completed_time = datetime.datetime.now()
+            queue_entry.save(update_fields=['status', 'completed_time'])
+
+        completed_visits = AppointmentRequest.objects.filter(
+            phone_number__icontains=clean_digits[-10:] if clean_digits else appt.phone_number,
+            status='completed'
+        ).count()
+        if patient.invoices.count() > completed_visits:
+            completed_visits = patient.invoices.count()
+
         doctor_name = "Dr. Sabina Firoj Shaikh" if appt.clinic_type == 'dental' else "Dr. Jalil S. Mujawar"
         return JsonResponse({
             'success': True,
             'status': 'completed',
             'patient_name': appt.patient_name,
-            'patient_id': patient.id if patient else None,
+            'patient_id': patient.id,
+            'completed_visits': completed_visits,
             'clinic_type': appt.clinic_type,
             'service': appt.service_needed,
             'doctor_name': doctor_name,
