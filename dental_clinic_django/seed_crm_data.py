@@ -21,10 +21,10 @@ def seed():
     # 1. Staff Accounts & RBAC Profiles
     users_data = [
         {
-            'username': 'irfanshaikh3262@gmail.com',
-            'email': 'irfanshaikh3262@gmail.com',
-            'password': 'irfan@123',
-            'full_name': 'Irfan Shaikh',
+            'username': 'director@rootsbuds.com',
+            'email': 'director@rootsbuds.com',
+            'password': 'RootsClinic@2026',
+            'full_name': 'Clinic Director',
             'role': 'admin',
             'qualification': 'Clinic Owner & Executive Director',
             'specialty': 'Healthcare Operations & Management',
@@ -92,7 +92,7 @@ def seed():
         profile.save()
         print(f"  ✓ User {user.email} [{profile.role}] ready.")
 
-    admin_user = User.objects.get(username='irfanshaikh3262@gmail.com')
+    admin_user = User.objects.get(username='director@rootsbuds.com')
     frontdesk_user = User.objects.get(username='frontdesk@rootsbuds.com')
 
     # 2. Families

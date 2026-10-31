@@ -65,8 +65,8 @@
           </label>
           <div class="relative">
             <input type="text" id="identifier" name="identifier" required autofocus
-                   value="irfanshaikh3262@gmail.com"
-                   placeholder="e.g. irfanshaikh3262@gmail.com"
+                   value=""
+                   placeholder="e.g. director@rootsbuds.com"
                    class="w-full pl-10 pr-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-900 bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all">
             <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
@@ -81,7 +81,7 @@
           </label>
           <div class="relative">
             <input type="password" id="password" name="password" required
-                   value="irfan@123"
+                   value=""
                    placeholder="Enter your password"
                    class="w-full pl-10 pr-10 py-2.5 rounded-xl text-xs font-medium text-slate-900 bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all">
             <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,18 +103,18 @@
 
       </form>
 
-      <!-- 1-Click Master Credentials Pill -->
+      <!-- 1-Click Demo Evaluation Credentials Pill -->
       <div class="mt-6 pt-5 border-t border-slate-100">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Master Owner Access</span>
-          <button type="button" onclick="fillMasterCredentials()" class="text-[11px] font-medium text-slate-900 hover:underline">
+          <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Demo / Pitch Access</span>
+          <button type="button" onclick="fillDemoCredentials()" class="text-[11px] font-medium text-slate-900 hover:underline">
             Auto-Fill
           </button>
         </div>
         <div class="bg-slate-50 rounded-xl p-3 border border-slate-200/80 text-[11px] font-mono text-slate-600 flex items-center justify-between">
           <div>
-            <div>Email: <strong class="text-slate-900">irfanshaikh3262@gmail.com</strong></div>
-            <div>Password: <strong class="text-slate-900">irfan@123</strong></div>
+            <div>Email: <strong class="text-slate-900">director@rootsbuds.com</strong></div>
+            <div>Password: <strong class="text-slate-900">RootsClinic@2026</strong></div>
           </div>
           <span class="px-2 py-0.5 rounded text-[10px] font-sans font-medium bg-white text-slate-700 border border-slate-200">
             Super-Admin
@@ -143,9 +143,9 @@
       }
     }
 
-    function fillMasterCredentials() {
-      document.getElementById('identifier').value = 'irfanshaikh3262@gmail.com';
-      document.getElementById('password').value = 'irfan@123';
+    function fillDemoCredentials() {
+      document.getElementById('identifier').value = 'director@rootsbuds.com';
+      document.getElementById('password').value = 'RootsClinic@2026';
     }
   </script>
 </body>

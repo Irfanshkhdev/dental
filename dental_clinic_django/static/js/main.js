@@ -27,7 +27,7 @@
   ];
 
   const PEDIATRIC_SERVICES = [
-    'Newborn Intensive Assessment & Jaundice',
+    'Newborn Care & Jaundice Assessment',
     'Complete IAP Immunization & Cold-Chain',
     'Developmental Milestones & Growth Check',
     'Acute Childhood Illnesses & Fever Care',

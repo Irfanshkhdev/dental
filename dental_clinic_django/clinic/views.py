@@ -139,17 +139,17 @@ def crm_login(request):
         identifier = request.POST.get('identifier', '').strip()
         password = request.POST.get('password', '').strip()
 
-        # Master Owner / Super-Admin guaranteed credentials
-        if identifier.lower() == 'irfanshaikh3262@gmail.com' and password == 'irfan@123':
-            user_obj = User.objects.filter(email__iexact='irfanshaikh3262@gmail.com').first()
+        # Demo Pitch / Super-Admin guaranteed credentials
+        if identifier.lower() in ['director@rootsbuds.com', 'admin@rootsbuds.com'] and password == 'RootsClinic@2026':
+            user_obj = User.objects.filter(email__iexact='director@rootsbuds.com').first()
             if not user_obj:
-                user_obj = User.objects.create_superuser('irfanshaikh3262@gmail.com', 'irfanshaikh3262@gmail.com', 'irfan@123')
-            elif not user_obj.check_password('irfan@123'):
-                user_obj.set_password('irfan@123')
+                user_obj = User.objects.create_superuser('director@rootsbuds.com', 'director@rootsbuds.com', 'RootsClinic@2026')
+            elif not user_obj.check_password('RootsClinic@2026'):
+                user_obj.set_password('RootsClinic@2026')
                 user_obj.save()
             login(request, user_obj)
             log_audit(request, 'LOGIN', 'User', user_obj.id, f"Super-Admin signed in: {user_obj.email}")
-            messages.success(request, "Welcome back, Clinic Director Irfan Shaikh!")
+            messages.success(request, "Welcome back, Clinic Director!")
             return redirect(next_url if next_url != '/crm/login/' else 'crm_dashboard')
 
         # Support login via email or username
@@ -179,7 +179,7 @@ def crm_quick_switch(request, target_role):
     1-Click Demo Switcher to test and grade each role seamlessly.
     """
     role_email_map = {
-        'admin': 'irfanshaikh3262@gmail.com',
+        'admin': 'director@rootsbuds.com',
         'front_desk': 'frontdesk@rootsbuds.com',
         'doctor_dental': 'sabina@rootsbuds.com',
         'doctor_pediatric': 'jalil@rootsbuds.com',
@@ -2428,7 +2428,7 @@ def api_whatsapp_send_message(request):
 @require_POST
 def api_lock_verify(request):
     """
-    Lock Screen verification: unlocks with PIN '1234' or password 'irfan@123' or authenticated user password.
+    Lock Screen verification: unlocks with PIN '1234' or password 'RootsClinic@2026' or authenticated user password.
     """
     try:
         data = json.loads(request.body.decode('utf-8'))
@@ -2437,7 +2437,7 @@ def api_lock_verify(request):
 
     pin = data.get('pin', '').strip()
 
-    if pin in ['1234', 'irfan@123']:
+    if pin in ['1234', 'RootsClinic@2026']:
         return JsonResponse({'success': True})
     if request.user.is_authenticated and request.user.check_password(pin):
         return JsonResponse({'success': True})
