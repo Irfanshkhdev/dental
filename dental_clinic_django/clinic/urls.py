@@ -29,16 +29,22 @@ urlpatterns = [
     path('crm/dashboard/', views.crm_dashboard, name='crm_dashboard'),
     path('crm-dashboard/', views.crm_dashboard, name='crm_dashboard_legacy'),
     path('crm/today/', views.crm_today_desk, name='crm_today'),
+    path('crm/calendar/', views.crm_calendar, name='crm_calendar'),
     path('crm/patients/', views.crm_patients_directory, name='crm_patients'),
     path('crm/billing/', views.crm_finance_billing, name='crm_billing'),
     path('crm/whatsapp/', views.crm_whatsapp_hub, name='crm_whatsapp'),
+    path('crm/backup/', views.crm_backup, name='crm_backup'),
 
     # Streamlined CRM API Endpoints
     path('crm/api/appointment/<int:pk>/status/', views.api_appointment_action, name='api_appointment_action'),
+    path('crm/api/calendar/month/', views.api_calendar_month, name='api_calendar_month'),
     path('crm/api/bill/create/', views.api_quick_bill_create, name='api_quick_bill_create'),
     path('crm/api/reminder/schedule/', views.api_reminder_schedule, name='api_reminder_schedule'),
     path('crm/api/reminder/<int:pk>/cancel/', views.api_reminder_cancel, name='api_reminder_cancel'),
     path('crm/api/whatsapp/send/', views.api_whatsapp_send_message, name='api_whatsapp_send_message'),
+    path('crm/api/whatsapp/inbound/', views.api_whatsapp_inbound, name='api_whatsapp_inbound'),
+    path('crm/api/whatsapp/link-device/', views.api_whatsapp_link_device, name='api_whatsapp_link_device'),
+    path('crm/api/backup/export/<str:category>/', views.api_backup_export, name='api_backup_export'),
     path('crm/api/lock/verify/', views.api_lock_verify, name='api_lock_verify'),
 
     # Role Dashboards

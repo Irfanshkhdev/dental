@@ -1,0 +1,290 @@
+{% extends 'crm/base_crm.html' %}
+
+{% block page_title %}BACKUP &amp; Data Export{% endblock %}
+
+{% block header_actions %}
+<div class="flex items-center gap-2">
+  <span class="text-xs text-slate-500 font-medium">
+    Total Database Records: <strong class="text-slate-900 font-mono">{{ total_records }}</strong>
+  </span>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-6">
+
+  <!-- ============================================================== -->
+  <!-- 1. BACKUP MASTER HERO BANNER (DOWNLOAD EVERYTHING)            -->
+  <!-- ============================================================== -->
+  <section class="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-800 relative overflow-hidden">
+    <!-- Subtle background accent glow -->
+    <div class="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div class="space-y-2 max-w-xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-slate-300 border border-white/10">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Master Clinic Backup &bull; UTF-8 Excel Certified
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+          Complete Clinic Data Archive
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          Download an exhaustive, timestamped ZIP package containing individual CSV spreadsheets for every single module in the clinic: patients, billing ledger, appointments, medical prescriptions, queue logs, and scheduled WhatsApp reminders.
+        </p>
+        <div class="flex items-center gap-4 text-xs text-slate-400 font-mono pt-1">
+          <span>📦 7 Combined Datasets</span>
+          <span>&bull;</span>
+          <span>⚡ Instant 1-Click Generation</span>
+        </div>
+      </div>
+
+      <!-- Master 1-Click Download Button -->
+      <a href="{% url 'api_backup_export' 'all' %}"
+         class="px-6 py-4 rounded-2xl bg-white text-slate-950 hover:bg-slate-100 font-bold text-sm transition-all shadow-xl hover:shadow-2xl flex items-center gap-3 flex-shrink-0 group cursor-pointer">
+        <svg class="w-5 h-5 text-slate-900 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+        </svg>
+        <div class="text-left">
+          <div class="text-xs uppercase tracking-wider text-slate-500 font-semibold">Master Export</div>
+          <div>Download Everything (.ZIP)</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- 2. INDIVIDUAL CATEGORY CSV DOWNLOAD CARDS                      -->
+  <!-- ============================================================== -->
+  <section class="space-y-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-sm font-bold text-slate-900 tracking-tight">Granular Category Downloads</h3>
+        <p class="text-xs text-slate-400 mt-0.5">Select specific datasets to download as standalone formatted CSVs</p>
+      </div>
+      <span class="text-xs text-slate-400 font-mono">Last Generated: {{ backup_timestamp }}</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      
+      <!-- Option 1: Customer & Patient Data -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between space-y-4 group">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-sm">
+              👥
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-700">
+              CSV
+            </span>
+          </div>
+          <h4 class="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+            Customer / Patient Data
+          </h4>
+          <p class="text-xs text-slate-500 mt-1">
+            Complete patient directory: Names, contacts, demographics, family files, medical alerts, blood groups, and financial spending summaries.
+          </p>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-mono font-bold text-slate-900">{{ total_patients }} patients</span>
+          <a href="{% url 'api_backup_export' 'patients' %}"
+             class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Download CSV
+          </a>
+        </div>
+      </div>
+
+      <!-- Option 2: Transactions & Billing Ledger -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between space-y-4 group">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-sm">
+              💳
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-700">
+              CSV
+            </span>
+          </div>
+          <h4 class="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+            Transactions &amp; Billing Ledger
+          </h4>
+          <p class="text-xs text-slate-500 mt-1">
+            Complete financial records: Invoice numbers, dates, consulting doctor revenue, treatment items, UPI/cash modes, paid amounts, and receivables.
+          </p>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-mono font-bold text-slate-900">{{ total_invoices }} invoices</span>
+          <a href="{% url 'api_backup_export' 'transactions' %}"
+             class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Download CSV
+          </a>
+        </div>
+      </div>
+
+      <!-- Option 3: Appointments & Booking Requests -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between space-y-4 group">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-sm">
+              🗓️
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-700">
+              CSV
+            </span>
+          </div>
+          <h4 class="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+            Appointments &amp; Requests
+          </h4>
+          <p class="text-xs text-slate-500 mt-1">
+            Full schedule history: Patient names, preferred dates &amp; slots, practice wings, doctor assignments, and confirmation statuses.
+          </p>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-mono font-bold text-slate-900">{{ total_appointments }} bookings</span>
+          <a href="{% url 'api_backup_export' 'appointments' %}"
+             class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Download CSV
+          </a>
+        </div>
+      </div>
+
+      <!-- Option 4: Clinical Prescriptions -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between space-y-4 group">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-sm">
+              💊
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-700">
+              CSV
+            </span>
+          </div>
+          <h4 class="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+            Clinical Prescriptions (Rx)
+          </h4>
+          <p class="text-xs text-slate-500 mt-1">
+            Official medical prescriptions: Diagnoses, clinical symptoms, drug dosages, dietary advice, vitals, and follow-up timelines.
+          </p>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-mono font-bold text-slate-900">{{ total_prescriptions }} prescriptions</span>
+          <a href="{% url 'api_backup_export' 'prescriptions' %}"
+             class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Download CSV
+          </a>
+        </div>
+      </div>
+
+      <!-- Option 5: Waiting Room Queue Records -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between space-y-4 group">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-sm">
+              ⏳
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-700">
+              CSV
+            </span>
+          </div>
+          <h4 class="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+            Waiting Room Live Queue
+          </h4>
+          <p class="text-xs text-slate-500 mt-1">
+            Footfall logs: Token numbers, walk-in vs scheduled visits, check-in timestamps, consultation start and finish times.
+          </p>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-mono font-bold text-slate-900">{{ total_queue }} queue visits</span>
+          <a href="{% url 'api_backup_export' 'queue' %}"
+             class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Download CSV
+          </a>
+        </div>
+      </div>
+
+      <!-- Option 6: Scheduled WhatsApp Reminders -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between space-y-4 group">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-sm">
+              💬
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-700">
+              CSV
+            </span>
+          </div>
+          <h4 class="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+            Scheduled Reminders &amp; Recalls
+          </h4>
+          <p class="text-xs text-slate-500 mt-1">
+            Automated WhatsApp reminders: Patient phones, preset types, custom notices, target dates, and dispatch statuses.
+          </p>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-mono font-bold text-slate-900">{{ total_reminders }} reminders</span>
+          <a href="{% url 'api_backup_export' 'reminders' %}"
+             class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Download CSV
+          </a>
+        </div>
+      </div>
+
+      <!-- Option 7: Dental Treatment Plans -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between space-y-4 group">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-sm">
+              🦷
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-700">
+              CSV
+            </span>
+          </div>
+          <h4 class="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+            Dental Treatment Plans
+          </h4>
+          <p class="text-xs text-slate-500 mt-1">
+            Multi-visit clinical plans: Treatment titles, estimated total costs, stages JSON, clinical notes, and approval status.
+          </p>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs font-mono font-bold text-slate-900">{{ total_treatment_plans }} plans</span>
+          <a href="{% url 'api_backup_export' 'treatment_plans' %}"
+             class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Download CSV
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- 3. DATA SECURITY & REGULATORY NOTE                             -->
+  <!-- ============================================================== -->
+  <section class="p-4 rounded-2xl bg-slate-100/80 border border-slate-200/80 text-xs text-slate-500 flex items-start gap-3">
+    <div class="text-slate-400 mt-0.5">ℹ️</div>
+    <div class="space-y-1">
+      <div class="font-semibold text-slate-700">Confidentiality &amp; Audit Compliance</div>
+      <p>
+        All generated backups include cryptographic UTF-8 BOM encoding and are formatted for direct importing into Microsoft Excel, Google Sheets, or ERP software. Every export action is recorded in the CRM security audit trail with staff email, IP address, and timestamp.
+      </p>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

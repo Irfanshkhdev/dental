@@ -115,6 +115,13 @@
 
       <!-- Dual Action Buttons -->
       <div class="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
+        <!-- Save & Print Receipt -->
+        <button type="submit" onclick="document.getElementById('billing-action-input').value='save_and_print'"
+                class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 transition-all flex items-center gap-1.5 shadow-sm cursor-pointer">
+          <svg class="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          Save &amp; Print Receipt
+        </button>
+
         <!-- Save Only -->
         <button type="submit" onclick="document.getElementById('billing-action-input').value='save_only'"
                 class="px-4 py-2 rounded-xl text-xs font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
@@ -242,10 +249,10 @@
                        class="p-1.5 text-slate-500 hover:text-emerald-600 hover:bg-slate-100 rounded-lg transition-colors" title="Send WhatsApp Receipt">
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                     </a>
-                    <a href="{% url 'crm_invoice_print' inv.id %}" target="_blank"
-                       class="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors" title="Print Receipt">
+                    <button type="button" onclick="printInvoice({{ inv.id }})"
+                       class="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer" title="Print Receipt">
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                    </a>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -331,6 +338,28 @@
         r.style.display = wing === 'pediatric' ? '' : 'none';
       }
     });
+  }
+
+  function printInvoice(invoiceId) {
+    const url = `/crm/invoice/${invoiceId}/print/`;
+    const printWin = window.open(url, '_blank');
+    if (printWin) {
+      printWin.focus();
+    } else {
+      let iframe = document.getElementById('print-receipt-iframe');
+      if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.id = 'print-receipt-iframe';
+        iframe.style.position = 'fixed';
+        iframe.style.right = '0';
+        iframe.style.bottom = '0';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+        iframe.style.border = '0';
+        document.body.appendChild(iframe);
+      }
+      iframe.src = url;
+    }
   }
 
   // Pre-select patient if patient_id in URL query

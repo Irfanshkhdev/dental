@@ -406,5 +406,37 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeDrawer();
   });
+
+  // Handle URL query parameters for instant customer redirection from Calendar
+  document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pid = urlParams.get('patient_id');
+    const searchParam = urlParams.get('search');
+
+    if (searchParam) {
+      const searchInput = document.getElementById('patient-search-input');
+      if (searchInput) {
+        searchInput.value = searchParam;
+        handleInstantSearch(searchParam);
+      }
+    }
+
+    if (pid) {
+      const pIdNum = parseInt(pid);
+      const found = allPatients.find(p => p.id === pIdNum);
+      if (found) {
+        setTimeout(() => openDrawer(pIdNum), 150);
+      }
+    } else if (searchParam) {
+      const cleanDigits = searchParam.replace(/\D/g, '');
+      const found = allPatients.find(p => 
+        p.full_name.toLowerCase().includes(searchParam.toLowerCase()) || 
+        (cleanDigits && p.clean_phone && p.clean_phone.includes(cleanDigits))
+      );
+      if (found) {
+        setTimeout(() => openDrawer(found.id), 150);
+      }
+    }
+  });
 </script>
 {% endblock %}

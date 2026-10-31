@@ -204,5 +204,16 @@
     </div>
   </div>
 
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        try {
+          window.print();
+        } catch (e) {
+          console.log('Auto-print error:', e);
+        }
+      }, 350);
+    });
+  </script>
 </body>
 </html>
