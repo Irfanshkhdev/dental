@@ -66,18 +66,128 @@
       animation: slideInUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    @keyframes rootsGlow {
+    /* ============================================================== */
+    /* LUXURY MEDICAL STANDBY BREATHING RING (GPU ACCELERATED, 0% CPU)*/
+    /* ============================================================== */
+    .lock-screen-bg {
+      background: radial-gradient(circle at center, #0b1329 0%, #020617 100%);
+    }
+
+    .ambient-aura {
+      position: absolute;
+      width: 380px;
+      height: 380px;
+      background: conic-gradient(from 0deg at 50% 50%, rgba(56, 189, 248, 0.12) 0deg, rgba(99, 102, 241, 0.05) 120deg, rgba(45, 212, 191, 0.10) 240deg, rgba(56, 189, 248, 0.12) 360deg);
+      border-radius: 50%;
+      filter: blur(65px);
+      animation: auraRotate 16s linear infinite;
+      will-change: transform;
+      pointer-events: none;
+    }
+
+    .lock-screen-composition {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Breathing Ring Layer 1 (Outer) */
+    .breathing-ring-outer {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      box-shadow: 0 0 35px rgba(56, 189, 248, 0.06), inset 0 0 25px rgba(56, 189, 248, 0.04);
+      animation: luxuryBreathe 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      will-change: transform, opacity;
+      pointer-events: none;
+    }
+
+    /* Breathing Ring Layer 2 (Inner Staggered & Dashed) */
+    .breathing-ring-inner {
+      position: absolute;
+      inset: 22px;
+      border-radius: 50%;
+      border: 1px dashed rgba(56, 189, 248, 0.28);
+      animation: luxuryBreathe 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      animation-delay: -3s; /* Phase shifted for organic depth */
+      will-change: transform, opacity;
+      pointer-events: none;
+    }
+
+    /* Breathing Ring Layer 3 (Ultra-fine Core Ring) */
+    .breathing-ring-core {
+      position: absolute;
+      inset: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      animation: ringSlowSpin 32s linear infinite;
+      will-change: transform;
+      pointer-events: none;
+    }
+
+    /* Glassmorphic Monogram / Medical Centerpiece */
+    .monogram-badge {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      z-index: 2;
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      background-color: #38bdf8;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #38bdf8;
+      animation: dotPulse 2s ease-in-out infinite;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    @keyframes luxuryBreathe {
       0%, 100% {
-        box-shadow: 0 0 25px rgba(255, 255, 255, 0.1), 0 0 50px rgba(14, 165, 233, 0.15);
-        transform: scale(1);
+        transform: scale(0.92);
+        opacity: 0.3;
       }
       50% {
-        box-shadow: 0 0 45px rgba(255, 255, 255, 0.25), 0 0 80px rgba(14, 165, 233, 0.3);
-        transform: scale(1.03);
+        transform: scale(1.12);
+        opacity: 0.85;
       }
     }
-    .lock-emblem-glow {
-      animation: rootsGlow 3.5s ease-in-out infinite;
+
+    @keyframes auraRotate {
+      0% {
+        transform: rotate(0deg) scale(1);
+      }
+      50% {
+        transform: rotate(180deg) scale(1.08);
+      }
+      100% {
+        transform: rotate(360deg) scale(1);
+      }
+    }
+
+    @keyframes ringSlowSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes dotPulse {
+      0%, 100% { opacity: 0.2; transform: scale(0.85); }
+      50% { opacity: 1; transform: scale(1.25); }
     }
 
     /* Safe area for mobile home indicators */
@@ -378,62 +488,59 @@
   </nav>
 
   <!-- ============================================================== -->
-  <!-- LUXURY LOCK DESK SCREEN (ANIMATED ROOTS & DENTAL SCREENSAVER)   -->
+  <!-- LUXURY LOCK DESK SCREEN (ORGANIC MEDICAL BREATHING RING)       -->
   <!-- ============================================================== -->
-  <div id="lock-screen-modal" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-2xl flex items-center justify-center hidden select-none transition-all duration-300">
+  <div id="lock-screen-modal" class="fixed inset-0 z-50 lock-screen-bg flex items-center justify-center hidden select-none transition-all duration-300">
     
-    <!-- STAGE 1: ROOTS & DENTAL ANIMATED SCREEN SAVER (CLICK ANYWHERE TO UNLOCK) -->
-    <div id="lock-stage-saver" onclick="transitionToPinStage()" class="absolute inset-0 flex flex-col items-center justify-between p-6 sm:p-10 text-center cursor-pointer">
+    <!-- STAGE 1: LUXURY MEDICAL STANDBY / AFK SCREEN (MULTI-LAYERED BREATHING RING) -->
+    <div id="lock-stage-saver" onclick="transitionToPinStage()" class="absolute inset-0 flex flex-col items-center justify-between p-6 sm:p-10 text-center cursor-pointer overflow-hidden">
       
-      <!-- Top Clinic Badge -->
-      <div class="pt-4 flex items-center gap-2 text-xs tracking-widest uppercase text-slate-400 font-semibold">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        Roots Dental &bull; Buds Child Clinic &bull; Wanowrie, Pune
+      <!-- Top Clinic Standby Status Badge -->
+      <div class="pt-3 flex items-center gap-2.5 text-[11px] sm:text-xs tracking-widest uppercase text-slate-400 font-medium z-10">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span>Roots Dental &bull; Buds Child Clinic &bull; Standby Mode</span>
       </div>
 
-      <!-- Center Animated Monogram & Branding -->
-      <div class="flex flex-col items-center my-auto">
-        <!-- Glowing animated insignia (Pure CSS, 60fps, Zero Lag) -->
-        <div class="relative mb-6">
-          <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl bg-gradient-to-tr from-slate-900 via-slate-800 to-slate-950 border border-slate-700/80 shadow-2xl flex items-center justify-center lock-emblem-glow">
-            <svg class="w-12 h-12 sm:w-16 sm:h-16 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.8-.1 2.6-.4"/>
-              <path d="M18.4 5.6A10 10 0 0 1 22 12c0 3.2-1.5 6-3.8 7.8"/>
-              <path d="M9 12h6M12 9v6"/>
+      <!-- Center Ambient Core & Multi-Layered Breathing Ring -->
+      <div class="relative flex flex-col items-center my-auto z-10">
+        <!-- Ambient Backlight Aura (Conic Gradient Soft Glow) -->
+        <div class="ambient-aura"></div>
+
+        <!-- Central Monogram & Breathing Rings Wrapper -->
+        <div class="lock-screen-composition">
+          <!-- Layer 1: Outer Organic Breathing Aura Ring -->
+          <div class="breathing-ring-outer"></div>
+          
+          <!-- Layer 2: Inner Staggered Dashed Precision Ring -->
+          <div class="breathing-ring-inner"></div>
+          
+          <!-- Layer 3: Ultra-Fine Kinetic Core Orbit -->
+          <div class="breathing-ring-core"></div>
+          
+          <!-- Layer 4: Glassmorphic Monogram / Medical Centerpiece -->
+          <div class="monogram-badge">
+            <svg class="w-8 h-8 text-sky-400 drop-shadow-[0_2px_10px_rgba(56,189,248,0.45)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
             </svg>
           </div>
-          <!-- Orbiting light ripple -->
-          <div class="absolute -inset-2 rounded-3xl border border-white/10 animate-ping pointer-events-none opacity-20"></div>
         </div>
 
-        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-2">
+        <!-- Clinic Title & Subtitle (High-end medical typography) -->
+        <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white/95 mt-7 mb-1.5">
           ROOTS &amp; DENTAL
         </h2>
-        <p class="text-xs sm:text-sm text-slate-400 font-medium max-w-md mx-auto">
+        <p class="text-xs sm:text-sm text-slate-400 font-medium tracking-wide max-w-sm mx-auto">
           Dual-Specialty Dental &amp; Pediatric Hospital CRM Engine
         </p>
-
-        <!-- Digital Live Time Display -->
-        <div class="mt-8 py-2.5 px-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-          <div id="lock-saver-time" class="text-2xl sm:text-4xl font-mono font-bold text-white tracking-wider">
-            --:-- --
-          </div>
-          <div id="lock-saver-date" class="text-xs text-slate-400 mt-1">
-            Loading date...
-          </div>
-        </div>
       </div>
 
-      <!-- Bottom Prompt: Click Anywhere / Press Key -->
-      <div class="pb-6 flex flex-col items-center gap-2">
-        <button type="button" onclick="transitionToPinStage(); event.stopPropagation();"
-                class="px-6 py-2.5 rounded-full bg-white text-slate-950 font-semibold text-xs hover:bg-slate-200 transition-all shadow-lg flex items-center gap-2 group cursor-pointer">
-          <svg class="w-4 h-4 text-slate-900 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/>
-          </svg>
-          Click anywhere or press any key to unlock
-        </button>
-        <span class="text-[11px] text-slate-500 font-medium">Roots Dental Desk Protected</span>
+      <!-- Bottom Subtle Unlock Prompt (Buttery Smooth & Clean) -->
+      <div class="pb-6 flex flex-col items-center gap-2 z-10">
+        <div class="flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-white/[0.04] border border-white/[0.1] backdrop-blur-md text-xs sm:text-sm text-slate-300 font-normal tracking-wide shadow-xl hover:bg-white/[0.08] transition-all">
+          <span class="pulse-dot"></span>
+          <span>Touch anywhere or press any key to resume</span>
+        </div>
+        <span class="text-[10px] text-slate-500 tracking-wider uppercase font-semibold">Protected Clinic Desk</span>
       </div>
 
     </div>
@@ -481,21 +588,12 @@
   <!-- CORE SCRIPTS: TOAST, LOCK SCREEN, MOBILE DRAWER & HOTKEYS      -->
   <!-- ============================================================== -->
   <script>
-    // Live Clock in Header & Lock Screen
+    // Live Clock in Header
     function updateClock() {
       const now = new Date();
       const options = { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' };
       const el = document.getElementById('live-time-display');
       if (el) el.innerHTML = `Wanowrie &bull; ${now.toLocaleDateString('en-IN', options)}`;
-
-      const saverTime = document.getElementById('lock-saver-time');
-      const saverDate = document.getElementById('lock-saver-date');
-      if (saverTime) {
-        saverTime.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-      }
-      if (saverDate) {
-        saverDate.textContent = now.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-      }
     }
     setInterval(updateClock, 1000);
     updateClock();
@@ -565,7 +663,6 @@
       if (modal) modal.classList.remove('hidden');
       isDeskLocked = true;
       transitionToSaverStage();
-      updateClock();
     }
 
     function transitionToSaverStage() {
