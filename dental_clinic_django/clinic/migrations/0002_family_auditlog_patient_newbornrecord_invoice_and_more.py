@@ -269,7 +269,7 @@ class Migration(migrations.Migration):
                 ('status', models.CharField(choices=[('due', 'Due Soon'), ('overdue', 'Overdue'), ('administered', 'Administered'), ('exempt', 'Exempt / Postponed')], default='due', max_length=20)),
                 ('batch_no', models.CharField(blank=True, default='', max_length=60)),
                 ('manufacturer', models.CharField(blank=True, default='Serum Institute / GSK', max_length=120)),
-                ('administered_by', models.CharField(blank=True, default='Dr. Jalil S. Mujawar', max_length=120)),
+                ('administered_by', models.CharField(blank=True, default='Dr. Jalil Mujawar', max_length=120)),
                 ('notes', models.TextField(blank=True, default='')),
                 ('patient', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='vaccinations', to='clinic.patient')),
             ],

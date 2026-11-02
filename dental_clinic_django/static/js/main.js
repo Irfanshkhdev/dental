@@ -246,11 +246,11 @@
       setTimeout(() => {
         if (type === 'dental') {
           if (mobileAvatar) mobileAvatar.src = '/static/images/dentist_sabina.png';
-          if (mobilePillName) mobilePillName.textContent = 'Dr. Sabina Firoj Shaikh';
+          if (mobilePillName) mobilePillName.textContent = 'Dr. Sabina Shaikh';
           if (mobilePillDesc) mobilePillDesc.textContent = 'B.D.S, M.D.S (Gold Medalist) • Conservative Dentistry & Endodontics';
         } else {
           if (mobileAvatar) mobileAvatar.src = '/static/images/pediatrician_jalil.png';
-          if (mobilePillName) mobilePillName.textContent = 'Dr. Jalil S. Mujawar';
+          if (mobilePillName) mobilePillName.textContent = 'Dr. Jalil Mujawar';
           if (mobilePillDesc) mobilePillDesc.textContent = 'MBBS, DNB(Pediatrics), MNAMS • Pediatrician & Neonatologist';
         }
         mobilePill.style.opacity = '1';
@@ -515,7 +515,7 @@
       }
 
       if (avatar) avatar.src = '/static/images/dentist_sabina.png';
-      if (name) name.textContent = 'Dr. Sabina Firoj Shaikh';
+      if (name) name.textContent = 'Dr. Sabina Shaikh';
       if (desc) desc.textContent = 'B.D.S, M.D.S (Gold Medalist) • Conservative Dentistry & Endodontics';
 
       // Update Modal Slots for Dental
@@ -567,7 +567,7 @@
       }
 
       if (avatar) avatar.src = '/static/images/pediatrician_jalil.png';
-      if (name) name.textContent = 'Dr. Jalil S. Mujawar';
+      if (name) name.textContent = 'Dr. Jalil Mujawar';
       if (desc) desc.textContent = 'MBBS, DNB(Pediatrics), MNAMS • Pediatrician & Neonatologist';
 
       // Update Modal Slots for Pediatric

@@ -37,7 +37,7 @@ def seed():
             'username': 'sabina@rootsbuds.com',
             'email': 'sabina@rootsbuds.com',
             'password': 'sabina@123',
-            'full_name': 'Dr. Sabina Firoj Shaikh',
+            'full_name': 'Dr. Sabina Shaikh',
             'role': 'doctor_dental',
             'qualification': 'B.D.S, M.D.S (Gold Medalist)',
             'specialty': 'Conservative Dentistry & Endodontics',
@@ -50,7 +50,7 @@ def seed():
             'username': 'jalil@rootsbuds.com',
             'email': 'jalil@rootsbuds.com',
             'password': 'jalil@123',
-            'full_name': 'Dr. Jalil S. Mujawar',
+            'full_name': 'Dr. Jalil Mujawar',
             'role': 'doctor_pediatric',
             'qualification': 'MBBS, DNB(Pediatrics), MNAMS, SCHP, PGPN, MBA-Hosp Admin',
             'specialty': 'Senior Consultant Pediatrician & Neonatologist',
@@ -219,7 +219,7 @@ def seed():
         token_number=101,
         patient=pat_rahul,
         clinic_type='dental',
-        doctor_assigned='Dr. Sabina Firoj Shaikh',
+        doctor_assigned='Dr. Sabina Shaikh',
         token_type='appointment',
         status='in_consultation',
         reason_for_visit='Root Canal Stage 2 - Obturation & Crown Prep (#16)',
@@ -230,7 +230,7 @@ def seed():
         token_number=102,
         patient=pat_kabir,
         clinic_type='pediatric',
-        doctor_assigned='Dr. Jalil S. Mujawar',
+        doctor_assigned='Dr. Jalil Mujawar',
         token_type='walk_in',
         status='waiting',
         reason_for_visit='6-Week Immunization (Pentavalent, Rotavirus, PCV) & Weight Check'
@@ -240,7 +240,7 @@ def seed():
         token_number=103,
         patient=pat_aarav,
         clinic_type='pediatric',
-        doctor_assigned='Dr. Jalil S. Mujawar',
+        doctor_assigned='Dr. Jalil Mujawar',
         token_type='appointment',
         status='waiting',
         reason_for_visit='Seasonal Cough & Fever assessment'
@@ -250,7 +250,7 @@ def seed():
         token_number=104,
         patient=pat_priyanka,
         clinic_type='dental',
-        doctor_assigned='Dr. Sabina Firoj Shaikh',
+        doctor_assigned='Dr. Sabina Shaikh',
         token_type='walk_in',
         status='completed',
         reason_for_visit='Ultrasonic Teeth Scaling & Polishing',
@@ -264,7 +264,7 @@ def seed():
         patient=pat_rahul,
         family=fam1,
         clinic_type='dental',
-        doctor_name='Dr. Sabina Firoj Shaikh',
+        doctor_name='Dr. Sabina Shaikh',
         items_json=json.dumps([
             {"name": "Root Canal Treatment - Molar (#16)", "qty": 1, "rate": 4500, "total": 4500},
             {"name": "Digital RVG X-Rays (2 Views)", "qty": 2, "rate": 250, "total": 500}
@@ -285,7 +285,7 @@ def seed():
         patient=pat_kabir,
         family=fam2,
         clinic_type='pediatric',
-        doctor_name='Dr. Jalil S. Mujawar',
+        doctor_name='Dr. Jalil Mujawar',
         items_json=json.dumps([
             {"name": "Pediatric Consultation & Developmental Check", "qty": 1, "rate": 800, "total": 800},
             {"name": "Pentavalent DTP-HepB-Hib + Rotavirus Vaccine", "qty": 1, "rate": 1800, "total": 1800}
@@ -306,7 +306,7 @@ def seed():
         patient=pat_priyanka,
         family=fam1,
         clinic_type='dental',
-        doctor_name='Dr. Sabina Firoj Shaikh',
+        doctor_name='Dr. Sabina Shaikh',
         items_json=json.dumps([
             {"name": "Ultrasonic Scaling & Deep Polishing", "qty": 1, "rate": 1500, "total": 1500}
         ]),
@@ -453,7 +453,7 @@ def seed():
             status=v['status'],
             batch_no=v['batch'],
             manufacturer=v['mfg'],
-            administered_by='Dr. Jalil S. Mujawar',
+            administered_by='Dr. Jalil Mujawar',
             notes="Tolerated well without immediate adverse event." if v['status'] == 'administered' else ""
         )
 
@@ -469,7 +469,7 @@ def seed():
     ClinicalPrescription.objects.create(
         patient=pat_rahul,
         clinic_type='dental',
-        doctor_name='Dr. Sabina Firoj Shaikh',
+        doctor_name='Dr. Sabina Shaikh',
         diagnosis='Acute Irreversible Pulpitis #16, Symptomatic Apical Periodontitis',
         chief_complaints='Severe throbbing pain in upper right back tooth, radiating to temple.',
         vitals_json=json.dumps({"bp": "124/82 mmHg", "pulse": "76 bpm", "temp": "98.4 F"}),
@@ -486,7 +486,7 @@ def seed():
     ClinicalPrescription.objects.create(
         patient=pat_aarav,
         clinic_type='pediatric',
-        doctor_name='Dr. Jalil S. Mujawar',
+        doctor_name='Dr. Jalil Mujawar',
         diagnosis='Acute Viral Upper Respiratory Infection (URTI) with Low Grade Fever',
         chief_complaints='Runny nose, nighttime dry cough, mild fever 99.8 F for 2 days.',
         vitals_json=json.dumps({"weight": "16.2 kg", "temp": "99.4 F", "spo2": "99%", "resp_rate": "24/min"}),

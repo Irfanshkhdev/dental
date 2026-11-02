@@ -419,7 +419,7 @@ class VaccinationRecord(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='due')
     batch_no = models.CharField(max_length=60, blank=True, default='')
     manufacturer = models.CharField(max_length=120, blank=True, default='Serum Institute / GSK')
-    administered_by = models.CharField(max_length=120, blank=True, default='Dr. Jalil S. Mujawar')
+    administered_by = models.CharField(max_length=120, blank=True, default='Dr. Jalil Mujawar')
     notes = models.TextField(blank=True, default='')
 
     class Meta:
@@ -582,7 +582,7 @@ class AppointmentRequest(models.Model):
         return digits or '919921231399'
 
     def doctor_name(self):
-        return "Dr. Sabina Firoj Shaikh (B.D.S, M.D.S Gold Medalist)" if self.clinic_type == 'dental' else "Dr. Jalil S. Mujawar (Senior Consultant Pediatrician & Neonatologist)"
+        return "Dr. Sabina Shaikh (B.D.S, M.D.S Gold Medalist)" if self.clinic_type == 'dental' else "Dr. Jalil Mujawar (Senior Consultant Pediatrician & Neonatologist)"
 
     def clinic_display_name(self):
         return "Roots Dental Clinic" if self.clinic_type == 'dental' else "Buds Child Clinic"

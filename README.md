@@ -4,8 +4,8 @@
 > Dual-specialty premium medical website & front-desk CRM engine.
 
 ## 🌟 Clinic Highlights
-- **Roots Dental Clinic**: Led by **Dr. Sabina Firoj Shaikh** (MDS Gold Medalist, Prosthodontist & Oral Implantologist). Advanced, painless single-visit root canals, clear aligners, and precision smile makeovers.
-- **Buds Child Clinic**: Led by **Dr. Jalil S. Mujawar** (Senior Consultant Pediatrician & Neonatologist, MBBS DCH, 15+ years experience). Trusted by 75,000+ parents in Wanowrie.
+- **Roots Dental Clinic**: Led by **Dr. Sabina Shaikh** (MDS Gold Medalist, Prosthodontist & Oral Implantologist). Advanced, painless single-visit root canals, clear aligners, and precision smile makeovers.
+- **Buds Child Clinic**: Led by **Dr. Jalil Mujawar** (Senior Consultant Pediatrician & Neonatologist, MBBS DCH, 15+ years experience). Trusted by 75,000+ parents in Wanowrie.
 
 ## 🚀 Key Features
 - **Apple iOS Liquid Glass UI**: Frosted glassmorphism, responsive navigation, and fluid interaction design.

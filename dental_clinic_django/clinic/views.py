@@ -556,7 +556,7 @@ def api_queue_add(request):
     token_type = data.get('token_type', 'walk_in')
 
     patient = get_object_or_404(Patient, pk=patient_id)
-    doctor = "Dr. Sabina Firoj Shaikh" if clinic_type == 'dental' else "Dr. Jalil S. Mujawar"
+    doctor = "Dr. Sabina Shaikh" if clinic_type == 'dental' else "Dr. Jalil Mujawar"
 
     # Compute next token number
     last_token = QueueEntry.objects.order_by('-token_number').first()
@@ -683,7 +683,7 @@ def api_invoice_create(request):
     patient = get_object_or_404(Patient, pk=patient_id)
     balance_due = max(Decimal('0.00'), total_amount - paid_amount)
     status = 'paid' if balance_due <= Decimal('0.00') else ('partial' if paid_amount > 0 else 'unpaid')
-    doctor = "Dr. Sabina Firoj Shaikh" if clinic_type == 'dental' else "Dr. Jalil S. Mujawar"
+    doctor = "Dr. Sabina Shaikh" if clinic_type == 'dental' else "Dr. Jalil Mujawar"
 
     items = [{"name": item_desc, "qty": 1, "rate": float(total_amount), "total": float(total_amount)}]
 
@@ -903,7 +903,7 @@ def api_pediatric_vaccine_update(request):
     if status == 'administered':
         vax.administered_date = datetime.date.today()
         vax.batch_no = batch_no or f"BAT-{datetime.date.today().strftime('%Y%m')}-01"
-        vax.administered_by = "Dr. Jalil S. Mujawar"
+        vax.administered_by = "Dr. Jalil Mujawar"
     vax.save()
 
     log_audit(request, 'UPDATE', 'VaccinationRecord', vax.id, f"Vaccine {vax.vaccine_name} marked as {status} for {vax.patient.full_name}")
@@ -1010,7 +1010,7 @@ def api_prescription_create(request):
     follow_up = data.get('follow_up', 'After 5 days')
 
     patient = get_object_or_404(Patient, pk=patient_id)
-    doctor = "Dr. Sabina Firoj Shaikh" if clinic_type == 'dental' else "Dr. Jalil S. Mujawar"
+    doctor = "Dr. Sabina Shaikh" if clinic_type == 'dental' else "Dr. Jalil Mujawar"
 
     rx = ClinicalPrescription.objects.create(
         patient=patient,
@@ -1382,7 +1382,7 @@ def crm_patients_directory(request):
             'gender': p.get_gender_display() if hasattr(p, 'get_gender_display') else p.gender,
             'clinic_type': 'pediatric' if p.is_child else 'dental',
             'clinic_display': "Buds Child Clinic" if p.is_child else "Roots Dental Clinic",
-            'doctor_assigned': "Dr. Jalil S. Mujawar" if p.is_child else "Dr. Sabina Firoj Shaikh",
+            'doctor_assigned': "Dr. Jalil Mujawar" if p.is_child else "Dr. Sabina Shaikh",
             'family_name': p.family.family_name if p.family else 'Individual File',
             'emergency_contact': (p.family.primary_phone if p.family else None) or (p.phone or 'Direct Phone'),
             'total_billed': float(total_billed),
@@ -1419,7 +1419,7 @@ def crm_finance_billing(request):
     if request.method == 'POST':
         patient_id = request.POST.get('patient_id')
         clinic_type = request.POST.get('clinic_type', 'dental')
-        doctor_name = request.POST.get('doctor_name', 'Dr. Sabina Firoj Shaikh')
+        doctor_name = request.POST.get('doctor_name', 'Dr. Sabina Shaikh')
         treatment = request.POST.get('treatment', 'Clinical Consultation')
 
         try:
@@ -2201,7 +2201,7 @@ def api_appointment_action(request, pk):
         if patient.invoices.count() > completed_visits:
             completed_visits = patient.invoices.count()
 
-        doctor_name = "Dr. Sabina Firoj Shaikh" if appt.clinic_type == 'dental' else "Dr. Jalil S. Mujawar"
+        doctor_name = "Dr. Sabina Shaikh" if appt.clinic_type == 'dental' else "Dr. Jalil Mujawar"
         return JsonResponse({
             'success': True,
             'status': 'completed',
@@ -2245,7 +2245,7 @@ def api_quick_bill_create(request):
     patient_id = data.get('patient_id')
     patient_name = data.get('patient_name', '').strip()
     clinic_type = data.get('clinic_type', 'dental')
-    doctor_name = data.get('doctor_name') or ("Dr. Sabina Firoj Shaikh" if clinic_type == 'dental' else "Dr. Jalil S. Mujawar")
+    doctor_name = data.get('doctor_name') or ("Dr. Sabina Shaikh" if clinic_type == 'dental' else "Dr. Jalil Mujawar")
     treatment = data.get('treatment', 'Clinical Consultation')
 
     try:

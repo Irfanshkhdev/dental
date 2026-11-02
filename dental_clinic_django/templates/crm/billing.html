@@ -52,10 +52,10 @@
           </label>
           <select id="bill-wing-select" name="clinic_type" required onchange="updateDoctorName()"
                   class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
-            <option value="dental">Roots Dental Clinic (Dr. Sabina Firoj Shaikh)</option>
-            <option value="pediatric">Buds Child Clinic (Dr. Jalil S. Mujawar)</option>
+            <option value="dental">Roots Dental Clinic (Dr. Sabina Shaikh)</option>
+            <option value="pediatric">Buds Child Clinic (Dr. Jalil Mujawar)</option>
           </select>
-          <input type="hidden" id="bill-doctor-input" name="doctor_name" value="Dr. Sabina Firoj Shaikh">
+          <input type="hidden" id="bill-doctor-input" name="doctor_name" value="Dr. Sabina Shaikh">
         </div>
 
         <!-- Payment Mode -->
@@ -280,7 +280,7 @@
     const wing = document.getElementById('bill-wing-select').value;
     const docInput = document.getElementById('bill-doctor-input');
     if (docInput) {
-      docInput.value = wing === 'dental' ? 'Dr. Sabina Firoj Shaikh' : 'Dr. Jalil S. Mujawar';
+      docInput.value = wing === 'dental' ? 'Dr. Sabina Shaikh' : 'Dr. Jalil Mujawar';
     }
   }
 
